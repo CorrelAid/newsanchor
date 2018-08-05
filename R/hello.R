@@ -24,3 +24,7 @@ hello2 <- function() {
 hello3 <- function() {
   print("Hello, world!!!")
 }
+
+hello4 <- function() {
+  print("Hello, world!!!")
+}
