@@ -71,7 +71,7 @@ get_sources <- function(apiKey = NULL,
 
                           }
 
-#api <- "98c687e159c34c8f9803bca216cd3d96"
+#api <- ""
 
 #data2 <- get_sources(apiKey = api)
 #str(data2)
