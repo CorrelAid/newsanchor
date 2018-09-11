@@ -14,8 +14,7 @@
 get_sources <- function(apiKey = NULL,
                         category = NULL,
                         language = NULL,
-                        country = NULL
-){
+                        country = NULL) {
   force(apiKey)
   
   # category Fehlermeldung:
@@ -43,7 +42,7 @@ get_sources <- function(apiKey = NULL,
                          "rs", "ru", "sa", "se", "sg", "si", "sk", "th",
                          "tr", "tw", "ua", "us", "ve", "za")) {
       stop("Your input country is invalid. For a list of valid categories see:
-                                        https://newsapi.org/docs/endpoints/sources")
+                                 https://newsapi.org/docs/endpoints/sources")
     } }
   
   
@@ -51,7 +50,7 @@ get_sources <- function(apiKey = NULL,
   
   
   # die URL bauen mit den übergebenen parametern:
-  url <- parse_url("https://newsapi.org/v2/sources")
+  url <- httr::parse_url("https://newsapi.org/v2/sources")
   url$scheme <- "https"
   url$query <- list(
     category = category,
@@ -71,44 +70,3 @@ get_sources <- function(apiKey = NULL,
   return(data)
   
 }
-
-
-
-
-
-                      # die URL bauen mit den übergebenen parametern:
-                      url <- httr::parse_url("https://newsapi.org/v2/sources")
-                      url$scheme <- "https"
-                      url$query <- list(
-                                         category = category,
-                                         language = language,
-                                         country = country,
-                                         apiKey = apiKey)
-                      url <- httr::build_url(url)
-                      # API call
-                      result <- httr::GET(url)
-                      result <- httr::content(result, "parsed")
-                      # das Ergebnis in einen Dataframe übergeben und returnen:
-                      if ("sources" %in% names(result)) { # nur zur Sicherheit...
-                        result <- result[["sources"]]
-                      }
-                      data <- data.frame(do.call("rbind", result)) # good old base r :D
-                      data <- data.frame(lapply(data, as.character), stringsAsFactors=FALSE)
-                      return(data)
-
-                          }
-
-#api <- ""
-
-#data2 <- get_sources(apiKey = api)
-#str(data2)
-#category <- "technology"
-#language <- "de"
-#country <- "de"
-
-#data3 <- get_sources(api,category = category,language = language,country = country)
-#str(data3)
-
-
-
-
