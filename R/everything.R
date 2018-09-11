@@ -18,9 +18,7 @@
 #'
 
 
-library(httr)
 library(tidyverse)
-library(plyr)
 
 get_everything <- function(key,
                        content,
@@ -80,7 +78,7 @@ get_everything <- function(key,
 
   # Build URL
 
-  rawurl <- parse_url("https://newsapi.org/v2/everything")
+  rawurl <- httr::parse_url("https://newsapi.org/v2/everything")
 
   rawurl$query <- list(q = content,
                     pageSize = nrtexts,
@@ -93,7 +91,7 @@ get_everything <- function(key,
                     to = to,
                     sortBy = sort_by)
 
-  url <- build_url(rawurl)
+  url <- httr::build_url(rawurl)
 
   # Make request & save result
   raw <- httr::GET(url, httr::add_headers("X-Api-Key" = key))
@@ -107,10 +105,14 @@ get_everything <- function(key,
   results_df = as.data.frame(do.call("rbind", rawtext$articles))
 
   # Extract sources and add to data
-  results_df$id <- results_df %>% unnest(source) %>% as.data.frame() %>%
+  results_df$id <- results_df %>% 
+    unnest(source) %>% 
+    as.data.frame() %>%
     .[c(TRUE, FALSE), ]
 
-  results_df$name <- results_df %>% unnest(source) %>% as.data.frame() %>%
+  results_df$name <- results_df %>% 
+    unnest(source) %>% 
+    as.data.frame() %>%
     .[c(FALSE, TRUE), ]
 
   results_df$publishedAt <- as.POSIXct(paste(substr(results_df$publishedAt, 1, 10),
@@ -131,7 +133,7 @@ get_everything <- function(key,
   results_df$name <- unlist(results_df$name)
 
   # Remove NULL to NA
-  results_df[is_empty(results_df)] = NA
+  results_df[is_empty(results_df)] <- NA
 
 
   ## Create metadata list
@@ -148,11 +150,4 @@ get_everything <- function(key,
   return(results_df)
 
 }
-
-
-
-# Execute function
-# search2 <- everything(key = key, content = content, language = language, sort_by = sort, page = page)
-
-
 
