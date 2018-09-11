@@ -18,9 +18,9 @@
 #'
 
 
-library(needs)
-needs(httr, tidyverse, plyr)
-
+library(httr)
+library(tidyverse)
+library(plyr)
 
 get_everything <- function(key,
                        content,

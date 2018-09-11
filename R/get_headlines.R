@@ -58,7 +58,7 @@ get_headlines <- function(api_key,
                         "kr", "lt", "lv", "ma", "mx", "my", "ng", "nl", "no", 
                         "nz", "ph", "pl", "pt", "ro", "rs", "ru", "sa", "se", 
                         "sg", "si", "sk", "th", "tr", "tw", "ua", "us", "ve", 
-                        "za") {
+                        "za")) {
       stop(paste0("Please provide a valid searchterm for country, see ",
                   "https://newsapi.org/docs/endpoints/top-headlines"))
     }
