@@ -4,6 +4,7 @@
 #' @param category any category you might want to explore. Must be character or string
 #' @param language the language of the newsoutlet (e.g. "de" or "en").
 #' @param country the newsoutlet's country (e.g. "us").
+#' @importFrom httr content GET build_url parse_url add_headers
 #' @return A dataframe based on your specifications
 #' @examples
 #' get_sources(api)
@@ -50,7 +51,7 @@ get_sources <- function(apiKey = NULL,
 
 
                       # die URL bauen mit den übergebenen parametern:
-                      url <- parse_url("https://newsapi.org/v2/sources")
+                      url <- httr::parse_url("https://newsapi.org/v2/sources")
                       url$scheme <- "https"
                       url$query <- list(
                                          category = category,
