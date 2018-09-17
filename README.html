@@ -129,12 +129,14 @@ $(document).ready(function () {
 <p>An R Wrapper for the <a href="newsapi.org">NewsAPI</a>.</p>
 <div id="api-key" class="section level2">
 <h2>API key</h2>
-<p><a href="https://newsapi.org/register" class="uri">https://newsapi.org/register</a></p>
-<p>To automatically set the API-Key derived from</p>
-<p>to automatically derive the api key from the R environment</p>
-<pre><code>apiKey = &quot;98c687e159c34c8f98000000xxxxxxxxxxxxx&quot;</code></pre>
-<pre><code>
-Sys.setenv(&quot;NEWS_API_KEY&quot; = apiKey)</code></pre>
+<ol style="list-style-type: decimal">
+<li><p>Register and get your personal API key from <a href="https://newsapi.org/register">here</a></p></li>
+<li><p>To automatically set the API-Key in R, save it locally:</p>
+<pre class="r"><code># your own key goes here:
+apiKey = &quot;98c687e159c34c8f98000000xxxxxxxxxxxxx&quot; </code></pre>
+<p>or set it globally (much more convenient):</p>
+<pre class="r"><code>Sys.setenv(&quot;NEWS_API_KEY&quot; = apiKey)</code></pre></li>
+</ol>
 </div>
 
 

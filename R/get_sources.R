@@ -67,9 +67,11 @@ get_sources <- function(apiKey = NULL,
     apiKey = apiKey)
   url <- httr::build_url(url)
   # API call
+  
   result <- httr::GET(url)
   content <- httr::content(result, "text")
   prep_data <- jsonlite::fromJSON(content)
+  
   # return result in a dataframe
   if ("sources" %in% names(prep_data)) { # just to be safe
     data <- parsed_content$sources
