@@ -15,9 +15,17 @@ get_sources <- function(apiKey = NULL,
                         category = NULL,
                         language = NULL,
                         country = NULL) {
+  
+  if (is.null(apiKey)) {
+    
+  apiKey <- Sys.getenv("NEWS_API_KEY")
+  
+  }
+  
+  
   force(apiKey)
   
-  # category Fehlermeldung:
+  # check for a valid category:
   if(!is.null(category)){
     if (!category %in% c("business", "entertainment", "general" ,"health" ,
                          "science", "sports", "technology")) {
@@ -25,14 +33,14 @@ get_sources <- function(apiKey = NULL,
                                    https://newsapi.org/docs/endpoints/sources")
     } }
   
-  # language Fehlermeldung
+  # check for a valid language:
   if(!is.null(language)){
     if (!language %in% c("ar", "de", "en", "es", "fr", "he",
                          "it", "nl", "no", "pt", "ru", "se", "ud", "zh")) {
       stop("Your input language is invalid. For a list of valid categories see:
                                    https://newsapi.org/docs/endpoints/sources")
     } }
-  # country fehlermeldung
+  # check for a valid country:
   if(!is.null(country)){
     if (!country %in%  c("ae", "ar" ,"at","au", "be" ,"bg", "br" ,"ca",
                          "ch", "cn", "co", "cu", "cz", "de", "eg", "fr",
@@ -49,7 +57,7 @@ get_sources <- function(apiKey = NULL,
   
   
   
-  # die URL bauen mit den übergebenen parametern:
+  # build and parse url
   url <- httr::parse_url("https://newsapi.org/v2/sources")
   url$scheme <- "https"
   url$query <- list(
@@ -60,13 +68,15 @@ get_sources <- function(apiKey = NULL,
   url <- httr::build_url(url)
   # API call
   result <- httr::GET(url)
-  result <- httr::content(result, "parsed")
-  # das Ergebnis in einen Dataframe übergeben und returnen:
-  if ("sources" %in% names(result)) { # nur zur Sicherheit...
-    result <- result[["sources"]]
+  content <- httr::content(result, "text")
+  prep_data <- jsonlite::fromJSON(content)
+  # return result in a dataframe
+  if ("sources" %in% names(prep_data)) { # just to be safe
+    data <- parsed_content$sources
   }
-  data <- data.frame(do.call("rbind", result)) # good old base r :D
-  data <- data.frame(lapply(data, as.character), stringsAsFactors=FALSE)
+
   return(data)
   
 }
+
+
