@@ -126,4 +126,5 @@ get_headlines <- function(api_key,
   # delete old source column
   results_df$source <- NULL
   
+  return(list(metadata = list(), results_df = results_df))
 }

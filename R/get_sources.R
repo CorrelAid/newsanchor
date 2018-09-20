@@ -1,29 +1,29 @@
 #' Get (currently) available sources from newsapi.org.
 #'
-#' @param apiKey your API key - it is required to make the API call.
+#' @param api_key your API key - it is required to make the API call.
 #' @param category any category you might want to explore. Must be character or string
 #' @param language the language of the newsoutlet (e.g. "de" or "en").
 #' @param country the newsoutlet's country (e.g. "us").
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @return A dataframe based on your specifications
 #' @examples
-#' get_sources(api)
-#' get_sources(api, category="technology")
-#' get_sources(api, language="en")
+#' get_sources(api_key)
+#' get_sources(api_key, category="technology")
+#' get_sources(api_key, language="en")
 
-get_sources <- function(apiKey = NULL,
+get_sources <- function(api_key = NULL,
                         category = NULL,
                         language = NULL,
                         country = NULL) {
   
-  if (is.null(apiKey)) {
+  if (is.null(api_key)) {
     
-  apiKey <- Sys.getenv("NEWS_API_KEY")
+    api_key <- Sys.getenv("NEWS_API_KEY")
   
   }
   
   
-  force(apiKey)
+  force(api_key)
   
   # check for a valid category:
   if(!is.null(category)){
@@ -64,7 +64,7 @@ get_sources <- function(apiKey = NULL,
     category = category,
     language = language,
     country = country,
-    apiKey = apiKey)
+    apiKey = api_key)
   url <- httr::build_url(url)
   # API call
   
@@ -74,10 +74,10 @@ get_sources <- function(apiKey = NULL,
   
   # return result in a dataframe
   if ("sources" %in% names(prep_data)) { # just to be safe
-    data <- parsed_content$sources
+    data <- prep_data$sources
   }
 
-  return(data)
+  return(list(metadata = list(), results_df = data))
   
 }
 
