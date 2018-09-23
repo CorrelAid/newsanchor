@@ -1,6 +1,6 @@
-#' Get all resources that the API from newsapi.org provides
+#' Get all resources that the API of newsapi.org provides
 #'
-#' @param api_key Character string with the API key you get from newsapi.org. Passing it is compulsory.
+#' @param api_key Character string with the API key you get from newsapi.org. Passing it is compulsory. Function gets it per default from your global environment. See "set-api-key" for more info.
 #' @param content Character string that contains the content of your search in the API data base
 #' @param nrtexts The number (numeric!) of articles per page that are returned. Maximum is 100, default is 20.
 #' @param sources Character string with IDs (comma separated) of the news outlets you want to focus on (e.g., "usa-today, spiegel-online").
@@ -17,10 +17,11 @@
 #' get_everything(api_key = key, content = "mannheim", from = "2018-01-07T12:00:00")
 #'
 
+apiKey = "acf81c97c91746c2bc491a1110c1f0ad" 
 
-library(tidyverse)
+Sys.setenv("NEWS_API_KEY" = apiKey)
 
-get_everything <- function(api_key,
+get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
                            content,
                            nr_texts = 20, 
                            sources = NULL,
@@ -39,21 +40,24 @@ get_everything <- function(api_key,
            "pt", "ru", "se", "ud", "zh")
   
   # Make sure that the API key is passed
-  if(missing(api_key) == TRUE)
-    stop("You need to pass your API key")
+  #if(missing(api_key) == TRUE)
+    #stop("You need to pass your API key.")
+  
+  if(is.null(api_key) == TRUE)
+    stop("You did not correctly specify your API key as global variable. See documentation for further info.")
   
   # Make sure that some content is passed
   if(missing(content) == TRUE)
-    stop("You need to specify at least some content that you search for")
+    stop("You need to specify at least some content that you search for.")
   
   # Make sure page size does not exceed 100
   if(!is.numeric(nr_texts)) {
     
-    stop("You need to insert numeric values for the number of texts per page")
+    stop("You need to insert numeric values for the number of texts per page.")
     
   } else if(nr_texts > 100) {
     
-    stop("Page size cannot exceed 100 articles")
+    stop("Page size cannot exceed 100 articles.")
     
   }
   
@@ -68,7 +72,7 @@ get_everything <- function(api_key,
   }
   
   if(!sort_by %in% c("publishedAt", "relevancy", "popularity")){
-    stop("sortings can be only by 'publishedAt', 'relevancy', or 'popularity'")
+    stop("Sortings can be only by 'publishedAt', 'relevancy', or 'popularity'.")
   }
 
   # Build URL
