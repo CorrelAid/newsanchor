@@ -7,17 +7,24 @@
 #' @param api_key API key required to access 'sources'
 #' @importFrom xml2 read_html
 #' @importFrom rvest html_nodes html_text
+#' @importFrom devtools use_data
 #' @examples
 #' create_list_searchterms(api_key)
 #' create_list_searchterms()
 
 create_list_searchterms <- function(api_key = NULL){
 
-  # check global environment for api_key
-  if (is.null(api_key)){
-    api_key <- Sys.getenv("api_key")
+  # check for api-key in the global environment
+  if (is.null(api_key)) {
+    api_key <- Sys.getenv("NEWS_API_KEY")
   }
-
+  
+  # is an api-key available?
+  if (nchar(api_key) == 0){
+    stop("Please provide an api-key with the function call or to the global
+         environment")
+  }
+  
 
   # URL to access
   url_headlines = "https://newsapi.org/docs/endpoints/top-headlines"
@@ -62,6 +69,6 @@ create_list_searchterms <- function(api_key = NULL){
 
 
   #--- save list
-  save(searchterms, file = "data/searchterms.Rda")
+  devtools::use_data(searchterms)
 
 }
