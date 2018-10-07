@@ -4,11 +4,11 @@
 \alias{get_sources}
 \title{Get (currently) available sources from newsapi.org.}
 \usage{
-get_sources(apiKey = NULL, category = NULL, language = NULL,
+get_sources(api_key = NULL, category = NULL, language = NULL,
   country = NULL)
 }
 \arguments{
-\item{apiKey}{your API key - it is required to make the API call.}
+\item{api_key}{your API key - it is required to make the API call.}
 
 \item{category}{any category you might want to explore. Must be character or string}
 
@@ -23,7 +23,7 @@ A dataframe based on your specifications
 Get (currently) available sources from newsapi.org.
 }
 \examples{
-get_sources(api)
-get_sources(api, category="technology")
-get_sources(api, language="en")
+get_sources(api_key)
+get_sources(api_key, category="technology")
+get_sources(api_key, language="en")
 }
