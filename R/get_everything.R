@@ -2,7 +2,7 @@
 #'
 #' @param api_key Character string with the API key you get from newsapi.org. Passing it is compulsory. Function gets it per default from your global environment. See "set-api-key" for more info.
 #' @param content Character string that contains the content of your search in the API data base
-#' @param nrtexts The number (numeric!) of articles per page that are returned. Maximum is 100, default is 20.
+#' @param page_size The number (numeric!) of articles per page that are returned. Maximum is 100 (default).
 #' @param sources Character string with IDs (comma separated) of the news outlets you want to focus on (e.g., "usa-today, spiegel-online").
 #' @param domains Character string (comma separated) with domains that you want to restrict your search to (e.g. "bbc.com, nytimes.com").
 #' @param exclude_domains Similar usage as 'domains'. Will exclude these domains from your search.
@@ -13,17 +13,23 @@
 #' @param page Specifies the page number of your results. Must be numeric. Default is first page.
 #' @return A list containing a data frame with results for your search and another list with metadata on your search.
 #' @examples
+#' \dontrun{
 #' get_everything(api_key = key, content = "stuttgart", language = "de")
 #' get_everything(api_key = key, content = "mannheim", from = "2018-01-07T12:00:00")
-#'
+#' }
+#' @importFrom httr content GET build_url parse_url add_headers
+#' @importFrom jsonlite fromJSON
+#' @return List with two elements: 1) a data frame with search results & 2) list with meta data
+#' @export
+#' 
 
 apiKey = "acf81c97c91746c2bc491a1110c1f0ad" 
 
 Sys.setenv("NEWS_API_KEY" = apiKey)
 
 get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
-                           content,
-                           nr_texts = 20, 
+                           query,
+                           page_size = 100, 
                            sources = NULL,
                            domains = NULL,
                            exclude_domains = NULL,
@@ -43,19 +49,19 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
   #if(missing(api_key) == TRUE)
     #stop("You need to pass your API key.")
   
-  if(is.null(api_key) == TRUE)
+  if((nchar(api_key) == 0) == TRUE)
     stop("You did not correctly specify your API key as global variable. See documentation for further info.")
   
   # Make sure that some content is passed
-  if(missing(content) == TRUE)
+  if(missing(query) == TRUE)
     stop("You need to specify at least some content that you search for.")
   
   # Make sure page size does not exceed 100
-  if(!is.numeric(nr_texts)) {
+  if(!is.numeric(page_size)) {
     
     stop("You need to insert numeric values for the number of texts per page.")
     
-  } else if(nr_texts > 100) {
+  } else if(page_size > 100) {
     
     stop("Page size cannot exceed 100 articles.")
     
@@ -78,8 +84,8 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
   # Build URL
   rawurl <- httr::parse_url("https://newsapi.org/v2/everything")
   
-  rawurl$query <- list(q = content,
-                       pageSize = nr_texts,
+  rawurl$query <- list(q = query,
+                       pageSize = page_size,
                        page = page,
                        language = language,
                        sources = sources,
