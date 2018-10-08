@@ -23,10 +23,6 @@
 #' @export
 #' 
 
-apiKey = "acf81c97c91746c2bc491a1110c1f0ad" 
-
-Sys.setenv("NEWS_API_KEY" = apiKey)
-
 get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
                            query,
                            page_size = 100, 
