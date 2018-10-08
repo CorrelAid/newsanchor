@@ -13,7 +13,7 @@ apiKey
 
 \item{content}{Character string that contains the content of your search in the API data base}
 
-\item{page_size}{The number (numeric!) of articles per page that are returned. Maximum is 100 (default).}
+\item{nrtexts}{The number (numeric!) of articles per page that are returned. Maximum is 100, default is 20.}
 
 \item{sources}{Character string with IDs (comma separated) of the news outlets you want to focus on (e.g., "usa-today, spiegel-online").}
 
@@ -33,8 +33,6 @@ apiKey
 }
 \value{
 A list containing a data frame with results for your search and another list with metadata on your search.
-
-Data frame
 }
 \description{
 Get all resources that the API of newsapi.org provides
@@ -42,5 +40,6 @@ Get all resources that the API of newsapi.org provides
 \examples{
 get_everything(api_key = key, content = "stuttgart", language = "de")
 get_everything(api_key = key, content = "mannheim", from = "2018-01-07T12:00:00")
+
 }
 \keyword{datasets}

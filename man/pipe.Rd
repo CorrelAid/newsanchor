@@ -5,8 +5,8 @@
 \alias{get_headlines}
 \title{get_headlines}
 \usage{
-get_headlines(api_key, sources = NULL, country = NULL,
-  category = NULL, keyword = NULL, pageSize = 100, page = 1)
+get_headlines(api_key, sources = NULL, country = NULL, category = NULL,
+  keyword = NULL, pageSize = 100, page = 1)
 }
 \arguments{
 \item{api_key}{Character string API token.}
