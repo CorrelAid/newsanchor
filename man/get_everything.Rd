@@ -4,10 +4,9 @@
 \alias{get_everything}
 \title{Get all resources that the API of newsapi.org provides}
 \usage{
-get_everything(api_key = Sys.getenv("NEWS_API_KEY"), query,
-  page_size = 100, sources = NULL, domains = NULL,
-  exclude_domains = NULL, from = NULL, to = NULL, language = NULL,
-  sort_by = "publishedAt", page = NULL)
+get_everything(api_key = Sys.getenv("NEWS_API_KEY"), query, page_size = 100,
+  sources = NULL, domains = NULL, exclude_domains = NULL, from = NULL,
+  to = NULL, language = NULL, sort_by = "publishedAt", page = NULL)
 }
 \arguments{
 \item{api_key}{Character string with the API key you get from newsapi.org. Passing it is compulsory. Function gets it per default from your global environment. See "set-api-key" for more info.}
