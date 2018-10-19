@@ -1,13 +1,14 @@
 Package: newsanchor
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Client for the News API
 Version: 0.1.0
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: Interface to gather news from the 'NEWS API', based on a multilevel query <https://newsapi.org/>. A personal API key is required. 
+License: MIT + file LICENSE
 Encoding: UTF-8
+Depends: R (>= 3.2.0)
+BugReports: https://github.com/correlaid/newsanchor/issues
 LazyData: true
 Imports:
     devtools,
