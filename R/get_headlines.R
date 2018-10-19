@@ -1,12 +1,14 @@
-#' Returns headlines provided by the API from newsapi.org
+#' Returns selected headlines from newsapi.org
 #'
 #' \code{get_headlines} returns live top and breaking headlines for a country, 
 #' specific category in a country, single source, or multiple sources. You can 
 #' also search with keywords. Articles are sorted by the earliest date 
-#' published first.\cr\cr
-#' Please run \code{set_api_key} first. Alternatively, provide an explicit
-#' definition of the api_key. \cr\cr
+#' published first. To automatically download all results, use 
+#' \code{get_headlines_all}\cr\cr
+#' Please check that the api_key is available. You can provide an explicit
+#' definition of the api_key or use \code{set_api_key} \cr\cr
 #' For valid searchterms see \code{data(searchterms)}
+#' 
 #' 
 #' @param query Keyword you want headlines for
 #' @param category Category you want headlines from
@@ -131,29 +133,49 @@ get_headlines <- function(query     = NULL,
   # extract content
   content_text   <- httr::content(results, "text")
   content_parsed <- jsonlite::fromJSON(content_text)
-
-  # create results data frame
-  results_df        <- content_parsed$articles
-  results_df$id     <- unlist(results_df$source$id)
-  results_df$name   <- unlist(results_df$source$name)
-  results_df$source <- NULL
   
-  # rename two columns with camelcase to snake_case
-  names(results_df)[names(results_df) == 'publishedAt'] <- 'published_at'
-  names(results_df)[names(results_df) == 'urlToImage'] <- 'url_to_image'
   
-  # change col 'published_at' from character to POSIX
-  results_df$published_at <- as.POSIXct(results_df$published_at,
-                                       tz = "UTC",
-                                       format("%Y-%m-%dT%H:%M:%OSZ"))
-
-  # build meta-data ---------------------------------------------------------
   
-  metadata <- data.frame(total_results = content_parsed$totalResults, 
-                         status_code   = results$status_code,
-                         request_data  = results$date,
-                         request_url   = results$url)
-
+  #--- check whether status-code equals 200 (else this will throw an error)
+  if (results$status_code == 200) {
+    
+    #--- create results data frame
+    results_df        <- content_parsed$articles
+    results_df$id     <- unlist(results_df$source$id)
+    results_df$name   <- unlist(results_df$source$name)
+    results_df$source <- NULL
+    
+    # rename two columns with camelcase to snake_case
+    names(results_df)[names(results_df) == 'publishedAt'] <- 'published_at'
+    names(results_df)[names(results_df) == 'urlToImage'] <- 'url_to_image'
+    
+    # change col 'published_at' from character to POSIX
+    results_df$published_at <- as.POSIXct(results_df$published_at,
+                                          tz = "UTC",
+                                          format("%Y-%m-%dT%H:%M:%OSZ"))
+    # extract meta-data
+    metadata <- data.frame(total_results = content_parsed$totalResults, 
+                           status_code   = results$status_code,
+                           request_data  = results$date,
+                           request_url   = results$url,
+                           code          = NA,
+                           message       = NA)
+  }
+  
+  #--- and if not, provide the error message
+  if (results$status_code != 200) {
+    
+    # empty results dataframe
+    results_df = data.frame()
+    # extract meta-data
+    metadata <- data.frame(total_results = 0, 
+                           status_code   = results$status_code,
+                           request_data  = results$date,
+                           request_url   = results$url,
+                           code          = content_parsed$code,
+                           message       = content_parsed$message)
+  }
+  
   # return results ----------------------------------------------------------
   return(list(metadata = metadata, results_df = results_df))
 }

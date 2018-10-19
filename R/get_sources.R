@@ -10,6 +10,7 @@
 #' get_sources(api_key)
 #' get_sources(api_key, category="technology")
 #' get_sources(api_key, language="en")
+#' @export
 
 get_sources <- function(api_key = NULL,
                         category = NULL,
