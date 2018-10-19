@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^R/create_list_searchterms\.R$
+^README\.html$
+^README\.md$
+^README\.Rmd$
