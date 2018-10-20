@@ -26,6 +26,8 @@
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @importFrom tidyr unnest
 #' @importFrom jsonlite fromJSON
+#' @importFrom utils data
+#' 
 #' @return List with two dataframes:\cr
 #'         1) Data frame with \code{results_df}\cr
 #'         2) Data frame with \code{meta_data}
@@ -53,12 +55,9 @@ get_headlines <- function(query     = NULL,
                 "category, country, or source."))
   }
   
-  # provide access to searchterms, but hide this from the global environment
-  data(terms_category, terms_country, terms_sources, envir=environment())
-  
   # are the arguments for 'category' valid?
   if(!is.null(category)){
-    if (!category %in% terms_category$category) {
+    if (!category %in% newsanchor::terms_category$category) {
       stop(paste0("Please provide a valid searchterm for category,", 
                   "see data(terms_category)"))
     }
@@ -66,7 +65,7 @@ get_headlines <- function(query     = NULL,
   
   # are the arguments for 'country' valid?
   if(!is.null(country)){
-    if (!category %in% terms_country$country) { 
+    if (!category %in% newsanchor::terms_country$country) { 
       stop(paste0("Please provide a valid searchterm for country,", 
                   " see data(terms_country)"))
     }
@@ -74,7 +73,7 @@ get_headlines <- function(query     = NULL,
    
   # are the arguments for 'sources' valid? 
   if(!is.null(sources)){
-    if (!sources %in% terms_sources$id) { 
+    if (!sources %in% newsanchor::terms_sources$id) { 
       stop(paste0("Please provide a valid searchterm for news-sources,",
                   " see data(terms_sources)."))
     }
