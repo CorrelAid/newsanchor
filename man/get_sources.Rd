@@ -23,7 +23,10 @@ A dataframe based on your specifications
 Get (currently) available sources from newsapi.org.
 }
 \examples{
+\dontrun{
 get_sources(api_key)
 get_sources(api_key, category="technology")
 get_sources(api_key, language="en")
+}
+
 }

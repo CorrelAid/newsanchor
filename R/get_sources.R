@@ -6,10 +6,13 @@
 #' @param country the newsoutlet's country (e.g. "us").
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @return A dataframe based on your specifications
-#' @examples
+#' @examples 
+#' \dontrun{
 #' get_sources(api_key)
 #' get_sources(api_key, category="technology")
 #' get_sources(api_key, language="en")
+#' }
+#' 
 #' @export
 
 get_sources <- function(api_key = NULL,
