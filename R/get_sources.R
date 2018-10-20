@@ -15,19 +15,15 @@
 #' 
 #' @export
 
-get_sources <- function(api_key = NULL,
-                        category = NULL,
+get_sources <- function(category = NULL,
                         language = NULL,
-                        country = NULL) {
+                        country = NULL,
+                        api_key   = Sys.getenv("NEWS_API_KEY")) {
   
-  if (is.null(api_key)) {
-    
-    api_key <- Sys.getenv("NEWS_API_KEY")
-  
+  # is an api-key available?
+  if (nchar(api_key) == 0){
+    stop("Please provide an api-key")
   }
-  
-  
-  force(api_key)
   
   # check for a valid category:
   if(!is.null(category)){

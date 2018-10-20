@@ -4,17 +4,17 @@
 \alias{get_sources}
 \title{Get (currently) available sources from newsapi.org.}
 \usage{
-get_sources(api_key = NULL, category = NULL, language = NULL,
-  country = NULL)
+get_sources(category = NULL, language = NULL, country = NULL,
+  api_key = Sys.getenv("NEWS_API_KEY"))
 }
 \arguments{
-\item{api_key}{your API key - it is required to make the API call.}
-
 \item{category}{any category you might want to explore. Must be character or string}
 
 \item{language}{the language of the newsoutlet (e.g. "de" or "en").}
 
 \item{country}{the newsoutlet's country (e.g. "us").}
+
+\item{api_key}{your API key - it is required to make the API call.}
 }
 \value{
 A dataframe based on your specifications
