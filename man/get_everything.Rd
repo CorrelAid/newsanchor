@@ -12,6 +12,8 @@ get_everything(api_key = Sys.getenv("NEWS_API_KEY"), query,
 \arguments{
 \item{api_key}{Character string with the API key you get from newsapi.org. Passing it is compulsory. Function gets it per default from your global environment. See "set-api-key" for more info.}
 
+\item{query}{Character string that contains the content of your search in the API data base}
+
 \item{page_size}{The number (numeric!) of articles per page that are returned. Maximum is 100 (default).}
 
 \item{sources}{Character string with IDs (comma separated) of the news outlets you want to focus on (e.g., "usa-today, spiegel-online").}
@@ -29,8 +31,6 @@ get_everything(api_key = Sys.getenv("NEWS_API_KEY"), query,
 \item{sort_by}{Character string that specifies the sorting of your article results. Has three options: "publishedAt", "relevancy", "popularity". Default is "publishedAt".}
 
 \item{page}{Specifies the page number of your results. Must be numeric. Default is first page.}
-
-\item{content}{Character string that contains the content of your search in the API data base}
 }
 \value{
 A list containing a data frame with results for your search and another list with metadata on your search.

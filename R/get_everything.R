@@ -1,7 +1,7 @@
 #' Get all resources that the API of newsapi.org provides
 #'
 #' @param api_key Character string with the API key you get from newsapi.org. Passing it is compulsory. Function gets it per default from your global environment. See "set-api-key" for more info.
-#' @param content Character string that contains the content of your search in the API data base
+#' @param query Character string that contains the content of your search in the API data base
 #' @param page_size The number (numeric!) of articles per page that are returned. Maximum is 100 (default).
 #' @param sources Character string with IDs (comma separated) of the news outlets you want to focus on (e.g., "usa-today, spiegel-online").
 #' @param domains Character string (comma separated) with domains that you want to restrict your search to (e.g. "bbc.com, nytimes.com").
