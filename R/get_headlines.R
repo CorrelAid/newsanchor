@@ -150,8 +150,7 @@ get_headlines <- function(query     = NULL,
     
     # change col 'published_at' from character to POSIX
     results_df$published_at <- as.POSIXct(results_df$published_at,
-                                          tz = "UTC",
-                                          format("%Y-%m-%dT%H:%M:%OSZ"))
+                                          tz = "UTC")
     # extract meta-data
     metadata <- data.frame(total_results = content_parsed$totalResults, 
                            status_code   = results$status_code,
