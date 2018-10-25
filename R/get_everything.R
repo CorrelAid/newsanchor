@@ -25,32 +25,55 @@
 
 get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
                            query,
-                           page_size = 100, 
-                           sources = NULL,
-                           domains = NULL,
+                           page_size       = 100, 
+                           sources         = NULL,
+                           domains         = NULL,
                            exclude_domains = NULL,
-                           from = NULL, 
-                           to = NULL,
-                           language = NULL, 
-                           sort_by = "publishedAt", 
-                           page = NULL) {
+                           from            = NULL, 
+                           to              = NULL,
+                           language        = NULL, 
+                           sort_by         = "publishedAt", 
+                           page            = NULL) {
   
-  # Check evaluation of passed arguments
+  # Initial proceedings -----------------------------------------------------
+  
+  # Provide a vector with available ways of sort the articles  
   sortings <- c("publishedAt", "relevancy", "popularity")
   
+  # Provide a list of possible languages 
   ISO <- c("ar", "de", "en", "es", "fr", "he", "it", "nl", "no",
            "pt", "ru", "se", "ud", "zh")
   
-  # Make sure that the API key is passed
-  #if(missing(api_key) == TRUE)
-    #stop("You need to pass your API key.")
+  # Errors and warnings -----------------------------------------------------
   
+  # Make sure a API key is provided
   if((nchar(api_key) == 0) == TRUE)
     stop("You did not correctly specify your API key as global variable. See documentation for further info.")
   
-  # Make sure that some content is passed
+  # Make sure that some search term is passed
   if(missing(query) == TRUE)
     stop("You need to specify at least some content that you search for.")
+  
+  # Bind together various search parameters as comma-separated strings as required by API
+  
+  # Parameter: sources (plus limit to maximum of20 sources)
+  if(length(sources) > 20) {
+    stop("You cannot select more than 20 sources in one search request.")
+  } else {
+  if(length(sources) > 1) {
+  sources <- paste(sources, collapse = ",")
+    }
+  }
+  
+  # Parameter: domains 
+  if(length(domains) > 1) {
+    domains <- paste(domains, collapse = ",")
+  }
+  
+  # Parameter: exclude_domains
+  if(length(exclude_domains) > 1) {
+    exclude_domains <- paste(exclude_domains, collapse = ",")
+  }
   
   # Make sure page size does not exceed 100
   if(!is.numeric(page_size)) {
@@ -59,61 +82,104 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
     
   } else if(page_size > 100) {
     
+    # Error if page size exceeds maximum of 100 articles
     stop("Page size cannot exceed 100 articles.")
     
   }
   
+  # Error for non-numeric page parameter
   if(!is.null(page)) {
     stopifnot(is.numeric(page))#, call. =  FALSE)
     #stop("Arguments 'page' and 'nrtexts' need to be numeric")
   }
   
+  # If no page number is specified, set it to value "1"
+  if(is.null(page)) {page = 1}
+  
+  # Error if language indicated does not match the ones provided by the API
   if(!is.null(language)) {
     stopifnot((sum(language == ISO) == 1))#, call. = FALSE) # language
     #stop("Language must be specified as one of these ISO codes: ar, de, en, es, fr, he, it, nl, no, pt, ru, se, ud, zh)
   }
   
+  # Error if selected sorting does not match the ones provided by the API
   if(!sort_by %in% c("publishedAt", "relevancy", "popularity")){
     stop("Sortings can be only by 'publishedAt', 'relevancy', or 'popularity'.")
   }
-
+  
+  # Accessing the API  -----------------------------------------------------
+  
   # Build URL
   rawurl <- httr::parse_url("https://newsapi.org/v2/everything")
   
-  rawurl$query <- list(q = query,
-                       pageSize = page_size,
-                       page = page,
-                       language = language,
-                       sources = sources,
-                       domains = domains,
-                       excludeDomains = exclude_domains,
-                       from = from,
-                       to = to,
-                       sortBy = sort_by)
+  rawurl$query <- list(q               = query,
+                       pageSize        = page_size,
+                       page            = page,
+                       language        = language,
+                       sources         = sources,
+                       domains         = domains,
+                       excludeDomains  = exclude_domains,
+                       from            = from,
+                       to              = to,
+                       sortBy          = sort_by)
   
   url <- httr::build_url(rawurl)
   
-  # make request & parse result
-  res <- httr::GET(url, httr::add_headers("X-Api-Key" = api_key))
-  content_text <- httr::content(res, "text")
-  content_parsed <- jsonlite::fromJSON(content_text)
-
-  # create results data frame
-  results_df <- content_parsed$articles
-  results_df$id <- unlist(results_df$source$id)
-  results_df$name <- unlist(results_df$source$name)
-  results_df$source <- NULL
-
-  results_df$publishedAt <- as.POSIXct(results_df$publishedAt,
+  # Make request & parse result
+  results <- httr::GET(url, httr::add_headers("X-Api-Key" = api_key))
+  
+  content_text    <- httr::content(results, "text")
+  content_parsed  <- jsonlite::fromJSON(content_text)
+  
+  # Check if http status code is valid and construct results accordingly
+  if (results$status_code == 200) {
+    
+  # Create results data frame
+  results_df          <- content_parsed$articles
+  results_df$id       <- unlist(results_df$source$id)
+  results_df$name     <- unlist(results_df$source$name)
+  results_df$source   <- NULL
+  
+  # Rename two columns with camelCase to snake_case
+  names(results_df)[names(results_df) == 'publishedAt'] <- 'published_at'
+  names(results_df)[names(results_df) == 'urlToImage'] <- 'url_to_image'
+  
+  # Convert publishing date to posixct format
+  results_df$published_at <- as.POSIXct(results_df$published_at,
                                        tz = "UTC",
                                        format("%Y-%m-%dT%H:%M:%OSZ"))
   
   # Create metadata list
-  metadata <- list(total_results = content_parsed$totalResults,
-                   status_code = res$status_code,
-                   request_date = res$date,
-                   request_url = res$url)
-  return(list(metadata = metadata, results_df = results_df))
+  metadata <- list(total_results  = content_parsed$totalResults,
+                   status_code    = results$status_code,
+                   request_date   = results$date,
+                   request_url    = results$url,
+                   page_size      = page_size,
+                   page           = page,
+                   code           = NA,
+                   message        = NA)
+  
+  }
+  
+  # If the http code displays an error, build the results accordingly
+  if (results$status_code != 200) {
+    
+    # Return empty data.frame
+    results_df = data.frame()
+    
+    # Extract meta data 
+    metadata <- data.frame(total_results = 0, 
+                           status_code   = results$status_code,
+                           request_data  = results$date,
+                           request_url   = results$url,
+                           page_size     = NA,
+                           page          = NA,
+                           code          = content_parsed$code,
+                           message       = content_parsed$message)
+  }
+  
+  # Return results and metadata
+  return(list(metadata    = metadata, 
+              results_df  = results_df))
   
 }
-
