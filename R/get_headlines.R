@@ -14,10 +14,10 @@
 #' @param category Category you want headlines from
 #' @param country Country you want headlines for
 #' @param sources Sources you want headlines from
-#' @param page Use this to page through the results, if the total results 
-#'             found is greater than the \code{page_size}. 
+#' @param page If the total number of results is greater than \code{page_size},
+#'             than use this to page through the results.  
 #' @param page_size Number of hits per request (maximum = 100)
-#' @param api_key Your API token 
+#' @param api_key Your API token (explicit definition or use \code{set_api_key})
 #' 
 #' @examples
 #' \dontrun{
@@ -57,7 +57,7 @@ get_headlines <- function(query     = NULL,
   
   # are the arguments for 'category' valid?
   if(!is.null(category)){
-    if (!category %in% newsanchor::terms_category$category) {
+    if (!category %in% newsanchor::terms_category$headlines) {
       stop(paste0("Please provide a valid searchterm for category,", 
                   "see data(terms_category)"))
     }
@@ -65,7 +65,7 @@ get_headlines <- function(query     = NULL,
   
   # are the arguments for 'country' valid?
   if(!is.null(country)){
-    if (!category %in% newsanchor::terms_country$country) { 
+    if (!category %in% newsanchor::terms_country$headlines) { 
       stop(paste0("Please provide a valid searchterm for country,", 
                   " see data(terms_country)"))
     }
@@ -73,7 +73,7 @@ get_headlines <- function(query     = NULL,
    
   # are the arguments for 'sources' valid? 
   if(!is.null(sources)){
-    if (!sources %in% newsanchor::terms_sources$id) { 
+    if (!sources %in% newsanchor::terms_sources$all) { 
       stop(paste0("Please provide a valid searchterm for news-sources,",
                   " see data(terms_sources)."))
     }
@@ -100,10 +100,10 @@ get_headlines <- function(query     = NULL,
     stop("Page_size needs to be a number.")
   } 
   else if(page_size > 100) {
-    stop("Page size cannot exceed 100 articles per page.")
+    stop("Page size should not exceed 100 articles per page.")
   }
   
-  
+
   
   # access newsapi.org ------------------------------------------------------
   
@@ -136,7 +136,7 @@ get_headlines <- function(query     = NULL,
   
   
   #--- check whether status-code equals 200 (else this will throw an error)
-  if (results$status_code == 200) {
+  if (results$status_code == 200 & content_parsed$totalResults != 0) {
     
     #--- create results data frame
     results_df        <- content_parsed$articles
@@ -156,12 +156,26 @@ get_headlines <- function(query     = NULL,
                            status_code   = results$status_code,
                            request_data  = results$date,
                            request_url   = results$url,
+                           page_size     = page_size,
+                           page          = page,
                            code          = NA,
                            message       = NA)
   }
   
-  #--- and if not, provide the error message
-  if (results$status_code != 200) {
+  #--- and if not (provide the error message) or in case of zero results
+  if (results$status_code != 200 | content_parsed$totalResults == 0) {
+    
+    # provide warning for error message
+    if (results$status_code != 200){
+      warning(paste0("The search resulted in the following error message: ",
+                      content_parsed$message))
+    }
+
+    # provide warning that zero results
+    # provide warning for error message
+    if (content_parsed$totalResults == 0){
+      warning(paste0("The search was not successful. There were no results."))
+    }
     
     # empty results dataframe
     results_df = data.frame()
@@ -170,8 +184,12 @@ get_headlines <- function(query     = NULL,
                            status_code   = results$status_code,
                            request_data  = results$date,
                            request_url   = results$url,
-                           code          = content_parsed$code,
-                           message       = content_parsed$message)
+                           page_size     = page_size,
+                           page          = page,
+                           code          = ifelse(results$status_code !=200, 
+                                                  content_parsed$code, NA),
+                           message       = ifelse(results$status_code !=200,
+                                                  content_parsed$message, NA))
   }
   
   # return results ----------------------------------------------------------
