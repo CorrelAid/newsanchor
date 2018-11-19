@@ -1,7 +1,7 @@
 context("Get sources")
 
 testthat::test_that("that that function returns error if no argument provided", {
-  testthat::expect_error(newsanchor::get_sources())
+  testthat::expect_error(newsanchor::get_sources(api_key = ""))
 })
 
 testthat::test_that("test that the function returns a data frame", {
