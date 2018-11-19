@@ -20,7 +20,7 @@ get_headlines(query = NULL, category = NULL, country = NULL,
 \item{page}{If the total number of results is greater than \code{page_size},
 than use this to page through the results.}
 
-\item{page_size}{Number of hits per request (minimum = 20, maximum = 100)}
+\item{page_size}{Number of hits per request (maximum = 100)}
 
 \item{api_key}{Your API token (explicit definition or use \code{set_api_key})}
 }

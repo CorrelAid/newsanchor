@@ -2,43 +2,44 @@
 % Please edit documentation in R/get_everything.R
 \name{get_everything}
 \alias{get_everything}
-\title{Get all resources that the API of newsapi.org provides}
+\title{Get all resources that the API of newsapi.org provides for a given searchterm}
 \usage{
-get_everything()
+get_everything(api_key = Sys.getenv("NEWS_API_KEY"), query,
+  page_size = 100, sources = NULL, domains = NULL,
+  exclude_domains = NULL, from = NULL, to = NULL, language = NULL,
+  sort_by = "publishedAt", page = NULL)
 }
 \arguments{
-\item{api_key}{Character string with the API key you get from newsapi.org. Passing it is compulsory. Function gets it per default from your global environment. See "set-api-key" for more info.}
+\item{api_key}{Character string with the API key you get from newsapi.org. Passing it is compulsory. Function obtains it per default from your global environment. See "set-api-key" for more info.}
 
-\item{query}{Character string that contains the content of your search in the API data base. API supports advanced search parameters, see details.}
+\item{query}{Character string that contains the searchterm for the API's data base. API supports advanced search parameters, see 'details'.}
 
-\item{page_size}{The number (numeric!) of articles per page that are returned. Maximum is 100 (default).}
+\item{page_size}{The number (numeric!) of articles per page that are returned. Maximum is 100 (also default).}
 
 \item{sources}{Character string with IDs (comma separated) of the news outlets you want to focus on (e.g., "usa-today, spiegel-online").}
 
-\item{domains}{Character string (comma separated) with domains that you want to restrict your search to (e.g. "bbc.com, nytimes.com").}
+\item{domains}{Character string (comma separated) with domains that you want to restrict your search to (e.g., "bbc.com, nytimes.com").}
 
-\item{exclude_domains}{Similar usage as 'domains'. Will exclude these domains from your search.}
+\item{exclude_domains}{Similar usage as with 'domains'. Will exclude these domains from your search.}
 
-\item{from}{Marks the date of the start of your search. Must be in ISO 8601 format (e.g., '2018-09-08' or '2018-09-08T12:51:42'). Default is the oldest.}
+\item{from}{Marks the start date of your search. Must be in ISO 8601 format (e.g., "2018-09-08" or "2018-09-08T12:51:42"). Default is the oldest available date (depends on your paid/unpaid plan from newsapi.org).}
 
-\item{to}{Marks the end date of your search. Works similarly as 'from'. Default is the latest article.}
+\item{to}{Marks the end date of your search. Works similarly to 'from'. Default is the latest article available.}
 
 \item{language}{Specifies the language of the articles of your search. Must be in ISO shortcut format (e.g., "de", "en"). See list of all languages on https://newsapi.org/docs/endpoints/everything. Default is all languages.}
 
-\item{sort_by}{Character string that specifies the sorting of your article results. Has three options: "publishedAt", "relevancy", "popularity". Default is "publishedAt".}
+\item{sort_by}{Character string that specifies the sorting of your article results. Accepts three options: "publishedAt", "relevancy", "popularity". Default is "publishedAt".}
 
-\item{page}{Specifies the page number of your results. Must be numeric. Default is first page.}
+\item{page}{Specifies the page number of your results that is returned. Must be numeric. Default is first page. If you want to get all results at once, use 'get_everything_all' from 'newsanchor'.}
 }
 \value{
-A list containing a data frame with results for your search and another list with metadata on your search.
-
-List with two elements: 1) a data frame with search results & 2) list with meta data
+A list containing 1) a data frame with results for your search and 2) another list with metadata on your search.
 }
 \description{
-Get all resources that the API of newsapi.org provides
+Get all resources that the API of newsapi.org provides for a given searchterm
 }
 \details{
-Advanced search (see also www.newsapi.org): Surround entire phrases with quotes (") for exact matches. Prepend words/phrases that must appear with "+" symbol (e.g.: +bitcoin). Prepend words that must not appear with "-" symbol (e.g.: -bitcoin). You can also use AND, OR, NOT keywords (optionally grouped with parenthesis, e.g.: 'crypto AND (ethereum OR litecoin) NOT bitcoin)').
+Advanced search (see also www.newsapi.org): Surround entire phrases with quotes (") for exact matches. Prepend words/phrases that must appear with "+" symbol (e.g., +bitcoin). Prepend words that must not appear with "-" symbol (e.g., -bitcoin). You can also use AND, OR, NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND (ethereum OR litecoin) NOT bitcoin)').
 }
 \examples{
 \dontrun{
