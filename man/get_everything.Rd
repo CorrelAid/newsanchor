@@ -4,15 +4,12 @@
 \alias{get_everything}
 \title{Get all resources that the API of newsapi.org provides}
 \usage{
-get_everything(api_key = Sys.getenv("NEWS_API_KEY"), query,
-  page_size = 100, sources = NULL, domains = NULL,
-  exclude_domains = NULL, from = NULL, to = NULL, language = NULL,
-  sort_by = "publishedAt", page = NULL)
+get_everything()
 }
 \arguments{
 \item{api_key}{Character string with the API key you get from newsapi.org. Passing it is compulsory. Function gets it per default from your global environment. See "set-api-key" for more info.}
 
-\item{query}{Character string that contains the content of your search in the API data base}
+\item{query}{Character string that contains the content of your search in the API data base. API supports advanced search parameters, see details.}
 
 \item{page_size}{The number (numeric!) of articles per page that are returned. Maximum is 100 (default).}
 
@@ -39,6 +36,9 @@ List with two elements: 1) a data frame with search results & 2) list with meta 
 }
 \description{
 Get all resources that the API of newsapi.org provides
+}
+\details{
+Advanced search (see also www.newsapi.org): Surround entire phrases with quotes (") for exact matches. Prepend words/phrases that must appear with "+" symbol (e.g.: +bitcoin). Prepend words that must not appear with "-" symbol (e.g.: -bitcoin). You can also use AND, OR, NOT keywords (optionally grouped with parenthesis, e.g.: 'crypto AND (ethereum OR litecoin) NOT bitcoin)').
 }
 \examples{
 \dontrun{
