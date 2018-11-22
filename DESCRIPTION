@@ -19,5 +19,12 @@ Imports:
     rvest,
     tidyr,
     xml2
-Suggests: testthat
+Suggests: 
+    knitr,
+    magrittr,
+    rmarkdown,
+    rvest,
+    stringr,
+    testthat
 RoxygenNote: 6.1.0
+VignetteBuilder: knitr
