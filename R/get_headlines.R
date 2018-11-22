@@ -65,7 +65,7 @@ get_headlines <- function(query     = NULL,
   
   # are the arguments for 'country' valid?
   if(!is.null(country)){
-    if (!category %in% newsanchor::terms_country$headlines) { 
+    if (!country %in% newsanchor::terms_country$headlines) { 
       stop(paste0("Please provide a valid searchterm for country,", 
                   " see data(terms_country)"))
     }

@@ -9,7 +9,7 @@
 #' @importFrom rvest html_nodes html_text
 #' @importFrom devtools use_data
 #' @examples
-#' create_list_searchterms()
+#' create_data_searchterms()
 
 create_data_searchterms <- function(){
 
