@@ -2,44 +2,77 @@
 % Please edit documentation in R/get_everything.R
 \name{get_everything}
 \alias{get_everything}
-\title{Get all resources that the API of newsapi.org provides for a given searchterm}
+\title{Get all resources that newsapi.org provides for a given searchterm}
 \usage{
-get_everything(api_key = Sys.getenv("NEWS_API_KEY"), query,
-  page_size = 100, sources = NULL, domains = NULL,
+get_everything(query, sources = NULL, domains = NULL,
   exclude_domains = NULL, from = NULL, to = NULL, language = NULL,
-  sort_by = "publishedAt", page = NULL)
+  sort_by = "publishedAt", page = 1, page_size = 100,
+  api_key = Sys.getenv("NEWS_API_KEY"))
 }
 \arguments{
-\item{api_key}{Character string with the API key you get from newsapi.org. Passing it is compulsory. Function obtains it per default from your global environment. See "set-api-key" for more info.}
+\item{query}{Character string that contains the searchterm for the API's 
+data base. API supports advanced search parameters, see 'details'.}
 
-\item{query}{Character string that contains the searchterm for the API's data base. API supports advanced search parameters, see 'details'.}
+\item{sources}{Character string with IDs (comma separated) of the news outlets 
+you want to focus on (e.g., "usa-today, spiegel-online").}
 
-\item{page_size}{The number (numeric!) of articles per page that are returned. Maximum is 100 (also default).}
+\item{domains}{Character string (comma separated) with domains that you want 
+to restrict your search to (e.g., "bbc.com, nytimes.com").}
 
-\item{sources}{Character string with IDs (comma separated) of the news outlets you want to focus on (e.g., "usa-today, spiegel-online").}
+\item{exclude_domains}{Similar usage as with 'domains'. Will exclude these 
+domains from your search.}
 
-\item{domains}{Character string (comma separated) with domains that you want to restrict your search to (e.g., "bbc.com, nytimes.com").}
+\item{from}{Marks the start date of your search. Must be in ISO 8601 format 
+(e.g., "2018-09-08" or "2018-09-08T12:51:42"). Default is the 
+oldest available date (depends on your paid/unpaid plan from 
+newsapi.org).}
 
-\item{exclude_domains}{Similar usage as with 'domains'. Will exclude these domains from your search.}
+\item{to}{Marks the end date of your search. Works similarly to 'from'. 
+Default is the latest article available.}
 
-\item{from}{Marks the start date of your search. Must be in ISO 8601 format (e.g., "2018-09-08" or "2018-09-08T12:51:42"). Default is the oldest available date (depends on your paid/unpaid plan from newsapi.org).}
+\item{language}{Specifies the language of the articles of your search. Must 
+be in ISO shortcut format (e.g., "de", "en"). See list of all 
+languages on https://newsapi.org/docs/endpoints/everything. 
+Default is all languages.}
 
-\item{to}{Marks the end date of your search. Works similarly to 'from'. Default is the latest article available.}
+\item{sort_by}{Character string that specifies the sorting of your article 
+results. Accepts three options: "publishedAt", "relevancy", 
+"popularity". Default is "publishedAt".}
 
-\item{language}{Specifies the language of the articles of your search. Must be in ISO shortcut format (e.g., "de", "en"). See list of all languages on https://newsapi.org/docs/endpoints/everything. Default is all languages.}
+\item{page}{Specifies the page number of your results that is returned. Must 
+be numeric. Default is first page. If you want to get all results 
+at once, use \code{get_everything_all} from 'newsanchor'.}
 
-\item{sort_by}{Character string that specifies the sorting of your article results. Accepts three options: "publishedAt", "relevancy", "popularity". Default is "publishedAt".}
+\item{page_size}{The number of articles per page that are returned. 
+Maximum is 100 (also default).}
 
-\item{page}{Specifies the page number of your results that is returned. Must be numeric. Default is first page. If you want to get all results at once, use 'get_everything_all' from 'newsanchor'.}
+\item{api_key}{Character string with the API key you get from newsapi.org. 
+Passing it is compulsory. Alternatively, function can be 
+provided from the global environment (see \code{set_api_key}).}
 }
 \value{
-A list containing 1) a data frame with results for your search and 2) another list with metadata on your search.
+List with two dataframes:\cr
+        1) Data frame with \code{results_df}\cr
+        2) Data frame with \code{meta_data}
 }
 \description{
-Get all resources that the API of newsapi.org provides for a given searchterm
+#' \code{get_everything} searches through articles from large and small news 
+sources and blogs. This includes breaking news as well as lesser articles.
+You  can search for multiple sources \code{sources}, different \code{language}, 
+or use your own keywords. Articles can be sorted by the earliest date 
+\code{publishedAt}, \code{relevancy}, or \code{popularity}. To automatically 
+download all results, use \code{get_everything_all}\cr\cr
+Please check that the api_key is available. You can provide an explicit
+definition of the api_key or use \code{set_api_key} \cr\cr
+Valid searchterms for language are provided in \code{data(terms_language}.
 }
 \details{
-Advanced search (see also www.newsapi.org): Surround entire phrases with quotes (") for exact matches. Prepend words/phrases that must appear with "+" symbol (e.g., +bitcoin). Prepend words that must not appear with "-" symbol (e.g., -bitcoin). You can also use AND, OR, NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND (ethereum OR litecoin) NOT bitcoin)').
+Advanced search (see also www.newsapi.org): Surround entire phrases 
+         with quotes (") for exact matches. Prepend words/phrases that must 
+         appear with "+" symbol (e.g., +bitcoin). Prepend words that must not 
+         appear with "-" symbol (e.g., -bitcoin). You can also use AND, OR, 
+         NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND 
+         (ethereum OR litecoin) NOT bitcoin)').
 }
 \examples{
 \dontrun{
