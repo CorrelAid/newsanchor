@@ -7,8 +7,8 @@
 #' \code{get_headlines_all}\cr\cr
 #' Please check that the api_key is available. You can provide an explicit
 #' definition of the api_key or use \code{set_api_key} \cr\cr
-#' Valid searchterms are provided in \code{data(terms_category)}, 
-#' \code{data(terms_country)} or \code{data(terms_sources)}
+#' Valid searchterms are provided in \code{terms_category}, 
+#' \code{terms_country} or \code{terms_sources}
 #' 
 #' 
 #' @param query Character string that contains the searchterm 
@@ -67,7 +67,7 @@ get_headlines <- function(query     = NULL,
   if(!is.null(category)){
     if (!category %in% newsanchor::terms_category$category) {
       stop(paste0("Please provide a valid searchterm for category,", 
-                  "see data(terms_category)"))
+                  "see terms_category"))
     }
   }
   
@@ -75,7 +75,7 @@ get_headlines <- function(query     = NULL,
   if(!is.null(country)){
     if (!country %in% newsanchor::terms_country$country) { 
       stop(paste0("Please provide a valid searchterm for country,", 
-                  " see data(terms_country)"))
+                  " see terms_country"))
     }
   }     
    
@@ -83,7 +83,7 @@ get_headlines <- function(query     = NULL,
   if(!is.null(sources)){
     if (!sources %in% newsanchor::terms_sources$sources) { 
       stop(paste0("Please provide a valid searchterm for news-sources,",
-                  " see data(terms_sources)."))
+                  " see terms_sources."))
     }
   }    
   

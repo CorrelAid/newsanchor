@@ -8,7 +8,7 @@
 #' download all results, use \code{get_everything_all}\cr\cr
 #' Please check that the api_key is available. You can provide an explicit
 #' definition of the api_key or use \code{set_api_key} \cr\cr
-#' Valid searchterms for language are provided in \code{data(terms_language}. 
+#' Valid searchterms for language are provided in \code{terms_language}. 
 #' 
 #' @param query Character string that contains the searchterm for the API's 
 #'              data base. API supports advanced search parameters, see 'details'. 
@@ -122,8 +122,9 @@ get_everything <- function(query,
 
   # Error if language indicated does not match the ones provided by the API
   if(!is.null(language)){
-    if(!language %in% newsanchor::terms_country$everything) {
-      stop(paste0("Please provide a valid language,", "see data(terms_language)"))
+    if(!language %in% newsanchor::terms_language$language) {
+      stop(paste0("Please provide a valid search terms for language ", 
+                  "see terms_language"))
     }
   }
   
