@@ -89,6 +89,7 @@ create_data_searchterms <- function(){
   ############################# SAVE DATA ######################################
   
   #--- save data
-  devtools::use_data(terms_category, terms_country, terms_sources, overwrite = T)
+  devtools::use_data(terms_category, terms_country, terms_sources, 
+                     terms_language, overwrite = T)
   
 }
