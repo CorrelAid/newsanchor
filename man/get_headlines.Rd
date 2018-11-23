@@ -9,20 +9,25 @@ get_headlines(query = NULL, category = NULL, country = NULL,
   api_key = Sys.getenv("NEWS_API_KEY"))
 }
 \arguments{
-\item{query}{Keyword you want headlines for}
+\item{query}{Character string that contains the searchterm}
 
-\item{category}{Category you want headlines from}
+\item{category}{Character string with the category you want headlines from}
 
-\item{country}{Country you want headlines for}
+\item{country}{Character string with the country you want headlines from}
 
-\item{sources}{Sources you want headlines from}
+\item{sources}{Character string with IDs (comma separated) of the news outlets 
+you want to focus on (e.g., "usa-today, spiegel-online").}
 
-\item{page}{If the total number of results is greater than \code{page_size},
-than use this to page through the results.}
+\item{page}{Specifies the page number of your results that is returned. Must 
+be numeric. Default is first page. If you want to get all results 
+at once, use \code{get_headlines_all} from 'newsanchor'.}
 
-\item{page_size}{Number of hits per request (maximum = 100)}
+\item{page_size}{The number of articles per page that are returned. 
+Maximum is 100 (also default).}
 
-\item{api_key}{Your API token (explicit definition or use \code{set_api_key})}
+\item{api_key}{Character string with the API key you get from newsapi.org. 
+Passing it is compulsory. Alternatively, function can be 
+provided from the global environment (see \code{set_api_key}).}
 }
 \value{
 List with two dataframes:\cr
@@ -37,10 +42,13 @@ published first. To automatically download all results, use
 \code{get_headlines_all}\cr\cr
 Please check that the api_key is available. You can provide an explicit
 definition of the api_key or use \code{set_api_key} \cr\cr
-For valid searchterms see \code{data(searchterms)}
+Valid searchterms are provided in \code{data(terms_category)}, 
+\code{data(terms_country)} or \code{data(terms_sources)}
 }
 \examples{
 \dontrun{
 df <- get_headlines(sources = "bbc-news")
+df <- get_headlines(query = "sports", page = 2)
+df <- get_headlines(category = "business")
 }
 }

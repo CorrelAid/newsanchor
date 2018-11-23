@@ -7,21 +7,29 @@
 #' \code{get_headlines_all}\cr\cr
 #' Please check that the api_key is available. You can provide an explicit
 #' definition of the api_key or use \code{set_api_key} \cr\cr
-#' For valid searchterms see \code{data(searchterms)}
+#' Valid searchterms are provided in \code{data(terms_category)}, 
+#' \code{data(terms_country)} or \code{data(terms_sources)}
 #' 
 #' 
-#' @param query Keyword you want headlines for
-#' @param category Category you want headlines from
-#' @param country Country you want headlines for
-#' @param sources Sources you want headlines from
-#' @param page If the total number of results is greater than \code{page_size},
-#'             than use this to page through the results.  
-#' @param page_size Number of hits per request (maximum = 100)
-#' @param api_key Your API token (explicit definition or use \code{set_api_key})
+#' @param query Character string that contains the searchterm 
+#' @param category Character string with the category you want headlines from
+#' @param country Character string with the country you want headlines from
+#' @param sources Character string with IDs (comma separated) of the news outlets 
+#'                you want to focus on (e.g., "usa-today, spiegel-online").
+#' @param page Specifies the page number of your results that is returned. Must 
+#'             be numeric. Default is first page. If you want to get all results 
+#'             at once, use \code{get_headlines_all} from 'newsanchor'.
+#' @param page_size The number of articles per page that are returned. 
+#'                  Maximum is 100 (also default).
+#' @param api_key Character string with the API key you get from newsapi.org. 
+#'                Passing it is compulsory. Alternatively, function can be 
+#'                provided from the global environment (see \code{set_api_key}).
 #' 
 #' @examples
 #' \dontrun{
 #' df <- get_headlines(sources = "bbc-news")
+#' df <- get_headlines(query = "sports", page = 2)
+#' df <- get_headlines(category = "business")
 #' }
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @importFrom tidyr unnest
@@ -43,21 +51,21 @@ get_headlines <- function(query     = NULL,
   
   
   # errors and warnings -----------------------------------------------------
-  
+
   # is an api-key available?
   if (nchar(api_key) == 0){
     stop("Please provide an api-key")
   }
 
-  # are any querys available?
+  # are any searchterms provided?
   if (all(sapply(list(sources, country, category, query), is.null))) {
-    stop(paste0("Please provide at least one search term, i.e., query,",
-                "category, country, or source."))
+    stop(paste0("You did not correctly specify your API key as global variable.", 
+                " See documentation for further info."))
   }
   
   # are the arguments for 'category' valid?
   if(!is.null(category)){
-    if (!category %in% newsanchor::terms_category$headlines) {
+    if (!category %in% newsanchor::terms_category$category) {
       stop(paste0("Please provide a valid searchterm for category,", 
                   "see data(terms_category)"))
     }
@@ -65,7 +73,7 @@ get_headlines <- function(query     = NULL,
   
   # are the arguments for 'country' valid?
   if(!is.null(country)){
-    if (!country %in% newsanchor::terms_country$headlines) { 
+    if (!country %in% newsanchor::terms_country$country) { 
       stop(paste0("Please provide a valid searchterm for country,", 
                   " see data(terms_country)"))
     }
@@ -73,7 +81,7 @@ get_headlines <- function(query     = NULL,
    
   # are the arguments for 'sources' valid? 
   if(!is.null(sources)){
-    if (!sources %in% newsanchor::terms_sources$all) { 
+    if (!sources %in% newsanchor::terms_sources$sources) { 
       stop(paste0("Please provide a valid searchterm for news-sources,",
                   " see data(terms_sources)."))
     }
@@ -94,16 +102,19 @@ get_headlines <- function(query     = NULL,
                   " used. Further elements were ignored."))
    category = category[1]; country = country[1]; query = query[1]
   }
-  
-  # check that page_size is <= 100
+
+  # check that page_size is numeric and <= 100
   if(!is.numeric(page_size)) {
-    stop("Page_size needs to be a number.")
+    stop("You need to insert numeric values for the number of texts per page.")
   } 
   else if(page_size > 100) {
-    stop("Page size should not exceed 100 articles per page.")
+    stop("Page size cannot not exceed 100 articles per page.")
   }
   
-
+  # Error for non-numeric page parameter
+  if(!is.numeric(page)) {
+    stop("Page should be a number.")
+  }
   
   # access newsapi.org ------------------------------------------------------
   
@@ -133,12 +144,17 @@ get_headlines <- function(query     = NULL,
   content_text   <- httr::content(results, "text")
   content_parsed <- jsonlite::fromJSON(content_text)
   
-  
-  
-  #--- check whether status-code equals 200 (else this will throw an error)
-  if (results$status_code == 200 & content_parsed$totalResults != 0) {
+  # # check whether content_parsed is NULL 
+  if(is.null(content_parsed$totalResults)){
+    content_parsed$totalResults <- 0
+  }
+
+
+  #--- Check if http status code equals 200 (and construct results accordingly)
+  if (results$status_code == 200 & content_parsed$totalResults != 0 ) 
+    {
     
-    #--- create results data frame
+    # create results data frame
     results_df        <- content_parsed$articles
     results_df$id     <- unlist(results_df$source$id)
     results_df$name   <- unlist(results_df$source$name)
@@ -148,21 +164,26 @@ get_headlines <- function(query     = NULL,
     names(results_df)[names(results_df) == 'publishedAt'] <- 'published_at'
     names(results_df)[names(results_df) == 'urlToImage'] <- 'url_to_image'
     
-    # change col 'published_at' from character to POSIX
-    results_df$published_at <- as.POSIXct(results_df$published_at,
-                                          tz = "UTC")
+    # change col 'published_at' from character to POSIX (if available)
+    if(!is.null(results$published_at)){
+      results_df$published_at <- as.POSIXct(results_df$published_at,
+                                            tz = "UTC")
+    }
+
     # extract meta-data
     metadata <- data.frame(total_results = content_parsed$totalResults, 
                            status_code   = results$status_code,
-                           request_data  = results$date,
+                           request_date  = results$date,
                            request_url   = results$url,
                            page_size     = page_size,
                            page          = page,
-                           code          = NA,
-                           message       = NA)
+                           code          = "",
+                           message       = "",
+                           stringsAsFactors = FALSE)
   }
-  
-  #--- and if not (provide the error message) or in case of zero results
+
+  #--- if the http code displays an error, throw a warning and build the results 
+  #    accordingly
   if (results$status_code != 200 | content_parsed$totalResults == 0) {
     
     # provide warning for error message
@@ -171,10 +192,12 @@ get_headlines <- function(query     = NULL,
                       content_parsed$message))
     }
 
-    # provide warning that zero results
-    # provide warning for error message
-    if (content_parsed$totalResults == 0){
-      warning(paste0("The search was not successful. There were no results."))
+    # provide warning that zero results (but only if status_code == 200)
+    if (results$status_code == 200){
+      if (content_parsed$totalResults == 0){
+        warning(paste0("The search was not successful. There were no results",
+                       " for your specifications."))
+      }
     }
     
     # empty results dataframe
@@ -182,16 +205,21 @@ get_headlines <- function(query     = NULL,
     # extract meta-data
     metadata <- data.frame(total_results = 0, 
                            status_code   = results$status_code,
-                           request_data  = results$date,
+                           request_date  = results$date,
                            request_url   = results$url,
                            page_size     = page_size,
                            page          = page,
                            code          = ifelse(results$status_code !=200, 
-                                                  content_parsed$code, NA),
+                                                  content_parsed$code, 
+                                                  ""),
                            message       = ifelse(results$status_code !=200,
-                                                  content_parsed$message, NA))
+                                                  content_parsed$message, 
+                                                  ""),
+                           stringsAsFactors = FALSE)
   }
   
+
   # return results ----------------------------------------------------------
+  
   return(list(metadata = metadata, results_df = results_df))
 }
