@@ -1,18 +1,51 @@
-#' Get all resources that the API of newsapi.org provides for a given searchterm
-#'
-#' @param api_key Character string with the API key you get from newsapi.org. Passing it is compulsory. Function obtains it per default from your global environment. See "set-api-key" for more info.
-#' @param query Character string that contains the searchterm for the API's data base. API supports advanced search parameters, see 'details'. 
-#' @param page_size The number (numeric!) of articles per page that are returned. Maximum is 100 (also default).
-#' @param sources Character string with IDs (comma separated) of the news outlets you want to focus on (e.g., "usa-today, spiegel-online").
-#' @param domains Character string (comma separated) with domains that you want to restrict your search to (e.g., "bbc.com, nytimes.com").
-#' @param exclude_domains Similar usage as with 'domains'. Will exclude these domains from your search.
-#' @param from Marks the start date of your search. Must be in ISO 8601 format (e.g., "2018-09-08" or "2018-09-08T12:51:42"). Default is the oldest available date (depends on your paid/unpaid plan from newsapi.org).
-#' @param to Marks the end date of your search. Works similarly to 'from'. Default is the latest article available.
-#' @param language Specifies the language of the articles of your search. Must be in ISO shortcut format (e.g., "de", "en"). See list of all languages on https://newsapi.org/docs/endpoints/everything. Default is all languages.
-#' @param sort_by Character string that specifies the sorting of your article results. Accepts three options: "publishedAt", "relevancy", "popularity". Default is "publishedAt".
-#' @param page Specifies the page number of your results that is returned. Must be numeric. Default is first page. If you want to get all results at once, use 'get_everything_all' from 'newsanchor'.
-#' @return A list containing 1) a data frame with results for your search and 2) another list with metadata on your search.
-#' @details Advanced search (see also www.newsapi.org): Surround entire phrases with quotes (") for exact matches. Prepend words/phrases that must appear with "+" symbol (e.g., +bitcoin). Prepend words that must not appear with "-" symbol (e.g., -bitcoin). You can also use AND, OR, NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND (ethereum OR litecoin) NOT bitcoin)').
+#' Get all resources that newsapi.org provides for a given searchterm
+#' 
+#'#' \code{get_everything} searches through articles from large and small news 
+#' sources and blogs. This includes breaking news as well as lesser articles.
+#' You  can search for multiple sources \code{sources}, different \code{language}, 
+#' or use your own keywords. Articles can be sorted by the earliest date 
+#' \code{publishedAt}, \code{relevancy}, or \code{popularity}. To automatically 
+#' download all results, use \code{get_everything_all}\cr\cr
+#' Please check that the api_key is available. You can provide an explicit
+#' definition of the api_key or use \code{set_api_key} \cr\cr
+#' Valid searchterms for language are provided in \code{data(terms_language}. 
+#' 
+#' @param query Character string that contains the searchterm for the API's 
+#'              data base. API supports advanced search parameters, see 'details'. 
+#' @param sources Character string with IDs (comma separated) of the news outlets 
+#'                you want to focus on (e.g., "usa-today, spiegel-online").
+#' @param domains Character string (comma separated) with domains that you want 
+#'                to restrict your search to (e.g., "bbc.com, nytimes.com").
+#' @param exclude_domains Similar usage as with 'domains'. Will exclude these 
+#'                        domains from your search.
+#' @param from Marks the start date of your search. Must be in ISO 8601 format 
+#'             (e.g., "2018-09-08" or "2018-09-08T12:51:42"). Default is the 
+#'             oldest available date (depends on your paid/unpaid plan from 
+#'             newsapi.org).
+#' @param to Marks the end date of your search. Works similarly to 'from'. 
+#'           Default is the latest article available.
+#' @param language Specifies the language of the articles of your search. Must 
+#'                 be in ISO shortcut format (e.g., "de", "en"). See list of all 
+#'                 languages on https://newsapi.org/docs/endpoints/everything. 
+#'                 Default is all languages.
+#' @param sort_by Character string that specifies the sorting of your article 
+#'                results. Accepts three options: "publishedAt", "relevancy", 
+#'                "popularity". Default is "publishedAt".
+#' @param page Specifies the page number of your results that is returned. Must 
+#'             be numeric. Default is first page. If you want to get all results 
+#'             at once, use \code{get_everything_all} from 'newsanchor'.
+#' @param page_size The number of articles per page that are returned. 
+#'                  Maximum is 100 (also default).
+#' @param api_key Character string with the API key you get from newsapi.org. 
+#'                Passing it is compulsory. Alternatively, function can be 
+#'                provided from the global environment (see \code{set_api_key}).
+#' 
+#' @details Advanced search (see also www.newsapi.org): Surround entire phrases 
+#'          with quotes (") for exact matches. Prepend words/phrases that must 
+#'          appear with "+" symbol (e.g., +bitcoin). Prepend words that must not 
+#'          appear with "-" symbol (e.g., -bitcoin). You can also use AND, OR, 
+#'          NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND 
+#'          (ethereum OR litecoin) NOT bitcoin)').
 #' @examples
 #' \dontrun{
 #' get_everything(api_key = key, content = "stuttgart", language = "de")
@@ -20,12 +53,12 @@
 #' }
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @importFrom jsonlite fromJSON
+#' @return List with two dataframes:\cr
+#'         1) Data frame with \code{results_df}\cr
+#'         2) Data frame with \code{meta_data}
 #' @export
-#' 
 
-get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
-                           query,
-                           page_size       = 100, 
+get_everything <- function(query,
                            sources         = NULL,
                            domains         = NULL,
                            exclude_domains = NULL,
@@ -33,7 +66,9 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
                            to              = NULL,
                            language        = NULL, 
                            sort_by         = "publishedAt", 
-                           page            = NULL) {
+                           page            = 1,
+                           page_size       = 100, 
+                           api_key = Sys.getenv("NEWS_API_KEY")) {
   
   # Initial proceedings -----------------------------------------------------
   
@@ -44,7 +79,8 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
   
   # Make sure an API key is provided
   if(nchar(api_key) == 0)
-    stop("You did not correctly specify your API key as global variable. See documentation for further info.")
+    stop(paste0("You did not correctly specify your API key as global variable.", 
+                " See documentation for further info."))
   
   # Make sure that some search term is passed
   if(missing(query) == TRUE)
@@ -71,30 +107,23 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
     exclude_domains <- paste(exclude_domains, collapse = ",")
   }
   
-  # Make sure page size does not exceed 100
+  # check that page_size is <= 100
   if(!is.numeric(page_size)) {
-    
     stop("You need to insert numeric values for the number of texts per page.")
-    
-  } else if(page_size > 100) {
-    
-    # Error if page size exceeds maximum of 100 articles
-    stop("Page size cannot exceed 100 articles.")
-    
+  } 
+  else if(page_size > 100) {
+    stop("Page size cannot not exceed 100 articles per page.")
   }
   
   # Error for non-numeric page parameter
-  if(!is.null(page)) {
-    stopifnot(is.numeric(page))
+  if(!is.numeric(page)) {
+    stop("Page should be a number.")
   }
-  
-  # If no page number is specified, set it to value "1"
-  if(is.null(page)) {page = 1}
-  
+
   # Error if language indicated does not match the ones provided by the API
-  if(!is.null(country)){
-    if(!category %in% newsanchor::terms_country$everything) {
-      stop(paste0("Please provide a valid country,", "see data(terms_country)"))
+  if(!is.null(language)){
+    if(!language %in% newsanchor::terms_country$everything) {
+      stop(paste0("Please provide a valid language,", "see data(terms_language)"))
     }
   }
   
@@ -109,63 +138,83 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
   rawurl <- httr::parse_url("https://newsapi.org/v2/everything")
   
   rawurl$query <- list(q               = query,
-                       pageSize        = page_size,
-                       page            = page,
                        language        = language,
                        sources         = sources,
                        domains         = domains,
                        excludeDomains  = exclude_domains,
                        from            = from,
                        to              = to,
-                       sortBy          = sort_by)
+                       sortBy          = sort_by,
+                       pageSize        = page_size,
+                       page            = page)
   
+  # build url for query
   url <- httr::build_url(rawurl)
   
-  # Make request & parse result
+  # get results from query to newsapi
   results <- httr::GET(url, httr::add_headers("X-Api-Key" = api_key))
+
   
+  # build df from results ---------------------------------------------------
+  
+  # extract content
   content_text    <- httr::content(results, "text")
   content_parsed  <- jsonlite::fromJSON(content_text)
   
-  # Check if http status code is valid and construct results accordingly
+  
+  # check whether content_parsed is NULL 
+  if(is.null(content_parsed$totalResults)){
+    content_parsed$totalResults <- 0
+  }
+  
+  #--- Check if http status code equals 200 (and construct results accordingly)
   if (results$status_code == 200 & content_parsed$totalResults != 0) {
     
-  # Create results data frame
-  results_df          <- content_parsed$articles
-  results_df$id       <- unlist(results_df$source$id)
-  results_df$name     <- unlist(results_df$source$name)
-  results_df$source   <- NULL
-  
-  # Rename two columns with camelCase to snake_case
-  names(results_df)[names(results_df) == 'publishedAt'] <- 'published_at'
-  names(results_df)[names(results_df) == 'urlToImage'] <- 'url_to_image'
-  
-  # Convert publishing date to posixct format
-  results_df$published_at <- as.POSIXct(results_df$published_at,
-                                       tz = "UTC",
-                                       format("%Y-%m-%dT%H:%M:%OSZ"))
-  
-  # Create metadata list
-  metadata <- list(total_results  = content_parsed$totalResults,
-                   status_code    = results$status_code,
-                   request_date   = results$date,
-                   request_url    = results$url,
-                   page_size      = page_size,
-                   page           = page,
-                   code           = NA,
-                   message        = NA)
-  
-  }
+    # create results data frame
+    results_df          <- content_parsed$articles
+    results_df$id       <- unlist(results_df$source$id)
+    results_df$name     <- unlist(results_df$source$name)
+    results_df$source   <- NULL
     
-  # If the http code displays an error, throw a warning and build the results accordingly
-  if (results$status_code != 200 | content_parsed$totalResults == 0) {
+    # Rename two columns with camelCase to snake_case
+    names(results_df)[names(results_df) == 'publishedAt'] <- 'published_at'
+    names(results_df)[names(results_df) == 'urlToImage'] <- 'url_to_image'
     
-    if(results$status_code != 200) {
-      warning(paste0("The search resulted in the following error message:" , content_parsed$message))
+    # change col 'published_at' from character to POSIX (if available)
+    if(!is.null(results$published_at)){
+      results_df$published_at <- as.POSIXct(results_df$published_at,
+                                            tz = "UTC")
     }
     
-    if(content_parsed$totalResults == 0) {
-      warning(paste0("The search was not successful. There were no results for your specifications."))
+    # Create metadata list
+    metadata <- data.frame(total_results  = content_parsed$totalResults,
+                           status_code    = results$status_code,
+                           request_date   = results$date,
+                           request_url    = as.character(results$url),
+                           page_size      = page_size,
+                           page           = page,
+                           code           = "",
+                           message        = "",
+                           stringsAsFactors = F)
+
+  }
+    
+  #--- if the http code displays an error, throw a warning and build the results 
+  #     accordingly
+  if (results$status_code != 200 | content_parsed$totalResults == 0) {
+    
+    # provide warning for error message
+    if(results$status_code != 200) {
+      warning(paste0("The search resulted in the following error message:" , 
+                     content_parsed$message))
+    }
+    
+    # provide warning that zero results (but only if status_code == 200)
+    if (results$status_code == 200){
+      if (content_parsed$totalResults == 0){
+        warning(paste0("The search was not successful. There were no results",
+                       " for your specifications."))
+      }
     }
     
     # Return empty data.frame
@@ -178,12 +227,19 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
                            request_url   = results$url,
                            page_size     = NA,
                            page          = NA,
-                           code          = ifelse(results$status_code != 200, content_parsed$code, NA),
-                           message       = ifelse(results$status_code != 200, content_parsed$message, NA))
+                           code          = ifelse(results$status_code != 200, 
+                                                  content_parsed$code, 
+                                                  ""),
+                           message       = ifelse(results$status_code != 200, 
+                                                  content_parsed$message, 
+                                                  ""),
+                           stringsAsFactors = F)
   }
   
-  # Return results and metadata
+
+  # return results ----------------------------------------------------------
   return(list(metadata    = metadata, 
               results_df  = results_df))
   
 }
+
