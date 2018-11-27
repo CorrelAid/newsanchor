@@ -11,7 +11,7 @@ vignette: >
 
 ## Dependencies
 
-```{r}
+```{r, eval=FALSE}
 library(newsanchor) # download newspaper articles
 library(rvest)      # web scraping tools
 library(magrittr)   # pipes
@@ -24,14 +24,14 @@ library(stringr)    # string/character manipulations
 
 # download meta data
 
-```{r}
+```{r, eval=FALSE}
 # get heaadlines published by spiegel online
 response <- get_headlines(source = "spiegel-online") 
 ```
 
 ## Define a function to scrape article body
 
-```{r}
+```{r, eval=FALSE}
 get_article_body <- function (url) {
   # download and parse website
   html <- read_html(url)                    
@@ -49,7 +49,7 @@ get_article_body <- function (url) {
 
 ## Apply the new function
 
-```{r}
+```{r, eval=FALSE}
 # apply function to the given URLs
 response$results_df$body <- sapply(response$results_df$url, get_article_body)
 ```

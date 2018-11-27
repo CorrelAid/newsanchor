@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jan Dix jan.dix@uni-konstanz.de" />
 
-<meta name="date" content="2018-11-22" />
+<meta name="date" content="2018-11-27" />
 
 <title>Scrape Spiegel Online Articles</title>
 
@@ -70,16 +70,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Scrape Spiegel Online Articles</h1>
 <h4 class="author"><em>Jan Dix <a href="mailto:jan.dix@uni-konstanz.de">jan.dix@uni-konstanz.de</a></em></h4>
-<h4 class="date"><em>2018-11-22</em></h4>
+<h4 class="date"><em>2018-11-27</em></h4>
 
 
 
 <div id="dependencies" class="section level2">
 <h2>Dependencies</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(newsanchor) <span class="co"># download newspaper articles</span>
-<span class="kw">library</span>(rvest)      <span class="co"># web scraping tools</span></code></pre></div>
-<pre><code>## Loading required package: xml2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)   <span class="co"># pipes</span>
+<span class="kw">library</span>(rvest)      <span class="co"># web scraping tools</span>
+<span class="kw">library</span>(magrittr)   <span class="co"># pipes</span>
 <span class="kw">library</span>(stringr)    <span class="co"># string/character manipulations</span></code></pre></div>
 </div>
 <div id="download-spiegel-online-articles-and-their-corresponding-urls" class="section level2">
