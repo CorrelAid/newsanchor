@@ -42,8 +42,8 @@ published first. To automatically download all results, use
 \code{get_headlines_all}\cr\cr
 Please check that the api_key is available. You can provide an explicit
 definition of the api_key or use \code{set_api_key} \cr\cr
-Valid searchterms are provided in \code{data(terms_category)}, 
-\code{data(terms_country)} or \code{data(terms_sources)}
+Valid searchterms are provided in \code{terms_category}, 
+\code{terms_country} or \code{terms_sources}
 }
 \examples{
 \dontrun{

@@ -64,7 +64,7 @@ or use your own keywords. Articles can be sorted by the earliest date
 download all results, use \code{get_everything_all}\cr\cr
 Please check that the api_key is available. You can provide an explicit
 definition of the api_key or use \code{set_api_key} \cr\cr
-Valid searchterms for language are provided in \code{data(terms_language}.
+Valid searchterms for language are provided in \code{terms_language}.
 }
 \details{
 Advanced search (see also www.newsapi.org): Surround entire phrases 

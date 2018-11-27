@@ -8,7 +8,6 @@ testthat::test_that("test that the function returns a data frame", {
   res <- newsanchor::get_sources(api_key = "457e40043f6b4418ab108e3eb11ccc1e", 
                                  category = "general",
                                  language = "de")
-  print(paste0( "structure ", str(res)))
   testthat::expect_true(is.data.frame(res$results_df), 
                         info = paste0(str(res)))
 })
