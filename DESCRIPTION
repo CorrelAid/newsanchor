@@ -16,7 +16,6 @@ Imports:
     devtools,
     httr,
     jsonlite,
-    rvest,
     tidyr,
     xml2
 Suggests: 
