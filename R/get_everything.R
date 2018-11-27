@@ -49,8 +49,10 @@
 #'          (ethereum OR litecoin) NOT bitcoin)').
 #' @examples
 #' 
-#' get_everything(api_key = key, content = "stuttgart", language = "de")
-#' get_everything(api_key = key, content = "mannheim", from = "2018-01-07T12:00:00")
+#' \dontrun{
+#' get_everything(query = "stuttgart", language = "de")
+#' get_everything(query = "mannheim", from = "2018-01-07T12:00:00")
+#' }
 #' 
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @importFrom jsonlite fromJSON
