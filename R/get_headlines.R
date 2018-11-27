@@ -54,13 +54,14 @@ get_headlines <- function(query     = NULL,
 
   # is an api-key available?
   if (nchar(api_key) == 0){
-    stop("Please provide an api-key")
+    stop(paste0("You did not correctly specify your API key neither as global",
+                " variable nor with the function call. See documentation for",
+                " further info."))
   }
 
   # are any searchterms provided?
   if (all(sapply(list(sources, country, category, query), is.null))) {
-    stop(paste0("You did not correctly specify your API key as global variable.", 
-                " See documentation for further info."))
+    stop(paste0("Please provide at least one searchterm"))
   }
   
   # are the arguments for 'category' valid?
