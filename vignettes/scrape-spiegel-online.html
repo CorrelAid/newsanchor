@@ -77,9 +77,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="dependencies" class="section level2">
 <h2>Dependencies</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(newsanchor) <span class="co"># download newspaper articles</span>
+<span class="kw">library</span>(httr)       <span class="co"># http requests</span>
 <span class="kw">library</span>(rvest)      <span class="co"># web scraping tools</span>
-<span class="kw">library</span>(magrittr)   <span class="co"># pipes</span>
-<span class="kw">library</span>(stringr)    <span class="co"># string/character manipulations</span></code></pre></div>
+<span class="kw">library</span>(dplyr)      <span class="co"># pipes</span>
+<span class="kw">library</span>(stringr)    <span class="co"># string/character manipulations </span>
+<span class="kw">library</span>(tidytext)   <span class="co"># tidy text analysis</span></code></pre></div>
 </div>
 <div id="download-spiegel-online-articles-and-their-corresponding-urls" class="section level2">
 <h2>Download Spiegel Online articles and their corresponding URLs</h2>
@@ -87,29 +89,89 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="download-meta-data" class="section level1">
 <h1>download meta data</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get heaadlines published by spiegel online</span>
-response &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">source =</span> <span class="st">&quot;spiegel-online&quot;</span>) </code></pre></div>
+response &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query   =</span> <span class="st">&quot;Trump&quot;</span>,
+                           <span class="dt">sources =</span> <span class="st">&quot;the-new-york-times&quot;</span>,
+                           <span class="dt">from    =</span> <span class="st">&quot;2018-10-29&quot;</span>,
+                           <span class="dt">to      =</span> <span class="st">&quot;2018-11-04&quot;</span>) 
+
+<span class="co"># extract response data frame</span>
+articles &lt;-<span class="st"> </span>response<span class="op">$</span>results_df</code></pre></div>
+<div id="check-if-we-are-allowed-to-scrape" class="section level2">
+<h2>Check if we are allowed to scrape</h2>
+</div>
 <div id="define-a-function-to-scrape-article-body" class="section level2">
 <h2>Define a function to scrape article body</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_article_body &lt;-<span class="st"> </span><span class="cf">function</span> (url) {
-  <span class="co"># download and parse website</span>
-  html &lt;-<span class="st"> </span><span class="kw">read_html</span>(url)                    
+  
+  <span class="co"># download article page</span>
+  response &lt;-<span class="st"> </span><span class="kw">GET</span>(url)
+  
+  <span class="co"># check if request was successfull</span>
+  <span class="cf">if</span> (response<span class="op">$</span>status_code <span class="op">!=</span><span class="st"> </span><span class="dv">200</span>) <span class="kw">return</span>(<span class="ot">NA</span>)
+  
+  <span class="co"># extract html</span>
+  html &lt;-<span class="st"> </span><span class="kw">content</span>(<span class="dt">x        =</span> response, 
+                  <span class="dt">type     =</span> <span class="st">&quot;text&quot;</span>, 
+                  <span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>)
+  
+  <span class="co"># parse html</span>
+  parsed_html &lt;-<span class="st"> </span><span class="kw">read_html</span>(html)                   
+  
+  <span class="co"># define paragraph DOM selector</span>
+  selector &lt;-<span class="st"> &quot;article#story div.StoryBodyCompanionColumn div p&quot;</span>
   
   <span class="co"># parse content</span>
-  html <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">html_nodes</span>(<span class="st">&quot;div.article-section p&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># extract all paragraphs within class 'article-section'</span>
-<span class="st">    </span><span class="kw">html_text</span>() <span class="op">%&gt;%</span><span class="st">                         </span><span class="co"># extract content of the p tags</span>
-<span class="st">    </span><span class="kw">str_replace_all</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="st">&quot;&quot;</span>) <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># replace all line breaks</span>
-<span class="st">    </span><span class="kw">paste</span>(<span class="dt">collapse =</span> <span class="st">&quot; &quot;</span>)                   <span class="co"># join all paragraphs into one string</span>
+  parsed_html <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">html_nodes</span>(selector) <span class="op">%&gt;%</span><span class="st">      </span><span class="co"># extract all paragraphs within class 'article-section'</span>
+<span class="st">    </span><span class="kw">html_text</span>() <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># extract content of the p tags</span>
+<span class="st">    </span><span class="kw">str_replace_all</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="st">&quot;&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># replace all line breaks</span>
+<span class="st">    </span><span class="kw">paste</span>(<span class="dt">collapse =</span> <span class="st">&quot; &quot;</span>)         <span class="co"># join all paragraphs into one string</span>
 }</code></pre></div>
 </div>
 <div id="apply-the-new-function" class="section level2">
 <h2>Apply the new function</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># apply function to the given URLs</span>
-response<span class="op">$</span>results_df<span class="op">$</span>body &lt;-<span class="st"> </span><span class="kw">sapply</span>(response<span class="op">$</span>results_df<span class="op">$</span>url, get_article_body)</code></pre></div>
+<p>Why do not use an apply function ?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create new text column</span>
+articles<span class="op">$</span>body &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+<span class="co"># initialize progress bar</span>
+pb &lt;-<span class="st"> </span><span class="kw">txtProgressBar</span>(<span class="dt">min     =</span> <span class="dv">1</span>, 
+                     <span class="dt">max     =</span> <span class="kw">nrow</span>(articles), 
+                     <span class="dt">initial =</span> <span class="dv">1</span>, 
+                     <span class="dt">style   =</span> <span class="dv">3</span>)
+
+<span class="co"># loop through articles and &quot;apply&quot; function</span>
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(articles)) {
+  <span class="co"># &quot;apply&quot; function to i url</span>
+  articles<span class="op">$</span>body[i] &lt;-<span class="st"> </span><span class="kw">get_article_body</span>(articles<span class="op">$</span>url[i])
+
+  <span class="co"># update progress bar</span>
+  <span class="kw">setTxtProgressBar</span>(pb, i)
+
+  <span class="co"># sleep for 1 sec</span>
+  <span class="kw">Sys.sleep</span>(<span class="dv">1</span>)
+}</code></pre></div>
+</div>
+<div id="calculate-sentiment" class="section level2">
+<h2>Calculate sentiment</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">articles_sentiment &lt;-<span class="st"> </span>articles <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(url, body) <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># extract required columns </span>
+<span class="st">  </span><span class="kw">unnest_tokens</span>(word, body) <span class="op">%&gt;%</span><span class="st">                             </span><span class="co"># split each article into single word</span>
+<span class="st">  </span><span class="kw">anti_join</span>(<span class="kw">get_stopwords</span>(), <span class="dt">by =</span> <span class="st">&quot;word&quot;</span>) <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># remove stopwords</span>
+<span class="st">  </span><span class="kw">inner_join</span>(<span class="kw">get_sentiments</span>(<span class="st">&quot;afinn&quot;</span>), <span class="dt">by =</span> <span class="st">&quot;word&quot;</span>) <span class="op">%&gt;%</span><span class="st">      </span><span class="co"># join sentiment scores</span>
+<span class="st">  </span><span class="kw">group_by</span>(url) <span class="op">%&gt;%</span><span class="st">                                         </span><span class="co"># group text again by their url</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">sentiment =</span> <span class="kw">sum</span>(score)) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># sum up sentiment scores</span>
+<span class="st">  </span><span class="kw">left_join</span>(articles, <span class="dt">by =</span> <span class="st">&quot;url&quot;</span>) <span class="op">%&gt;%</span><span class="st">                       </span><span class="co"># add sentiment column to articles</span>
+<span class="st">  </span><span class="kw">select</span>(published_at, sentiment) <span class="op">%&gt;%</span><span class="st">                       </span><span class="co"># extract required columns </span>
+<span class="st">  </span><span class="kw">group_by</span>(<span class="dt">date =</span> <span class="kw">as.Date</span>(published_at, <span class="st">&quot;%Y-%m-%d&quot;</span>)) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># group by date</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">sentiment =</span> <span class="kw">sum</span>(sentiment))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(sentiment <span class="op">~</span><span class="st"> </span>date,
+     <span class="dt">data =</span> articles_sentiment)</code></pre></div>
 </div>
 <div id="what-else-could-be-done" class="section level2">
 <h2>What else could be done?</h2>
 <ul>
+<li>more defined split in headings in paragrahs</li>
 <li>check if article has multiple pages</li>
 <li>fetch comments</li>
 <li>download all images</li>
