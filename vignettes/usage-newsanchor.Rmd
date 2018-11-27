@@ -1,0 +1,182 @@
+---
+title: "Usage of newsanchor"
+author: "Correlaid"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval = FALSE, fig.align="center")
+```
+
+```{r libraries}
+library(newsanchor)
+```
+
+<br> This is an introductory vignette to the **newsanchor** package. The package connects to https://newsapi.org/. **News API** is a simple HTTP REST API for searching and retrieving live articles from all over the web. You can get breaking news headlines, and search for articles from over 30,000 news sources and blogs. <br>
+The API can be used for free for non-commercial use cases, _[but you might experience some restrictions in your results]_. Please see also https://newsapi.org/pricing for commerical options. <br><br>
+
+The package helps you to answer questions like:<br>
+
+- What are the **top stories** running right now in the world?
+- What **articles** were published about your favorite politician, moviestar, singer, or celebrity **today**?
+- What are the breaking news in **business**, **entertainment**, or **sports**?
+
+The package is made publicly available at GitHub and hopefully soon at CRAN as well. In this vignette we demonstrate basic features of the package. In a second vignette, we show how the package can be used to scrap your results from an online newspaper (i.e. Spiegel online).<br><br>
+
+## Authentication
+You need an API key to access https://newsapi.org. You can apply for a key at https://newsapi.org/register/. The function below appends the key automatically to your R environment file. Hence, every time you start R the key is loaded. The function `get_headlines`, `get_headlines_all`, `get_everything`, `get_everything_all`, and `get_sources` access your key automatically by executing `Sys.getenv("NEWS_API_KEY")`. Alternatively, you can provide an explicit definition of your api_key with each function call.<br><br>
+
+```{r set_api_key}
+# save the api key in the .Renviron file
+set_api_key(api_key = "xxx", 
+            path = "~/.Renviron")
+```
+
+<br>
+
+## get_headlines / get_headlines_all
+This endpoint returns breaking news headlines for a country and category, or currently running on a single or multiple sources. This is perfect if you want to download live up-to-date news headlines and images. You can provide **specific news-sources**, **categories**, **countries**, and/or **queries**. For valid searchterms see the respective paragraph below.
+
+```{r headlines: examples}
+# get headlines published by the Washington Post
+results <- get_headlines(sources = "the-washington-post")
+# get headlines published in the category sports
+results <- get_headlines(category = "sports")
+# get headlines published in Germany
+results <- get_headlines(country = "de")
+# get headlines published about Trump
+results <- get_headlines(query = "Trump")
+
+```
+
+**Limitations:** <br>
+
+- Please note, only **one** searchterm can be used for `category`, `country`, or `query`. Additional elements will be ignored.
+- In addition, `sources` must not be combined with `country` and/or `category`. <br>
+
+**Additional settings:**<br>
+The default of https://newsapi.org only allows to get maximal 100 results per search. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page_size** (per default: page_size = 100). 
+
+```{r headlines: page, page_size}
+results <- get_headlines(category = "sports", page = 2)
+results <- get_headlines(category = "sports", page = 3, page_size = 20)
+```
+
+**get_headlines_all:**<br>
+To automatically download all results, use **get_headlines_all**. This function is build around `get_headlines` and provides the same options (except for `page` and `page_size`). 
+
+```{r headlines: get_all}
+results <- get_headlines_all(category = "sports")
+```
+
+**search terms:**<br>
+We provide different dataframes `terms_category`, `terms_sources`, and `terms_country` with valid search terms.
+
+```{r headlines: searchterms}
+terms_category
+terms_country
+terms_sources
+```
+
+
+
+
+
+
+
+
+<br>
+
+
+## get_everything / get_everything_all
+This endpoint searches through articles from large and small news sources and blogs. This includes breaking news as well as lesser articles. This function needs a **query** with each function call. You have the following additional options for a more advanced search: <br>
+
+- surround entire phrases with quotes (") for exact matches. 
+- prepend words/phrases that must appear with "+" symbol (e.g., +bitcoin). 
+- prepend words that must not appear with "-" symbol (e.g., -bitcoin). 
+- you can also use AND, OR, NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND (ethereum OR litecoin) NOT bitcoin)').
+
+```{r everything: search and advanced search}
+# get everything published about Trump
+results <- get_everything(query = "Trump")
+# get everything published with the phrase "Trump says"
+results <- get_everything(query = "Trump says")
+```
+
+
+<br> As stated above, you always have to provide a `query` with the function call. However, you can limit your results to multiple **sources**, different **languages**, or different **domains**. You are also able to **exclude_domains** or mark the start (**from**) or end (**to**) of your search. 
+
+```{r everything: examples}
+# get everything published about Trump
+results <- get_everything(query = "Trump")
+# get everything published about Trump in the Washington Post
+results <- get_everything(query = "Trump", sources = "the-washington-post")
+# get everything published about Trump in french
+results <- get_everything(query = "Trump", languages = "fr")
+# get everything published about Trump at bbc.com
+results <- get_everything(query = "Trump", domains = "bbc.com")
+# get everything published about Trump BUT NOT at bbc.com
+results <- get_everything(query = "Trump", exclude_domains = "bbc.com")
+# get everything published about Trump BUT NOT at bbc.com
+results <- get_everything(query = "Trump", from = "2018-09-08")
+```
+
+**Limitations:** <br>
+
+- **YANNIK: Welche Sachen schließen sich aus? (cf. get_headlines)**
+- **hier vielleicht auf die from-to Sachen verweisen? default = oldest available date**
+
+**Additional settings:**<br>
+The default of https://newsapi.org only allows to get maximal 100 results per search. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page_size** (per default: page_size = 100). 
+
+```{r everything: page, page_size}
+results <- get_everything(query = "Trump", page = 2)
+results <- get_everything(query = "Trump", page = 3, page_size = 20)
+```
+
+In addition, you can sort (**sort_by**) the order of the articles. Possible options are `relevancy` (articles more closely related to the query come first), `popularity` (articles from popular sources and publishers come first) and `publishedAt` (newest articles come first). Per default articles are sorted by `publishedAt`. 
+
+```{r everything: sort}
+# sort results by relevancy
+results <- get_everything(query = "Trump", sort_by = "relevancy")
+# sort results by popularity
+results <- get_everything(query = "Trump", sort_by = "popularity")
+# sort results by date
+results <- get_everything(query = "Trump", sort_by = "publishedAt")
+
+```
+
+**get_everything_all:**<br>
+To automatically download all results, use **get_everything_all**. This function is build around `get_everything` and provides the same options (except for *page* and *page_size*). 
+
+```{r everything: get_all}
+results <- get_everything_all(category = "sports")
+```
+
+**search terms:**<br>
+We provide different dataframes `terms_language` and `terms_sources` with valid search terms.
+**YANNIK: Sources verwendest du gar nicht, oder?**
+```{r everything: searchterms}
+terms_language
+terms_sources
+```
+
+
+<br>
+
+## get_sources
+This function returns the subset of news publishers that top headlines are available from. 
+
+```{r sources}
+publisher <- get_sources()
+```
+<br>
+
+
+

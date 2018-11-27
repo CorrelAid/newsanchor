@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Correlaid" />
+
+<meta name="date" content="2018-11-27" />
+
+<title>Usage of newsanchor</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Usage of newsanchor</h1>
+<h4 class="author"><em>Correlaid</em></h4>
+<h4 class="date"><em>2018-11-27</em></h4>
+
+
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(newsanchor)</code></pre></div>
+<p><br> This is an introductory vignette to the <strong>newsanchor</strong> package. The package connects to <a href="https://newsapi.org/" class="uri">https://newsapi.org/</a>. <strong>News API</strong> is a simple HTTP REST API for searching and retrieving live articles from all over the web. You can get breaking news headlines, and search for articles from over 30,000 news sources and blogs. <br> The API can be used for free for non-commercial use cases, <em>[but you might experience some restrictions in your results]</em>. Please see also <a href="https://newsapi.org/pricing" class="uri">https://newsapi.org/pricing</a> for commerical options. <br><br></p>
+<p>The package helps you to answer questions like:<br></p>
+<ul>
+<li>What are the <strong>top stories</strong> running right now in the world?</li>
+<li>What <strong>articles</strong> were published about your favorite politician, moviestar, singer, or celebrity <strong>today</strong>?</li>
+<li>What are the breaking news in <strong>business</strong>, <strong>entertainment</strong>, or <strong>sports</strong>?</li>
+</ul>
+<p>The package is made publicly available at GitHub and hopefully soon at CRAN as well. In this vignette we demonstrate basic features of the package. In a second vignette, we show how the package can be used to scrap your results from an online newspaper (i.e. Spiegel online).<br><br></p>
+<div id="authentication" class="section level2">
+<h2>Authentication</h2>
+<p>You need an API key to access <a href="https://newsapi.org" class="uri">https://newsapi.org</a>. You can apply for a key at <a href="https://newsapi.org/register/" class="uri">https://newsapi.org/register/</a>. The function below appends the key automatically to your R environment file. Hence, every time you start R the key is loaded. The function <code>get_headlines</code>, <code>get_headlines_all</code>, <code>get_everything</code>, <code>get_everything_all</code>, and <code>get_sources</code> access your key automatically by executing <code>Sys.getenv(&quot;NEWS_API_KEY&quot;)</code>. Alternatively, you can provide an explicit definition of your api_key with each function call.<br><br></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># save the api key in the .Renviron file</span>
+<span class="kw">set_api_key</span>(<span class="dt">api_key =</span> <span class="st">&quot;xxx&quot;</span>, 
+            <span class="dt">path =</span> <span class="st">&quot;~/.Renviron&quot;</span>)</code></pre></div>
+<p><br></p>
+</div>
+<div id="get_headlines-get_headlines_all" class="section level2">
+<h2>get_headlines / get_headlines_all</h2>
+<p>This endpoint returns breaking news headlines for a country and category, or currently running on a single or multiple sources. This is perfect if you want to download live up-to-date news headlines and images. You can provide <strong>specific news-sources</strong>, <strong>categories</strong>, <strong>countries</strong>, and/or <strong>queries</strong>. For valid searchterms see the respective paragraph below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get headlines published by the Washington Post</span>
+results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">sources =</span> <span class="st">&quot;the-washington-post&quot;</span>)
+<span class="co"># get headlines published in the category sports</span>
+results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>)
+<span class="co"># get headlines published in Germany</span>
+results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">country =</span> <span class="st">&quot;de&quot;</span>)
+<span class="co"># get headlines published about Trump</span>
+results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>)</code></pre></div>
+<p><strong>Limitations:</strong> <br></p>
+<ul>
+<li>Please note, only <strong>one</strong> searchterm can be used for <code>category</code>, <code>country</code>, or <code>query</code>. Additional elements will be ignored.</li>
+<li>In addition, <code>sources</code> must not be combined with <code>country</code> and/or <code>category</code>. <br></li>
+</ul>
+<p><strong>Additional settings:</strong><br> The default of <a href="https://newsapi.org" class="uri">https://newsapi.org</a> only allows to get maximal 100 results per search. Since some search terms might yield much more results, you can use the option <strong>page</strong> to browse throught your results (per default: page = 1). You can change the number of results returned per request using <strong>page_size</strong> (per default: page_size = 100).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>, <span class="dt">page =</span> <span class="dv">2</span>)
+results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>, <span class="dt">page =</span> <span class="dv">3</span>, <span class="dt">page_size =</span> <span class="dv">20</span>)</code></pre></div>
+<p><strong>get_headlines_all:</strong><br> To automatically download all results, use <strong>get_headlines_all</strong>. This function is build around <code>get_headlines</code> and provides the same options (except for <code>page</code> and <code>page_size</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_headlines_all</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>)</code></pre></div>
+<p><strong>search terms:</strong><br> We provide different dataframes <code>terms_category</code>, <code>terms_sources</code>, and <code>terms_country</code> with valid search terms.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">terms_category
+terms_country
+terms_sources</code></pre></div>
+<p><br></p>
+</div>
+<div id="get_everything-get_everything_all" class="section level2">
+<h2>get_everything / get_everything_all</h2>
+<p>This endpoint searches through articles from large and small news sources and blogs. This includes breaking news as well as lesser articles. This function needs a <strong>query</strong> with each function call. You have the following additional options for a more advanced search: <br></p>
+<ul>
+<li>surround entire phrases with quotes (“) for exact matches.</li>
+<li>prepend words/phrases that must appear with “+” symbol (e.g., +bitcoin).</li>
+<li>prepend words that must not appear with “-” symbol (e.g., -bitcoin).</li>
+<li>you can also use AND, OR, NOT keywords (optionally grouped with parenthesis, e.g., ‘crypto AND (ethereum OR litecoin) NOT bitcoin)’).</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get everything published about Trump</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>)
+<span class="co"># get everything published with the phrase &quot;Trump says&quot;</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump says&quot;</span>)</code></pre></div>
+<p><br> As stated above, you always have to provide a <code>query</code> with the function call. However, you can limit your results to multiple <strong>sources</strong>, different <strong>languages</strong>, or different <strong>domains</strong>. You are also able to <strong>exclude_domains</strong> or mark the start (<strong>from</strong>) or end (<strong>to</strong>) of your search.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get everything published about Trump</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>)
+<span class="co"># get everything published about Trump in the Washington Post</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">sources =</span> <span class="st">&quot;the-washington-post&quot;</span>)
+<span class="co"># get everything published about Trump in french</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">languages =</span> <span class="st">&quot;fr&quot;</span>)
+<span class="co"># get everything published about Trump at bbc.com</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">domains =</span> <span class="st">&quot;bbc.com&quot;</span>)
+<span class="co"># get everything published about Trump BUT NOT at bbc.com</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">exclude_domains =</span> <span class="st">&quot;bbc.com&quot;</span>)
+<span class="co"># get everything published about Trump BUT NOT at bbc.com</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">from =</span> <span class="st">&quot;2018-09-08&quot;</span>)</code></pre></div>
+<p><strong>Limitations:</strong> <br></p>
+<ul>
+<li><strong>YANNIK: Welche Sachen schließen sich aus? (cf. get_headlines)</strong></li>
+<li><strong>hier vielleicht auf die from-to Sachen verweisen? default = oldest available date</strong></li>
+</ul>
+<p><strong>Additional settings:</strong><br> The default of <a href="https://newsapi.org" class="uri">https://newsapi.org</a> only allows to get maximal 100 results per search. Since some search terms might yield much more results, you can use the option <strong>page</strong> to browse throught your results (per default: page = 1). You can change the number of results returned per request using <strong>page_size</strong> (per default: page_size = 100).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">page =</span> <span class="dv">2</span>)
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">page =</span> <span class="dv">3</span>, <span class="dt">page_size =</span> <span class="dv">20</span>)</code></pre></div>
+<p>In addition, you can sort (<strong>sort_by</strong>) the order of the articles. Possible options are <code>relevancy</code> (articles more closely related to the query come first), <code>popularity</code> (articles from popular sources and publishers come first) and <code>publishedAt</code> (newest articles come first). Per default articles are sorted by <code>publishedAt</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sort results by relevancy</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">sort_by =</span> <span class="st">&quot;relevancy&quot;</span>)
+<span class="co"># sort results by popularity</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">sort_by =</span> <span class="st">&quot;popularity&quot;</span>)
+<span class="co"># sort results by date</span>
+results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">sort_by =</span> <span class="st">&quot;publishedAt&quot;</span>)</code></pre></div>
+<p><strong>get_everything_all:</strong><br> To automatically download all results, use <strong>get_everything_all</strong>. This function is build around <code>get_everything</code> and provides the same options (except for <em>page</em> and <em>page_size</em>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_everything_all</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>)</code></pre></div>
+<p><strong>search terms:</strong><br> We provide different dataframes <code>terms_language</code> and <code>terms_sources</code> with valid search terms. <strong>YANNIK: Sources verwendest du gar nicht, oder?</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">terms_language
+terms_sources</code></pre></div>
+<p><br></p>
+</div>
+<div id="get_sources" class="section level2">
+<h2>get_sources</h2>
+<p>This function returns the subset of news publishers that top headlines are available from.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">publisher &lt;-<span class="st"> </span><span class="kw">get_sources</span>()</code></pre></div>
+<p><br></p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
