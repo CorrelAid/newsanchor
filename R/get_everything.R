@@ -1,6 +1,6 @@
 #' Get all resources that newsapi.org provides for a given searchterm
 #' 
-#'#' \code{get_everything} searches through articles from large and small news 
+#' \code{get_everything} searches through articles from large and small news 
 #' sources and blogs. This includes breaking news as well as lesser articles.
 #' You  can search for multiple sources \code{sources}, different \code{language}, 
 #' or use your own keywords. Articles can be sorted by the earliest date 
