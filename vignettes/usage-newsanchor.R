@@ -6,7 +6,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval = FALSE, fig.align="cen
 
 ## ----set_api_key---------------------------------------------------------
 #  # save the api key in the .Renviron file
-#  set_api_key(api_key = "xxx",
+#  set_api_key(api_key = "YOUR API KEY",
 #              path = "~/.Renviron")
 
 ## ----headlines: examples-------------------------------------------------
@@ -66,7 +66,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval = FALSE, fig.align="cen
 #  
 
 ## ----everything: get_all-------------------------------------------------
-#  results <- get_everything_all(category = "sports")
+#  results <- get_everything_all(query = "Trump")
 
 ## ----everything: searchterms---------------------------------------------
 #  terms_language

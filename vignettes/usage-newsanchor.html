@@ -75,25 +75,25 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(newsanchor)</code></pre></div>
-<p><br> This is an introductory vignette to the <strong>newsanchor</strong> package. The package connects to <a href="https://newsapi.org/" class="uri">https://newsapi.org/</a>. <strong>News API</strong> is a simple HTTP REST API for searching and retrieving live articles from all over the web. You can get breaking news headlines, and search for articles from over 30,000 news sources and blogs. <br> The API can be used for free for non-commercial use cases, <em>[but you might experience some restrictions in your results]</em>. Please see also <a href="https://newsapi.org/pricing" class="uri">https://newsapi.org/pricing</a> for commerical options. <br><br></p>
-<p>The package helps you to answer questions like:<br></p>
+<p><br> This is an introductory vignette to the <strong>newsanchor</strong> package. The package connects to <a href="https://newsapi.org/" class="uri">https://newsapi.org/</a>. <strong>News API</strong> is a simple HTTP REST API for searching and retrieving live articles from all over the web. You can get breaking news headlines, and search for articles from over 30,000 news sources and blogs. <br> The API can generally be used for free for non-commercial use cases, <em>[but you might experience some restrictions in your results]</em>. Please see also <a href="https://newsapi.org/pricing" class="uri">https://newsapi.org/pricing</a> for commerical options. <br><br></p>
+<p>The package helps you to answer questions like the following:<br></p>
 <ul>
 <li>What are the <strong>top stories</strong> running right now in the world?</li>
-<li>What <strong>articles</strong> were published about your favorite politician, moviestar, singer, or celebrity <strong>today</strong>?</li>
+<li>What <strong>articles</strong> were published about your favorite politician, movie star, singer, or celebrity <strong>today</strong>?</li>
 <li>What are the breaking news in <strong>business</strong>, <strong>entertainment</strong>, or <strong>sports</strong>?</li>
 </ul>
-<p>The package is made publicly available at GitHub and hopefully soon at CRAN as well. In this vignette we demonstrate basic features of the package. In a second vignette, we show how the package can be used to scrap your results from an online newspaper (i.e. Spiegel online).<br><br></p>
+<p>The package is publicly available at GitHub and hopefully soon at CRAN as well. In this vignette we demonstrate basic features of the package. In a second vignette, we show how the package can be used to scrape your results from an example online newspaper (Spiegel Online in our case).<br><br></p>
 <div id="authentication" class="section level2">
 <h2>Authentication</h2>
-<p>You need an API key to access <a href="https://newsapi.org" class="uri">https://newsapi.org</a>. You can apply for a key at <a href="https://newsapi.org/register/" class="uri">https://newsapi.org/register/</a>. The function below appends the key automatically to your R environment file. Hence, every time you start R the key is loaded. The function <code>get_headlines</code>, <code>get_headlines_all</code>, <code>get_everything</code>, <code>get_everything_all</code>, and <code>get_sources</code> access your key automatically by executing <code>Sys.getenv(&quot;NEWS_API_KEY&quot;)</code>. Alternatively, you can provide an explicit definition of your api_key with each function call.<br><br></p>
+<p>You need an API key to access <a href="https://newsapi.org" class="uri">https://newsapi.org</a>. You can apply for a key at <a href="https://newsapi.org/register/" class="uri">https://newsapi.org/register/</a>. The function below appends the key automatically to your R environment file. Hence, every time you start R the key is loaded. The functions <code>get_headlines</code>, <code>get_headlines_all</code>, <code>get_everything</code>, <code>get_everything_all</code>, and <code>get_sources</code> access your key automatically by executing <code>Sys.getenv(&quot;NEWS_API_KEY&quot;)</code>. Alternatively, you can provide an explicit definition of your api_key with each function call.<br><br></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># save the api key in the .Renviron file</span>
-<span class="kw">set_api_key</span>(<span class="dt">api_key =</span> <span class="st">&quot;xxx&quot;</span>, 
+<span class="kw">set_api_key</span>(<span class="dt">api_key =</span> <span class="st">&quot;YOUR API KEY&quot;</span>, 
             <span class="dt">path =</span> <span class="st">&quot;~/.Renviron&quot;</span>)</code></pre></div>
 <p><br></p>
 </div>
 <div id="get_headlines-get_headlines_all" class="section level2">
 <h2>get_headlines / get_headlines_all</h2>
-<p>This endpoint returns breaking news headlines for a country and category, or currently running on a single or multiple sources. This is perfect if you want to download live up-to-date news headlines and images. You can provide <strong>specific news-sources</strong>, <strong>categories</strong>, <strong>countries</strong>, and/or <strong>queries</strong>. For valid searchterms see the respective paragraph below.</p>
+<p>These functions connect to the API’s endpoint that returns breaking news headlines for a country and category, or currently running on a single or multiple sources. This is perfect if you want to download live up-to-date news headlines and images. You can provide <strong>specific news-sources</strong>, <strong>categories</strong>, <strong>countries</strong>, and/or <strong>queries</strong>. For valid searchterms see the respective paragraph below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get headlines published by the Washington Post</span>
 results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">sources =</span> <span class="st">&quot;the-washington-post&quot;</span>)
 <span class="co"># get headlines published in the category sports</span>
@@ -112,7 +112,7 @@ results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<spa
 results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>, <span class="dt">page =</span> <span class="dv">3</span>, <span class="dt">page_size =</span> <span class="dv">20</span>)</code></pre></div>
 <p><strong>get_headlines_all:</strong><br> To automatically download all results, use <strong>get_headlines_all</strong>. This function is build around <code>get_headlines</code> and provides the same options (except for <code>page</code> and <code>page_size</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_headlines_all</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>)</code></pre></div>
-<p><strong>search terms:</strong><br> We provide different dataframes <code>terms_category</code>, <code>terms_sources</code>, and <code>terms_country</code> with valid search terms.</p>
+<p><strong>searchterms:</strong><br> We provide different dataframes :<code>terms_category</code>, <code>terms_sources</code>, and <code>terms_country</code>. They contain information on valid search terms. Access them if you are not sure whether some country or some source will work.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">terms_category
 terms_country
 terms_sources</code></pre></div>
@@ -120,9 +120,9 @@ terms_sources</code></pre></div>
 </div>
 <div id="get_everything-get_everything_all" class="section level2">
 <h2>get_everything / get_everything_all</h2>
-<p>This endpoint searches through articles from large and small news sources and blogs. This includes breaking news as well as lesser articles. This function needs a <strong>query</strong> with each function call. You have the following additional options for a more advanced search: <br></p>
+<p>This endpoint searches through articles from large and small news sources and blogs. This includes breaking news as well as other kinds of normal articles. This function needs a compulsory <code>query</code> with each function call. You can make your search more fine-tuned using the following additional options: <br></p>
 <ul>
-<li>surround entire phrases with quotes (“) for exact matches.</li>
+<li>surround entire phrases with quotes (“”) for exact matches.</li>
 <li>prepend words/phrases that must appear with “+” symbol (e.g., +bitcoin).</li>
 <li>prepend words that must not appear with “-” symbol (e.g., -bitcoin).</li>
 <li>you can also use AND, OR, NOT keywords (optionally grouped with parenthesis, e.g., ‘crypto AND (ethereum OR litecoin) NOT bitcoin)’).</li>
@@ -131,7 +131,7 @@ terms_sources</code></pre></div>
 results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>)
 <span class="co"># get everything published with the phrase &quot;Trump says&quot;</span>
 results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump says&quot;</span>)</code></pre></div>
-<p><br> As stated above, you always have to provide a <code>query</code> with the function call. However, you can limit your results to multiple <strong>sources</strong>, different <strong>languages</strong>, or different <strong>domains</strong>. You are also able to <strong>exclude_domains</strong> or mark the start (<strong>from</strong>) or end (<strong>to</strong>) of your search.</p>
+<p><br> As stated above, you always have to provide a <code>query</code> with the function call. However, you can limit your results to multiple <strong>sources</strong>, different <strong>languages</strong>, or different <strong>domains</strong>. You are also able to <strong>exclude_domains</strong> or mark the start (<strong>from</strong>) or end (<strong>to</strong>) time of your search.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get everything published about Trump</span>
 results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>)
 <span class="co"># get everything published about Trump in the Washington Post</span>
@@ -146,10 +146,12 @@ results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<sp
 results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">from =</span> <span class="st">&quot;2018-09-08&quot;</span>)</code></pre></div>
 <p><strong>Limitations:</strong> <br></p>
 <ul>
-<li><strong>YANNIK: Welche Sachen schließen sich aus? (cf. get_headlines)</strong></li>
-<li><strong>hier vielleicht auf die from-to Sachen verweisen? default = oldest available date</strong></li>
+<li>If you use the option <code>sources</code>, there is a limitation to 20 sources.</li>
+<li>The options of <code>from</code> and <code>to</code> should be in ISO 8601 format.</li>
+<li>The <code>language</code> needs to be a two digits ISO 639-1 code. You can only use one language for a search, default is all.</li>
+<li>Some limitations are restricted to the free plan of www.newsapi.org. For example, you cannot access articles that have been published more than a month ago. This can only be accomplished using the paid plan.</li>
 </ul>
-<p><strong>Additional settings:</strong><br> The default of <a href="https://newsapi.org" class="uri">https://newsapi.org</a> only allows to get maximal 100 results per search. Since some search terms might yield much more results, you can use the option <strong>page</strong> to browse throught your results (per default: page = 1). You can change the number of results returned per request using <strong>page_size</strong> (per default: page_size = 100).</p>
+<p><strong>Additional settings:</strong><br> The default of <a href="https://newsapi.org" class="uri">https://newsapi.org</a> only allows to get a maximum of 1,000 results per search. Since some search terms might yield much more results, you can use the option <strong>page</strong> to browse throught your results (per default: page = 1). You can change the number of results returned per request using <strong>page_size</strong> (per default: page_size = 100).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">page =</span> <span class="dv">2</span>)
 results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">page =</span> <span class="dv">3</span>, <span class="dt">page_size =</span> <span class="dv">20</span>)</code></pre></div>
 <p>In addition, you can sort (<strong>sort_by</strong>) the order of the articles. Possible options are <code>relevancy</code> (articles more closely related to the query come first), <code>popularity</code> (articles from popular sources and publishers come first) and <code>publishedAt</code> (newest articles come first). Per default articles are sorted by <code>publishedAt</code>.</p>
@@ -160,8 +162,8 @@ results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<sp
 <span class="co"># sort results by date</span>
 results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">sort_by =</span> <span class="st">&quot;publishedAt&quot;</span>)</code></pre></div>
 <p><strong>get_everything_all:</strong><br> To automatically download all results, use <strong>get_everything_all</strong>. This function is build around <code>get_everything</code> and provides the same options (except for <em>page</em> and <em>page_size</em>).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_everything_all</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>)</code></pre></div>
-<p><strong>search terms:</strong><br> We provide different dataframes <code>terms_language</code> and <code>terms_sources</code> with valid search terms. <strong>YANNIK: Sources verwendest du gar nicht, oder?</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_everything_all</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>)</code></pre></div>
+<p><strong>searchterms:</strong><br> We provide different dataframes <code>terms_language</code> and <code>terms_sources</code> with valid search terms. <strong>YANNIK: Sources verwendest du gar nicht, oder?</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">terms_language
 terms_sources</code></pre></div>
 <p><br></p>

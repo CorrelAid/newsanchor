@@ -1,14 +1,15 @@
-#' Get all resources that newsapi.org provides for a given searchterm
+#' Get all resources of newsapi.org
 #' 
 #' \code{get_everything} searches through articles from large and small news 
-#' sources and blogs. This includes breaking news as well as lesser articles.
-#' You  can search for multiple sources \code{sources}, different \code{language}, 
+#' sources and blogs. This includes breaking news as well as other regular articles.
+#' You  can search for multiple \code{sources}, different \code{language}, 
 #' or use your own keywords. Articles can be sorted by the earliest date 
 #' \code{publishedAt}, \code{relevancy}, or \code{popularity}. To automatically 
-#' download all results, use \code{get_everything_all}\cr\cr
-#' Please check that the api_key is available. You can provide an explicit
-#' definition of the api_key or use \code{set_api_key} \cr\cr
-#' Valid searchterms for language are provided in \code{terms_language}. 
+#' download all results, use \code{get_everything_all()}\cr\cr
+#' Please check that the \code{api_key} is available. You can provide an explicit
+#' definition of the api_key or use \code{set_api_key()}. \cr\cr
+#' Valid languages for \code{language} are provided in the dataset \cr\cr
+#' \code{terms_language}. 
 #' 
 #' @param query Character string that contains the searchterm for the API's 
 #'              data base. API supports advanced search parameters, see 'details'. 
@@ -47,10 +48,10 @@
 #'          NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND 
 #'          (ethereum OR litecoin) NOT bitcoin)').
 #' @examples
-#' \dontrun{
+#' 
 #' get_everything(api_key = key, content = "stuttgart", language = "de")
 #' get_everything(api_key = key, content = "mannheim", from = "2018-01-07T12:00:00")
-#' }
+#' 
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @importFrom jsonlite fromJSON
 #' @return List with two dataframes:\cr
