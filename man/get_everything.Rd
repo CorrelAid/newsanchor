@@ -76,8 +76,8 @@ Advanced search (see also www.newsapi.org): Surround entire phrases
          (ethereum OR litecoin) NOT bitcoin)').
 }
 \examples{
-
-get_everything(api_key = key, content = "stuttgart", language = "de")
-get_everything(api_key = key, content = "mannheim", from = "2018-01-07T12:00:00")
-
+\dontrun{
+df <- get_everything(query = "stuttgart", language = "de")
+df <- get_everything(query = "mannheim", from = "2019-01-02T12:00:00")
+}
 }

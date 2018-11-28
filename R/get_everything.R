@@ -48,12 +48,10 @@
 #'          NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND 
 #'          (ethereum OR litecoin) NOT bitcoin)').
 #' @examples
-#' 
 #' \dontrun{
-#' get_everything(query = "stuttgart", language = "de")
-#' get_everything(query = "mannheim", from = "2018-01-07T12:00:00")
+#' df <- get_everything(query = "stuttgart", language = "de")
+#' df <- get_everything(query = "mannheim", from = "2019-01-02T12:00:00")
 #' }
-#' 
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @importFrom jsonlite fromJSON
 #' @return List with two dataframes:\cr
