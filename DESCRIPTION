@@ -2,8 +2,9 @@ Package: newsanchor
 Type: Package
 Title: Client for the News API
 Version: 0.1.0
-Authors@R: c(person("Preu", "Frie", email = "fr1e@pm.me", role = c("aut", "cre", "pro")),
-  person("Buhl", "Yannik", email = "ybuhl@posteo.de", role = c("aut")),
+Authors@R: c(person("Preu", "Frie", email = "fr1e@pm.me", role = c("aut", "pro")),
+  person("Buhl", "Yannik", email = "ybuhl@posteo.de", role = c("aut", "cre")),
+  person("Schulze", "Lars", email = "lars.schulze@hotmail.com", role = c("aut")),
   person("Dix", "Jan", email = "jan.dix@uni-konstanz.de", role = c("aut", "pro")))
 Maintainer: Frie Preu <fr1e@pm.me>
 Description: Interface to gather news from the 'NEWS API', based on a multilevel query <https://newsapi.org/>. A personal API key is required. 
