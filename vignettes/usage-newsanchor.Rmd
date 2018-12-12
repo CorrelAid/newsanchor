@@ -1,6 +1,6 @@
 ---
 title: "Usage of newsanchor"
-author: "Correlaid"
+author: "Lars Schulze <lars.schulze@hotmail.com>"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
