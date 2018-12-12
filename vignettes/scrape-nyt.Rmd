@@ -11,7 +11,7 @@ vignette: >
 
 ## Dependencies
 
-Before 
+Before we start downloading the actual content we have to load the required packages. 
 
 ```{r load packages, eval=FALSE}
 library(newsanchor) # download newspaper articles
@@ -25,7 +25,7 @@ library(tidytext)   # tidy text analysis
 
 
 
-## Download Spiegel Online articles and their corresponding URLs
+## Download NYT articles and their corresponding URLs
 
 
 ```{r get meta data, eval=FALSE}
