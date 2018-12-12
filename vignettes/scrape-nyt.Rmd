@@ -1,5 +1,5 @@
 ---
-title: "Scrape Spiegel Online Articles"
+title: "Scrape New York Times Online Articles"
 author: "Jan Dix <jan.dix@uni-konstanz.de>"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -11,8 +11,11 @@ vignette: >
 
 ## Dependencies
 
-```{r, eval=FALSE}
+Before 
+
+```{r load packages, eval=FALSE}
 library(newsanchor) # download newspaper articles
+library(robotstxt)  # get robots txt
 library(httr)       # http requests
 library(rvest)      # web scraping tools
 library(dplyr)      # pipes
@@ -24,14 +27,13 @@ library(tidytext)   # tidy text analysis
 
 ## Download Spiegel Online articles and their corresponding URLs
 
-# download meta data
 
-```{r, eval=FALSE}
+```{r get meta data, eval=FALSE}
 # get heaadlines published by spiegel online
 response <- get_everything(query   = "Trump",
                            sources = "the-new-york-times",
-                           from    = "2018-10-29",
-                           to      = "2018-11-04") 
+                           from    = "2018-12-03",
+                           to      = "2018-12-09") 
 
 # extract response data frame
 articles <- response$results_df
@@ -40,9 +42,15 @@ articles <- response$results_df
 
 ## Check if we are allowed to scrape
 
+```{r check robots txt}
+allowed <- paths_allowed(articles$url)
+all(allowed)
+```
+
+
 ## Define a function to scrape article body
 
-```{r, eval=FALSE}
+```{r define parsing function, eval=FALSE}
 get_article_body <- function (url) {
   
   # download article page
@@ -77,7 +85,7 @@ get_article_body <- function (url) {
 
 Why do not use an apply function ?
 
-```{r, eval=FALSE}
+```{r apply function to urls, eval=FALSE}
 # create new text column
 articles$body <- NA
 
@@ -102,7 +110,7 @@ for (i in 1:nrow(articles)) {
 
 ## Calculate sentiment
 
-```{r, eval=FALSE}
+```{r calculate sentiment, eval=FALSE}
 articles_sentiment <- articles %>%
   select(url, body) %>%                                     # extract required columns 
   unnest_tokens(word, body) %>%                             # split each article into single word
@@ -117,7 +125,7 @@ articles_sentiment <- articles %>%
 ```
 
 
-```{r, eval=FALSE}
+```{r plot results, eval=FALSE}
 plot(sentiment ~ date,
      data = articles_sentiment)
 ```
