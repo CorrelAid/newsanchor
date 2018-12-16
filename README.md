@@ -56,15 +56,13 @@ Introduction
 
 ### Authentication
 
-You need an API key to access <https://newsapi.org>. You can apply for a key at <https://newsapi.org/register/>. The function below appends the key automatically to your R environment file. Hence, every time you start R the key is loaded. The functions `get_headlines`, `get_headlines_all`, `get_everything`, `get_everything_all`, and `get_sources` access your key automatically by executing `Sys.getenv("NEWS_API_KEY")`. Alternatively, you can provide an explicit definition of your api\_key with each function call.<br><br>
+You need an API key to access <https://newsapi.org>. You can apply for a key at <https://newsapi.org/register/>. The function below appends the key automatically to your R environment file. Hence, every time you start R the key is loaded. The functions `get_headlines`, `get_headlines_all`, `get_everything`, `get_everything_all`, and `get_sources` access your key automatically by executing `Sys.getenv("NEWS_API_KEY")`. Alternatively, you can provide an explicit definition of your api\_key with each function call.
 
 ``` r
 # save the api key in the .Renviron file
 set_api_key(api_key = "YOUR API KEY", 
-            path = "~/.Renviron")
+            path    = "~/.Renviron")
 ```
-
-<br>
 
 ### get\_headlines / get\_headlines\_all
 
@@ -81,33 +79,37 @@ results <- get_headlines(country = "de")
 results <- get_headlines(query = "Trump")
 ```
 
-**Limitations:** <br>
+**Limitations:**
 
 -   Please note, only **one** searchterm can be used for `category`, `country`, or `query`. Additional elements will be ignored.
--   In addition, `sources` must not be combined with `country` and/or `category`. <br>
+-   In addition, `sources` must not be combined with `country` and/or `category`.
 
-**Additional settings:**<br> The default of <https://newsapi.org> only allows to get maximal 100 results per search. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page\_size** (per default: page\_size = 100).
+**Additional settings:**
+
+The default of <https://newsapi.org> only allows to get maximal 100 results per search. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page\_size** (per default: page\_size = 100).
 
 ``` r
 results <- get_headlines(category = "sports", page = 2)
 results <- get_headlines(category = "sports", page = 3, page_size = 20)
 ```
 
-**get\_headlines\_all:**<br> To automatically download all results, use **get\_headlines\_all**. This function is build around `get_headlines` and provides the same options (except for `page` and `page_size`).
+**get\_headlines\_all:**
+
+To automatically download all results, use **get\_headlines\_all**. This function is build around `get_headlines` and provides the same options (except for `page` and `page_size`).
 
 ``` r
 results <- get_headlines_all(category = "sports")
 ```
 
-**searchterms:**<br> We provide different dataframes :`terms_category`, `terms_sources`, and `terms_country`. They contain information on valid search terms. Access them if you are not sure whether some country or some source will work.
+**searchterms:**
+
+We provide different dataframes :`terms_category`, `terms_sources`, and `terms_country`. They contain information on valid search terms. Access them if you are not sure whether some country or some sources will work.
 
 ``` r
 terms_category
 terms_country
 terms_sources
 ```
-
-<br>
 
 ### get\_everything / get\_everything\_all
 
@@ -125,7 +127,7 @@ results <- get_everything(query = "Trump")
 results <- get_everything(query = "Trump says")
 ```
 
-<br> As stated above, you always have to provide a `query` with the function call. However, you can limit your results to multiple **sources**, different **languages**, or different **domains**. You are also able to **exclude\_domains** or mark the start (**from**) or end (**to**) time of your search.
+As stated above, you always have to provide a `query` with the function call. However, you can limit your results to multiple **sources**, different **languages**, or different **domains**. You are also able to **exclude\_domains** or mark the start (**from**) or end (**to**) time of your search.
 
 ``` r
 # get everything published about Trump
@@ -142,14 +144,16 @@ results <- get_everything(query = "Trump", exclude_domains = "bbc.com")
 results <- get_everything(query = "Trump", from = "2018-09-08")
 ```
 
-**Limitations:** <br>
+**Limitations:**
 
 -   If you use the option `sources`, there is a limitation to 20 sources.
 -   The options of `from` and `to` should be in ISO 8601 format.
 -   The `language` needs to be a two digits ISO 639-1 code. You can only use one language for a search, default is all.
 -   Some limitations are restricted to the free plan of www.newsapi.org. For example, you cannot access articles that have been published more than a month ago. This can only be accomplished using the paid plan.
 
-**Additional settings:**<br> The default of <https://newsapi.org> only allows to get a maximum of 1,000 results per search. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page\_size** (per default: page\_size = 100).
+**Additional settings:**
+
+The default of <https://newsapi.org> only allows to get a maximum of 1,000 results per search. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page\_size** (per default: page\_size = 100).
 
 ``` r
 results <- get_everything(query = "Trump", page = 2)
@@ -167,27 +171,25 @@ results <- get_everything(query = "Trump", sort_by = "popularity")
 results <- get_everything(query = "Trump", sort_by = "publishedAt")
 ```
 
-**get\_everything\_all:**<br> To automatically download all results, use **get\_everything\_all**. This function is build around `get_everything` and provides the same options (except for *page* and *page\_size*).
+**get\_everything\_all:** To automatically download all results, use **get\_everything\_all**. This function is build around `get_everything` and provides the same options (except for *page* and *page\_size*).
 
 ``` r
 results <- get_everything_all(query = "Trump")
 ```
 
-**searchterms:**<br> We provide different dataframes `terms_language` and `terms_sources` with valid search terms. **YANNIK: Sources verwendest du gar nicht, oder?**
+**searchterms:** We provide several dataframes with valid search terms. You can find all dataframes below:
 
 ``` r
 terms_language
 terms_sources
+terms_country
+terms_category
 ```
-
-<br>
 
 ### get\_sources
 
-This function returns the subset of news publishers that top headlines are available from.
+This function returns the subset of news publishers that top headlines are available from. This information is also provided in a dataframe `terms_sources`. However, this function also allows to return sources for specific categories or languages.
 
 ``` r
 publisher <- get_sources()
 ```
-
-<br>
