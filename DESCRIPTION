@@ -20,11 +20,14 @@ Imports:
     tidyr,
     xml2
 Suggests: 
+    dplyr,
     knitr,
     magrittr,
     rmarkdown,
+    robotstxt,
     rvest,
     stringr,
-    testthat
+    testthat,
+    tidytext
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
