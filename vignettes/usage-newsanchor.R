@@ -70,6 +70,9 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval = FALSE, fig.align="cen
 
 ## ----everything: searchterms---------------------------------------------
 #  terms_language
+#  terms_sources
+#  terms_country
+#  terms_category
 
 ## ----sources-------------------------------------------------------------
 #  publisher <- get_sources()

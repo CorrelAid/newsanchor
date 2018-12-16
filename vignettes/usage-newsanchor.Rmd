@@ -162,9 +162,13 @@ results <- get_everything_all(query = "Trump")
 ```
 
 **searchterms:**<br>
-We provide a dataframe `terms_language` with valid search terms.
+We provide several dataframes with valid search terms. You can find all dataframes below:
+
 ```{r everything: searchterms}
 terms_language
+terms_sources
+terms_country
+terms_category
 ```
 
 

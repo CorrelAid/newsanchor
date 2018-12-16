@@ -185,8 +185,11 @@ results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<sp
 results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">sort_by =</span> <span class="st">&quot;publishedAt&quot;</span>)</code></pre></div>
 <p><strong>get_everything_all:</strong><br> To automatically download all results, use <strong>get_everything_all</strong>. This function is build around <code>get_everything</code> and provides the same options (except for <em>page</em> and <em>page_size</em>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_everything_all</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>)</code></pre></div>
-<p><strong>searchterms:</strong><br> We provide a dataframe <code>terms_language</code> with valid search terms.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">terms_language</code></pre></div>
+<p><strong>searchterms:</strong><br> We provide several dataframes with valid search terms. You can find all dataframes below:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">terms_language
+terms_sources
+terms_country
+terms_category</code></pre></div>
 <p><br></p>
 </div>
 <div id="get_sources" class="section level2">
