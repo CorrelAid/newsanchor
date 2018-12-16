@@ -9,24 +9,42 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
+This introduction shows how you could gether meta data, such as title and URL, from the newsapi and use this information to download the complete article and calculate the sentiment for text body. First, we will download the meta data using the `newsanchor` package. Secondly, we will write a function that allows us to automatically scrape the text of any New York Times (NYT) article from their website. We will apply this function on the URLs fetched in the first section. Thirdly, we will calculate the sentiment for each article using the **AFINN** dictionary. While a dictionary approach is probably not ideal to analyze political newspaper articles this introduction provides an insight how the newsanchor package could be used for more detailed analysis.  
+
 ## Dependencies
 
-Before we start downloading the actual content we have to load the required packages. 
+Before we start downloading the actual content we have to load the required packages. Below you find a short summary for the purpose of each package. 
 
-```{r load packages, eval=FALSE}
+`newsanchor` enables us to download necessary meta data. Unfortuentaly, the free newsapi account only allows to query data within the last 3 months. For the purpose of this tutorial we use an internal data set. The data set is also available using the `newsanchor::sample_response`. You find detailed information about the sample response object using `?newsanchor::sample_response`.   
+
+`robotstxt` provides functionalities that automatically read the `robots.txt` file of a website. The `robots.txt` file allows website administrators to define which scrappers and robots are allowed to visit certain folders within the webiste. While the usage is mainly based on trust you should definitly always check the file.
+
+`httr` is a wrapper for the curl package and provides functions to query modern web APIs. It allows to easily download websites and access useful information about the connection.
+
+`rvest` ships with functions that allow to easily parse HTML to characters. We can search for certain items on the downloaded website and easily access their text and attributes.
+
+`dplyr` is a package that provides us with neat functions to manipulate data frames. It will be essential in our last task: the sentiment calculation. Furthermore, it autmatically loads `magrittr` package with it's beautiful pipe operators. 
+
+`stringr` is a wrapper for string manipulation functions. It provides a consistent grammer. Hence, we prefer it over `stringi` and the `grep` family.
+
+`tidytext` is a tool that provides text manipulation along with the tidy data principles. It works well along with `dplyr` and is used to apply the sentiment calculations.
+`
+
+```{r load packages}
+# load all required packages
 library(newsanchor) # download newspaper articles
-library(robotstxt)  # get robots txt
+library(robotstxt)  # get robots.txt
 library(httr)       # http requests
 library(rvest)      # web scraping tools
-library(dplyr)      # pipes
+library(dplyr)      # easy data frame manipulations
 library(stringr)    # string/character manipulations 
 library(tidytext)   # tidy text analysis
 ```
 
-
-
 ## Download NYT articles and their corresponding URLs
 
+Firstly, we have to download the meta data using the `get_everything` function. We query the newsapi for all articles about Donald Trump between 03rd and 09th December 2019 in the NYT. Instead searching in the NYT, we could also narrow our search by looking for news in a certain language using the `language` argument. All available arguments can be seen using `?get_everything`. We assign the result to `response` and extract the data frame that includes newspaper articles and responding meta data, such as URL, author, title, etc. Unfortuentaly, the data frame does not include the article text.
 
 ```{r get meta data, eval=FALSE}
 # get heaadlines published by spiegel online
@@ -39,18 +57,30 @@ response <- get_everything(query   = "Trump",
 articles <- response$results_df
 ```
 
+Since newsapi does not allow to query results that are older than 3 months, we decided to append a sample data set to this package. Below is shown how you can load the example data set that equals the above query. 
 
-## Check if we are allowed to scrape
+```{r load example data set}
+articles <- sample_response$results_df
+```
 
-```{r check robots txt}
+
+## Are we allowed to scrape NYT?
+
+Before, we start downloading a lot of articles from the NYT we should check if we are allowed to access their website automatically. As explained previously, usually each website provides a `robots.txt` file that includes permissions for bots. You can see the file by opening [https://www.nytimes.com/robots.txt](https://www.nytimes.com/robots.txt) in your favorite browser. By the way, appending `robots.txt` to the root URL should work for every website. The `robotstxt` package provides the function `paths_allowed()` that returns `TRUE` when you are allowed to scrape the site and vice versa `FALSE`. We test our url vector. Afterwards, we use `all()`. `all()` returns `TRUE` when all items of a vector a `TRUE`. Since `all()` yields `TRUE` we are allowed to scrape the given URLs. 
+
+```{r check robots txt, cache=T, warning=F, prompt=F, message=F, error=F, results=F}
 allowed <- paths_allowed(articles$url)
 all(allowed)
 ```
 
+## Define a function to scrape the article body
 
-## Define a function to scrape article body
+We define a function that allows us to download the article body for any given NYT URL. Hence, the function takes only one argument: the URL. Firstly, we download the complete website using the `GET()` function from the `httr` package. 
 
-```{r define parsing function, eval=FALSE}
+vectorize 
+
+
+```{r define parsing function, cache=T}
 get_article_body <- function (url) {
   
   # download article page
@@ -85,7 +115,7 @@ get_article_body <- function (url) {
 
 Why do not use an apply function ?
 
-```{r apply function to urls, eval=FALSE}
+```{r apply function to urls, cache=T}
 # create new text column
 articles$body <- NA
 
@@ -99,10 +129,10 @@ pb <- txtProgressBar(min     = 1,
 for (i in 1:nrow(articles)) {
   # "apply" function to i url
   articles$body[i] <- get_article_body(articles$url[i])
-
+  
   # update progress bar
   setTxtProgressBar(pb, i)
-
+  
   # sleep for 1 sec
   Sys.sleep(1)
 }
@@ -110,7 +140,7 @@ for (i in 1:nrow(articles)) {
 
 ## Calculate sentiment
 
-```{r calculate sentiment, eval=FALSE}
+```{r calculate sentiment, cache=T}
 articles_sentiment <- articles %>%
   select(url, body) %>%                                     # extract required columns 
   unnest_tokens(word, body) %>%                             # split each article into single word
@@ -125,7 +155,7 @@ articles_sentiment <- articles %>%
 ```
 
 
-```{r plot results, eval=FALSE}
+```{r plot results}
 plot(sentiment ~ date,
      data = articles_sentiment)
 ```

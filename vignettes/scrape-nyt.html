@@ -12,14 +12,14 @@
 
 <meta name="author" content="Jan Dix jan.dix@uni-konstanz.de" />
 
-<meta name="date" content="2018-12-12" />
+<meta name="date" content="2018-12-16" />
 
-<title>Scrape Spiegel Online Articles</title>
+<title>Scrape New York Times Online Articles</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -55,7 +55,29 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -68,39 +90,65 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Scrape Spiegel Online Articles</h1>
+<h1 class="title toc-ignore">Scrape New York Times Online Articles</h1>
 <h4 class="author"><em>Jan Dix <a href="mailto:jan.dix@uni-konstanz.de">jan.dix@uni-konstanz.de</a></em></h4>
-<h4 class="date"><em>2018-12-12</em></h4>
+<h4 class="date"><em>2018-12-16</em></h4>
 
 
 
+<p>This introduction shows how you could gether meta data, such as title and URL, from the newsapi and use this information to download the complete article and calculate the sentiment for text body. First, we will download the meta data using the <code>newsanchor</code> package. Secondly, we will write a function that allows us to automatically scrape the text of any New York Times (NYT) article from their website. We will apply this function on the URLs fetched in the first section. Thirdly, we will calculate the sentiment for each article using the <strong>AFINN</strong> dictionary. While a dictionary approach is probably not ideal to analyze political newspaper articles this introduction provides an insight how the newsanchor package could be used for more detailed analysis.</p>
 <div id="dependencies" class="section level2">
 <h2>Dependencies</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(newsanchor) <span class="co"># download newspaper articles</span>
+<p>Before we start downloading the actual content we have to load the required packages. Below you find a short summary for the purpose of each package.</p>
+<p><code>newsanchor</code> enables us to download necessary meta data. Unfortuentaly, the free newsapi account only allows to query data within the last 3 months. For the purpose of this tutorial we use an internal data set. The data set is also available using the <code>newsanchor::sample_response</code>. You find detailed information about the sample response object using <code>?newsanchor::sample_response</code>.</p>
+<p><code>robotstxt</code> provides functionalities that automatically read the <code>robots.txt</code> file of a website. The <code>robots.txt</code> file allows website administrators to define which scrappers and robots are allowed to visit certain folders within the webiste. While the usage is mainly based on trust you should definitly always check the file.</p>
+<p><code>httr</code> is a wrapper for the curl package and provides functions to query modern web APIs. It allows to easily download websites and access useful information about the connection.</p>
+<p><code>rvest</code> ships with functions that allow to easily parse HTML to characters. We can search for certain items on the downloaded website and easily access their text and attributes.</p>
+<p><code>dplyr</code> is a package that provides us with neat functions to manipulate data frames. It will be essential in our last task: the sentiment calculation. Furthermore, it autmatically loads <code>magrittr</code> package with it’s beautiful pipe operators.</p>
+<p><code>stringr</code> is a wrapper for string manipulation functions. It provides a consistent grammer. Hence, we prefer it over <code>stringi</code> and the <code>grep</code> family.</p>
+<p><code>tidytext</code> is a tool that provides text manipulation along with the tidy data principles. It works well along with <code>dplyr</code> and is used to apply the sentiment calculations. `</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># load all required packages</span>
+<span class="kw">library</span>(newsanchor) <span class="co"># download newspaper articles</span>
+<span class="kw">library</span>(robotstxt)  <span class="co"># get robots.txt</span>
 <span class="kw">library</span>(httr)       <span class="co"># http requests</span>
-<span class="kw">library</span>(rvest)      <span class="co"># web scraping tools</span>
-<span class="kw">library</span>(dplyr)      <span class="co"># pipes</span>
-<span class="kw">library</span>(stringr)    <span class="co"># string/character manipulations </span>
+<span class="kw">library</span>(rvest)      <span class="co"># web scraping tools</span></code></pre></div>
+<pre><code>## Loading required package: xml2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)      <span class="co"># easy data frame manipulations</span></code></pre></div>
+<pre><code>## 
+## Attaching package: 'dplyr'</code></pre>
+<pre><code>## The following objects are masked from 'package:stats':
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stringr)    <span class="co"># string/character manipulations </span>
 <span class="kw">library</span>(tidytext)   <span class="co"># tidy text analysis</span></code></pre></div>
 </div>
-<div id="download-spiegel-online-articles-and-their-corresponding-urls" class="section level2">
-<h2>Download Spiegel Online articles and their corresponding URLs</h2>
-</div>
-<div id="download-meta-data" class="section level1">
-<h1>download meta data</h1>
+<div id="download-nyt-articles-and-their-corresponding-urls" class="section level2">
+<h2>Download NYT articles and their corresponding URLs</h2>
+<p>Firstly, we have to download the meta data using the <code>get_everything</code> function. We query the newsapi for all articles about Donald Trump between 03rd and 09th December 2019 in the NYT. Instead searching in the NYT, we could also narrow our search by looking for news in a certain language using the <code>language</code> argument. All available arguments can be seen using <code>?get_everything</code>. We assign the result to <code>response</code> and extract the data frame that includes newspaper articles and responding meta data, such as URL, author, title, etc. Unfortuentaly, the data frame does not include the article text.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get heaadlines published by spiegel online</span>
 response &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query   =</span> <span class="st">&quot;Trump&quot;</span>,
                            <span class="dt">sources =</span> <span class="st">&quot;the-new-york-times&quot;</span>,
-                           <span class="dt">from    =</span> <span class="st">&quot;2018-10-29&quot;</span>,
-                           <span class="dt">to      =</span> <span class="st">&quot;2018-11-04&quot;</span>) 
+                           <span class="dt">from    =</span> <span class="st">&quot;2018-12-03&quot;</span>,
+                           <span class="dt">to      =</span> <span class="st">&quot;2018-12-09&quot;</span>) 
 
 <span class="co"># extract response data frame</span>
 articles &lt;-<span class="st"> </span>response<span class="op">$</span>results_df</code></pre></div>
-<div id="check-if-we-are-allowed-to-scrape" class="section level2">
-<h2>Check if we are allowed to scrape</h2>
+<p>Since newsapi does not allow to query results that are older than 3 months, we decided to append a sample data set to this package. Below is shown how you can load the example data set that equals the above query.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">articles &lt;-<span class="st"> </span>sample_response<span class="op">$</span>results_df</code></pre></div>
 </div>
-<div id="define-a-function-to-scrape-article-body" class="section level2">
-<h2>Define a function to scrape article body</h2>
+<div id="are-we-allowed-to-scrape-nyt" class="section level2">
+<h2>Are we allowed to scrape NYT?</h2>
+<p>Before, we start downloading a lot of articles from the NYT we should check if we are allowed to access their website automatically. As explained previously, usually each website provides a <code>robots.txt</code> file that includes permissions for bots. You can see the file by opening (<a href="https://www.nytimes.com/robots.txt" class="uri">https://www.nytimes.com/robots.txt</a>)[<a href="https://www.nytimes.com/robots.txt" class="uri">https://www.nytimes.com/robots.txt</a>] in your favorite browser. By the way, appending <code>robots.txt</code> to the root URL should work for every website. The <code>robotstxt</code> package provides the function <code>paths_allowed()</code> that returns <code>TRUE</code> when you are allowed to scrape the site and vice versa <code>FALSE</code>. We test our url vector. Afterwards, we use <code>all()</code>. <code>all()</code> returns <code>TRUE</code> when all items of a vector a <code>TRUE</code>. Since <code>all()</code> yields <code>TRUE</code> we are allowed to scrape the given URLs.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">allowed &lt;-<span class="st"> </span><span class="kw">paths_allowed</span>(articles<span class="op">$</span>url)
+<span class="kw">all</span>(allowed)</code></pre></div>
+</div>
+<div id="define-a-function-to-scrape-the-article-body" class="section level2">
+<h2>Define a function to scrape the article body</h2>
+<p>We define a function that allows us to download the article body for any given NYT URL. Hence, the function takes only one argument: the URL. Firstly, we download the complete website using the <code>GET()</code> function from the <code>httr</code> package.</p>
+<p>vectorize</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_article_body &lt;-<span class="st"> </span><span class="cf">function</span> (url) {
   
   <span class="co"># download article page</span>
@@ -138,19 +186,220 @@ articles<span class="op">$</span>body &lt;-<span class="st"> </span><span class=
 pb &lt;-<span class="st"> </span><span class="kw">txtProgressBar</span>(<span class="dt">min     =</span> <span class="dv">1</span>, 
                      <span class="dt">max     =</span> <span class="kw">nrow</span>(articles), 
                      <span class="dt">initial =</span> <span class="dv">1</span>, 
-                     <span class="dt">style   =</span> <span class="dv">3</span>)
-
-<span class="co"># loop through articles and &quot;apply&quot; function</span>
+                     <span class="dt">style   =</span> <span class="dv">3</span>)</code></pre></div>
+<pre><code>## 
+  |                                                                       
+  |                                                                 |   0%</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># loop through articles and &quot;apply&quot; function</span>
 <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(articles)) {
   <span class="co"># &quot;apply&quot; function to i url</span>
   articles<span class="op">$</span>body[i] &lt;-<span class="st"> </span><span class="kw">get_article_body</span>(articles<span class="op">$</span>url[i])
-
+  
   <span class="co"># update progress bar</span>
   <span class="kw">setTxtProgressBar</span>(pb, i)
-
+  
   <span class="co"># sleep for 1 sec</span>
   <span class="kw">Sys.sleep</span>(<span class="dv">1</span>)
 }</code></pre></div>
+<pre><code>## 
+  |                                                                       
+  |=                                                                |   1%
+  |                                                                       
+  |=                                                                |   2%
+  |                                                                       
+  |==                                                               |   3%
+  |                                                                       
+  |===                                                              |   4%
+  |                                                                       
+  |===                                                              |   5%
+  |                                                                       
+  |====                                                             |   6%
+  |                                                                       
+  |=====                                                            |   7%
+  |                                                                       
+  |=====                                                            |   8%
+  |                                                                       
+  |======                                                           |   9%
+  |                                                                       
+  |=======                                                          |  10%
+  |                                                                       
+  |=======                                                          |  11%
+  |                                                                       
+  |========                                                         |  12%
+  |                                                                       
+  |=========                                                        |  13%
+  |                                                                       
+  |=========                                                        |  14%
+  |                                                                       
+  |==========                                                       |  15%
+  |                                                                       
+  |===========                                                      |  16%
+  |                                                                       
+  |===========                                                      |  17%
+  |                                                                       
+  |============                                                     |  18%
+  |                                                                       
+  |============                                                     |  19%
+  |                                                                       
+  |=============                                                    |  20%
+  |                                                                       
+  |==============                                                   |  21%
+  |                                                                       
+  |==============                                                   |  22%
+  |                                                                       
+  |===============                                                  |  23%
+  |                                                                       
+  |================                                                 |  24%
+  |                                                                       
+  |================                                                 |  25%
+  |                                                                       
+  |=================                                                |  26%
+  |                                                                       
+  |==================                                               |  27%
+  |                                                                       
+  |==================                                               |  28%
+  |                                                                       
+  |===================                                              |  29%
+  |                                                                       
+  |====================                                             |  30%
+  |                                                                       
+  |====================                                             |  31%
+  |                                                                       
+  |=====================                                            |  32%
+  |                                                                       
+  |======================                                           |  33%
+  |                                                                       
+  |======================                                           |  34%
+  |                                                                       
+  |=======================                                          |  35%
+  |                                                                       
+  |========================                                         |  36%
+  |                                                                       
+  |========================                                         |  37%
+  |                                                                       
+  |=========================                                        |  38%
+  |                                                                       
+  |==========================                                       |  39%
+  |                                                                       
+  |==========================                                       |  40%
+  |                                                                       
+  |===========================                                      |  41%
+  |                                                                       
+  |============================                                     |  42%
+  |                                                                       
+  |============================                                     |  43%
+  |                                                                       
+  |=============================                                    |  44%
+  |                                                                       
+  |==============================                                   |  45%
+  |                                                                       
+  |==============================                                   |  46%
+  |                                                                       
+  |===============================                                  |  47%
+  |                                                                       
+  |================================                                 |  48%
+  |                                                                       
+  |================================                                 |  49%
+  |                                                                       
+  |=================================                                |  51%
+  |                                                                       
+  |=================================                                |  52%
+  |                                                                       
+  |==================================                               |  53%
+  |                                                                       
+  |===================================                              |  54%
+  |                                                                       
+  |===================================                              |  55%
+  |                                                                       
+  |====================================                             |  56%
+  |                                                                       
+  |=====================================                            |  57%
+  |                                                                       
+  |=====================================                            |  58%
+  |                                                                       
+  |======================================                           |  59%
+  |                                                                       
+  |=======================================                          |  60%
+  |                                                                       
+  |=======================================                          |  61%
+  |                                                                       
+  |========================================                         |  62%
+  |                                                                       
+  |=========================================                        |  63%
+  |                                                                       
+  |=========================================                        |  64%
+  |                                                                       
+  |==========================================                       |  65%
+  |                                                                       
+  |===========================================                      |  66%
+  |                                                                       
+  |===========================================                      |  67%
+  |                                                                       
+  |============================================                     |  68%
+  |                                                                       
+  |=============================================                    |  69%
+  |                                                                       
+  |=============================================                    |  70%
+  |                                                                       
+  |==============================================                   |  71%
+  |                                                                       
+  |===============================================                  |  72%
+  |                                                                       
+  |===============================================                  |  73%
+  |                                                                       
+  |================================================                 |  74%
+  |                                                                       
+  |=================================================                |  75%
+  |                                                                       
+  |=================================================                |  76%
+  |                                                                       
+  |==================================================               |  77%
+  |                                                                       
+  |===================================================              |  78%
+  |                                                                       
+  |===================================================              |  79%
+  |                                                                       
+  |====================================================             |  80%
+  |                                                                       
+  |=====================================================            |  81%
+  |                                                                       
+  |=====================================================            |  82%
+  |                                                                       
+  |======================================================           |  83%
+  |                                                                       
+  |======================================================           |  84%
+  |                                                                       
+  |=======================================================          |  85%
+  |                                                                       
+  |========================================================         |  86%
+  |                                                                       
+  |========================================================         |  87%
+  |                                                                       
+  |=========================================================        |  88%
+  |                                                                       
+  |==========================================================       |  89%
+  |                                                                       
+  |==========================================================       |  90%
+  |                                                                       
+  |===========================================================      |  91%
+  |                                                                       
+  |============================================================     |  92%
+  |                                                                       
+  |============================================================     |  93%
+  |                                                                       
+  |=============================================================    |  94%
+  |                                                                       
+  |==============================================================   |  95%
+  |                                                                       
+  |==============================================================   |  96%
+  |                                                                       
+  |===============================================================  |  97%
+  |                                                                       
+  |================================================================ |  98%
+  |                                                                       
+  |================================================================ |  99%
+  |                                                                       
+  |=================================================================| 100%</code></pre>
 </div>
 <div id="calculate-sentiment" class="section level2">
 <h2>Calculate sentiment</h2>
@@ -167,6 +416,7 @@ pb &lt;-<span class="st"> </span><span class="kw">txtProgressBar</span>(<span cl
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">sentiment =</span> <span class="kw">sum</span>(sentiment))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(sentiment <span class="op">~</span><span class="st"> </span>date,
      <span class="dt">data =</span> articles_sentiment)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 <div id="what-else-could-be-done" class="section level2">
 <h2>What else could be done?</h2>
@@ -176,7 +426,6 @@ pb &lt;-<span class="st"> </span><span class="kw">txtProgressBar</span>(<span cl
 <li>fetch comments</li>
 <li>download all images</li>
 </ul>
-</div>
 </div>
 
 
