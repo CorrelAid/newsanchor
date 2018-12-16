@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_sources.R
 \name{get_sources}
 \alias{get_sources}
-\title{Get (currently) available sources from newsapi.org.}
+\title{Returns selected sources from newsapi.org}
 \usage{
 get_sources(category = NULL, language = NULL, country = NULL,
   api_key = Sys.getenv("NEWS_API_KEY"))
@@ -14,19 +14,25 @@ get_sources(category = NULL, language = NULL, country = NULL,
 
 \item{country}{the newsoutlet's country (e.g. "us").}
 
-\item{api_key}{your API key - it is required to make the API call.}
+\item{api_key}{Character string with the API key you get from newsapi.org. 
+Passing it is compulsory. Alternatively, function can be 
+provided from the global environment (see \code{set_api_key}).}
 }
 \value{
-A dataframe based on your specifications
+List with two dataframes:\cr
+        1) Data frame with \code{results_df}\cr
+        2) Data frame with \code{meta_data}
 }
 \description{
-Get (currently) available sources from newsapi.org.
+\code{get_sources} returns the news sources currently available on newsapi.org. 
+The sources can be filtered using category, language or country. If the arguments are empty
+the query return all available sources.
 }
 \examples{
 \dontrun{
 get_sources(api_key)
-get_sources(api_key, category="technology")
-get_sources(api_key, language="en")
+get_sources(api_key, category = "technology")
+get_sources(api_key, language = "en")
 }
 
 }
