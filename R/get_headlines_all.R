@@ -4,11 +4,11 @@
 #' specific category in a country, single source, or multiple sources. You can 
 #' also search with keywords. Articles are sorted by the earliest date 
 #' published first. To automatically download all results, use 
-#' \code{get_headlines_all}\cr\cr
+#' \code{get_headlines_all}.\cr\cr
 #' Please check that the api_key is available. You can provide an explicit
 #' definition of the api_key or use \code{set_api_key} \cr\cr
-#' For valid searchterms see \code{data(searchterms)}
-#' 
+#' Valid searchterms are provided in \code{terms_category}, 
+#' \code{terms_country} or \code{terms_sources}
 #' 
 #' @param query Character string that contains the searchterm 
 #' @param category Category you want headlines from
@@ -38,35 +38,42 @@ get_headlines_all <- function(query     = NULL,
   
   
 
-  # initial request at newsapi.org ------------------------------------------
-  
-  # request
+
+  # initial request ---------------------------------------------------------
+
+  # initial call to newsapi.org
+  page = 1
   results <- get_headlines(query, category, country, sources, 
-                           page = 1, page_size = 100, api_key)
+                           page = page, page_size = 100, api_key)
   
-  # additional requests (if necessary) --------------------------------------
   
-  # check whether number of results is greater than results per page
-  if (results$metadata$total_results > results$metadata$page_size) {
-  
-    # number of pages for all results
-    page_size <- as.integer(
-      results$metadata$total_results / results$metadata$page_size)
+
+  # further requests (if necessary) -----------------------------------------
+
+  # calculate maximal number of pages to download all results
+  max_no_of_pages <- ceiling(results$metadata$total_results / 
+                             results$metadata$page_size)
+   
+  # make further requests while current page < than maximal no. of pages
+  while(page < max_no_of_pages) {
     
-    #--- and now loop across search queries
-    for(i in seq.int(2, page_size+1)) {
-      
-      # temporary results
-      results_tmp <- get_headlines(query, category, country, sources, 
-                                   page = i, page_size = 100, api_key)
-      
-      # bind new results
-      results$metadata   <- rbind(results$metadata,   results_tmp$metadata)
-      results$results_df <- rbind(results$results_df, results_tmp$results_df)
-      
+    # avoid unnecessary requests if status-code !=200 
+    if (tail(results$metadata$status_code, n=1) != 200)  {
+      break
     }
+      
+    # update page number
+    page= page + 1
+
+    # temporary results
+    results_tmp <- get_headlines(query, category, country, sources, 
+                                 page = page, page_size = 100, api_key)
+      
+    # bind new results
+    results$metadata   <- rbind(results$metadata,   results_tmp$metadata)
+    results$results_df <- rbind(results$results_df, results_tmp$results_df)
+
   }
-  
 
   # return results ----------------------------------------------------------
   return(results)

@@ -31,10 +31,11 @@ List with two dataframes:\cr
 specific category in a country, single source, or multiple sources. You can 
 also search with keywords. Articles are sorted by the earliest date 
 published first. To automatically download all results, use 
-\code{get_headlines_all}\cr\cr
+\code{get_headlines_all}.\cr\cr
 Please check that the api_key is available. You can provide an explicit
 definition of the api_key or use \code{set_api_key} \cr\cr
-For valid searchterms see \code{data(searchterms)}
+Valid searchterms are provided in \code{terms_category}, 
+\code{terms_country} or \code{terms_sources}
 }
 \examples{
 \dontrun{
