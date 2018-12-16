@@ -12,14 +12,14 @@
 
 <meta name="author" content="Lars Schulze lars.schulze@hotmail.com" />
 
-<meta name="date" content="2018-12-12" />
+<meta name="date" content="2018-12-16" />
 
 <title>Usage of newsanchor</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -55,7 +55,29 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -70,19 +92,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Usage of newsanchor</h1>
 <h4 class="author"><em>Lars Schulze <a href="mailto:lars.schulze@hotmail.com">lars.schulze@hotmail.com</a></em></h4>
-<h4 class="date"><em>2018-12-12</em></h4>
+<h4 class="date"><em>2018-12-16</em></h4>
 
 
 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(newsanchor)</code></pre></div>
-<p><br> This is an introductory vignette to the <strong>newsanchor</strong> package. The package connects to <a href="https://newsapi.org/" class="uri">https://newsapi.org/</a>. <strong>News API</strong> is a simple HTTP REST API for searching and retrieving live articles from all over the web. You can get breaking news headlines, and search for articles from over 30,000 news sources and blogs. <br> The API can generally be used for free for non-commercial use cases, <em>[but you might experience some restrictions in your results]</em>. Please see also <a href="https://newsapi.org/pricing" class="uri">https://newsapi.org/pricing</a> for commerical options. <br><br></p>
+<p><br> This is an introductory vignette to the <strong>newsanchor</strong> package. The package connects to <a href="https://newsapi.org/" class="uri">https://newsapi.org/</a>. <strong>News API</strong> is a simple HTTP REST API for searching and retrieving live articles from all over the web. You can get breaking news headlines, and search for articles from over 30,000 news sources and blogs. <br> The API can generally be used for free for non-commercial use cases. However, please be aware, that this results in some restrictions. For instance, you cannot download more than 1.000 results. Please see also <a href="https://newsapi.org/pricing" class="uri">https://newsapi.org/pricing</a> for commerical options. <br><br></p>
 <p>The package helps you to answer questions like the following:<br></p>
 <ul>
 <li>What are the <strong>top stories</strong> running right now in the world?</li>
 <li>What <strong>articles</strong> were published about your favorite politician, movie star, singer, or celebrity <strong>today</strong>?</li>
 <li>What are the breaking news in <strong>business</strong>, <strong>entertainment</strong>, or <strong>sports</strong>?</li>
 </ul>
-<p>The package is publicly available at GitHub and hopefully soon at CRAN as well. In this vignette we demonstrate basic features of the package. In a second vignette, we show how the package can be used to scrape your results from an example online newspaper (Spiegel Online in our case).<br><br></p>
+<p>The package is publicly available at GitHub and hopefully soon at CRAN as well. In this vignette we demonstrate basic features of the package. In a second vignette, we show how the package can be used to scrape your results from an example online newspaper (i.e. New York Times).<br><br></p>
 <div id="authentication" class="section level2">
 <h2>Authentication</h2>
 <p>You need an API key to access <a href="https://newsapi.org" class="uri">https://newsapi.org</a>. You can apply for a key at <a href="https://newsapi.org/register/" class="uri">https://newsapi.org/register/</a>. The function below appends the key automatically to your R environment file. Hence, every time you start R the key is loaded. The functions <code>get_headlines</code>, <code>get_headlines_all</code>, <code>get_everything</code>, <code>get_everything_all</code>, and <code>get_sources</code> access your key automatically by executing <code>Sys.getenv(&quot;NEWS_API_KEY&quot;)</code>. Alternatively, you can provide an explicit definition of your api_key with each function call.<br><br></p>
@@ -112,7 +134,7 @@ results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<spa
 results &lt;-<span class="st"> </span><span class="kw">get_headlines</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>, <span class="dt">page =</span> <span class="dv">3</span>, <span class="dt">page_size =</span> <span class="dv">20</span>)</code></pre></div>
 <p><strong>get_headlines_all:</strong><br> To automatically download all results, use <strong>get_headlines_all</strong>. This function is build around <code>get_headlines</code> and provides the same options (except for <code>page</code> and <code>page_size</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_headlines_all</span>(<span class="dt">category =</span> <span class="st">&quot;sports&quot;</span>)</code></pre></div>
-<p><strong>searchterms:</strong><br> We provide different dataframes :<code>terms_category</code>, <code>terms_sources</code>, and <code>terms_country</code>. They contain information on valid search terms. Access them if you are not sure whether some country or some source will work.</p>
+<p><strong>searchterms:</strong><br> We provide different dataframes :<code>terms_category</code>, <code>terms_sources</code>, and <code>terms_country</code>. They contain information on valid search terms. Access them if you are not sure whether some country or some sources will work.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">terms_category
 terms_country
 terms_sources</code></pre></div>
@@ -163,14 +185,13 @@ results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<sp
 results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">sort_by =</span> <span class="st">&quot;publishedAt&quot;</span>)</code></pre></div>
 <p><strong>get_everything_all:</strong><br> To automatically download all results, use <strong>get_everything_all</strong>. This function is build around <code>get_everything</code> and provides the same options (except for <em>page</em> and <em>page_size</em>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_everything_all</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>)</code></pre></div>
-<p><strong>searchterms:</strong><br> We provide different dataframes <code>terms_language</code> and <code>terms_sources</code> with valid search terms. <strong>YANNIK: Sources verwendest du gar nicht, oder?</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">terms_language
-terms_sources</code></pre></div>
+<p><strong>searchterms:</strong><br> We provide a dataframe <code>terms_language</code> with valid search terms.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">terms_language</code></pre></div>
 <p><br></p>
 </div>
 <div id="get_sources" class="section level2">
 <h2>get_sources</h2>
-<p>This function returns the subset of news publishers that top headlines are available from.</p>
+<p>This function returns the subset of news publishers that top headlines are available from. This information is also provided in a dataframe <code>terms_sources</code>. However, this function also allows to return sources for specific categories or languages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">publisher &lt;-<span class="st"> </span><span class="kw">get_sources</span>()</code></pre></div>
 <p><br></p>
 </div>
