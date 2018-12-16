@@ -72,16 +72,18 @@ get_sources <- function(category = NULL,
   # build url for query
   url <- httr::build_url(url)
   # get results from query to newsapi
-  result <- httr::GET(url, httr::add_headers("X-Api-Key" = api_key))
+  results <- httr::GET(url, httr::add_headers("X-Api-Key" = api_key))
   
   # build df from results ---------------------------------------------------
   # extract content
-  content_text   <- httr::content(result, "text")
+  content_text   <- httr::content(results, "text")
   content_parsed <- jsonlite::fromJSON(content_text)
   
   # check whether content_parsed is NULL 
   if(length(content_parsed$sources) < 1){
     content_parsed$totalResults <- 0
+  } else {
+    content_parsed$totalResults <- nrow(content_parsed$sources)
   }
   
   #--- Check if http status code equals 200 (and construct results accordingly)
@@ -95,7 +97,7 @@ get_sources <- function(category = NULL,
                            status_code   = results$status_code,
                            request_date  = results$date,
                            request_url   = results$url,
-                           code          = result$status_code,
+                           code          = results$status_code,
                            message       = content_parsed$status,
                            stringsAsFactors = FALSE)
   }
