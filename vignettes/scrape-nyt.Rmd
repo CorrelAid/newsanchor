@@ -75,9 +75,9 @@ all(allowed)
 
 ## Define a function to scrape the article body
 
-We define a function that allows us to download the article body for any given NYT URL. Hence, the function takes only one argument: the URL. Firstly, we download the complete website using the `GET()` function from the `httr` package. 
+We define a function that allows us to download the article body for any given NYT URL. Hence, the function takes only one argument: the URL. Firstly, we download the complete website using the `GET()` function from the `httr` package. We can check whether the server returned a valid answer. Generally, we accept all responses with a 200 status code. Usually, 4xx codes describe a user error and 5xx errors describe a server error. An useful overview on the mostly used status codes can be found on [wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes). If the server returns an error we return `NA`. If the server response is valid, we extract the content of the response. The `content()` function returns only the raw HTML code of the website. We can parse the HTML code using the `read_html` function so that R "understands" HTML. Subsequently, we can define a selector to search for the article text. The selector defines which elements on a website we want to target. You find an introduction to selectors [here](https://www.w3schools.com/cssref/trysel.asp). Furthermore, there is the very useful [selector gadget tool](https://selectorgadget.com/) to find selectors on every website. Finally, we can search for the selector using `html_nodes()` and extract the content using `html_text()`. Additionally, we remove all line breaks using `str_replace_all()` and paste/glue the character vector into one big text. 
 
-vectorize 
+This function is of course only a simple sample. We could amend the function with further tests of the returned content and detailed error handling and messages. Addtionally, we could vectorize the function and allow users to enter a vector of URLs. This could be done using functions of the `apply` family. However, for the purpose of this tutorial we want to keep the function as simple as possible.
 
 
 ```{r define parsing function, cache=T}
