@@ -85,11 +85,11 @@ get_everything_all <- function(query,
   if (results$metadata$total_results > results$metadata$page_size) {
     
     # number of pages for all results
-    page_size <- as.integer(
-      results$metadata$total_results / results$metadata$page_size)
+    max_no_of_pages <- ceiling(results$metadata$total_results / 
+                                 results$metadata$page_size)
     
     #--- and now loop across search queries
-    for(i in seq.int(2, page_size + 1)) {
+    for(i in seq.int(2, max_no_of_pages)) {
       
       # temporary results
       results_tmp <-  get_everything(query, 
@@ -104,7 +104,7 @@ get_everything_all <- function(query,
                                      page_size = 100, 
                                      api_key)
       
-      if(results_tmp$metadata$status_code == 429) break
+      if (tail(results$metadata$status_code, n = 1) != 200) break
 
       # bind new results
       results$metadata   <- rbind(results$metadata,   results_tmp$metadata)
