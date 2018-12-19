@@ -225,7 +225,7 @@ get_everything <- function(query,
     # Extract meta data 
     metadata <- data.frame(total_results = 0, 
                            status_code   = results$status_code,
-                           request_data  = results$date,
+                           request_date  = results$date,
                            request_url   = results$url,
                            page_size     = NA,
                            page          = NA,
