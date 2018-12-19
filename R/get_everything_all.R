@@ -104,6 +104,8 @@ get_everything_all <- function(query,
                                      page_size = 100, 
                                      api_key)
       
+      if(results_tmp$metadata$status_code == 429) break
+
       # bind new results
       results$metadata   <- rbind(results$metadata,   results_tmp$metadata)
       results$results_df <- rbind(results$results_df, results_tmp$results_df)
