@@ -66,7 +66,6 @@ get_everything_all <- function(query,
   # initial request at newsapi.org ------------------------------------------
   
   # request
-  page = 1
   results <- get_everything(query, 
                             sources, 
                             domains, 
@@ -75,7 +74,7 @@ get_everything_all <- function(query,
                             to,
                             language,
                             sort_by,
-                            page = page, 
+                            page = 1, 
                             page_size = 100, 
                             api_key)
   
@@ -84,7 +83,7 @@ get_everything_all <- function(query,
   # check whether number of results is greater than results per page
   if (results$metadata$total_results > results$metadata$page_size) {
     
-    # number of pages for all results
+    # calculate max number of pages to download all results
     max_no_of_pages <- ceiling(results$metadata$total_results / 
                                  results$metadata$page_size)
     
@@ -104,11 +103,13 @@ get_everything_all <- function(query,
                                      page_size = 100, 
                                      api_key)
       
-      if (tail(results$metadata$status_code, n = 1) != 200) break
-
       # bind new results
       results$metadata   <- rbind(results$metadata,   results_tmp$metadata)
       results$results_df <- rbind(results$results_df, results_tmp$results_df)
+      
+      # avoid unnecessary requests if last status-code !=200 
+      if (results_tmp$metadata$status_code != 200) break
+      
     }
   }
   

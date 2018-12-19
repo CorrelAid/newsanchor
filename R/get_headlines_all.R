@@ -41,38 +41,36 @@ get_headlines_all <- function(query     = NULL,
 
   # initial request ---------------------------------------------------------
 
-  # initial call to newsapi.org
-  page = 1
+  # request
   results <- get_headlines(query, category, country, sources, 
-                           page = page, page_size = 100, api_key)
+                           page = 1, page_size = 100, api_key)
   
   
 
   # further requests (if necessary) -----------------------------------------
 
-  # calculate maximal number of pages to download all results
-  max_no_of_pages <- ceiling(results$metadata$total_results / 
-                             results$metadata$page_size)
-   
-  # make further requests while current page < than maximal no. of pages
-  while(page < max_no_of_pages) {
+  # check whether number of results is greater than results per page
+  if (results$metadata$total_results > results$metadata$page_size) {
     
-    # avoid unnecessary requests if status-code !=200 
-    if (tail(results$metadata$status_code, n=1) != 200)  {
-      break
+    # calculate maximal number of pages to download all results
+    max_no_of_pages <- ceiling(results$metadata$total_results / 
+                               results$metadata$page_size)
+     
+    #--- and now loop across search queries
+    for(i in seq.int(2, max_no_of_pages)) {
+      
+      # temporary results
+      results_tmp <- get_headlines(query, category, country, sources, 
+                                   page = i, page_size = 100, api_key)
+      
+      # bind new results
+      results$metadata   <- rbind(results$metadata,   results_tmp$metadata)
+      results$results_df <- rbind(results$results_df, results_tmp$results_df)
+      
+      # avoid unnecessary requests if last status-code !=200 
+      if (results_tmp$metadata$status_code != 200) break
+      
     }
-      
-    # update page number
-    page= page + 1
-
-    # temporary results
-    results_tmp <- get_headlines(query, category, country, sources, 
-                                 page = page, page_size = 100, api_key)
-      
-    # bind new results
-    results$metadata   <- rbind(results$metadata,   results_tmp$metadata)
-    results$results_df <- rbind(results$results_df, results_tmp$results_df)
-
   }
 
   # return results ----------------------------------------------------------
