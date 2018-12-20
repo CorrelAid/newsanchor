@@ -183,9 +183,10 @@ get_everything <- function(query,
     names(results_df)[names(results_df) == 'urlToImage'] <- 'url_to_image'
     
     # change col 'published_at' from character to POSIX (if available)
-    if(!is.null(results$published_at)){
+    if(!is.null(results_df$published_at)){
       results_df$published_at <- as.POSIXct(results_df$published_at,
-                                            tz = "UTC")
+                                            tz = "UTC",
+                                            format("%Y-%m-%dT%H:%M:%OSZ"))
     }
     
     # Create metadata list
