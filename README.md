@@ -10,7 +10,7 @@ Purpose / Description
 
 **newsanchor** provides a wrapper for <https://newsapi.org/>. **News API** is a simple HTTP REST API for searching and retrieving live articles from all over the web. You can get breaking news headlines, and search for articles from over 30,000 news sources and blogs.
 
-The API can generally be used for free for non-commercial use cases, *\[but you might experience some restrictions in your results\]*. Please see also <https://newsapi.org/pricing> for commerical options.
+The API can generally be used for free for non-commercial use cases. However, please be aware, that this results in some restrictions. For instance, you cannot download more than 1.000 results. Please see also <https://newsapi.org/pricing> for commerical options.
 
 The package helps you to answer questions like the following:
 
