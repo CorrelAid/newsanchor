@@ -4,34 +4,34 @@ author: "Jan Dix <jan.dix@uni-konstanz.de>"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+%\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
-
-
-This introduction shows how you could gether meta data, such as title and URL, from the newsapi and use this information to download the complete article and calculate the sentiment for text body. First, we will download the meta data using the `newsanchor` package. Secondly, we will write a function that allows us to automatically scrape the text of any New York Times (NYT) article from their website. We will apply this function on the URLs fetched in the first section. Thirdly, we will calculate the sentiment for each article using the **AFINN** dictionary. While a dictionary approach is probably not ideal to analyze political newspaper articles this introduction provides an insight how the newsanchor package could be used for more detailed analysis.  
-
-## Dependencies
-
-Before we start downloading the actual content we have to load the required packages. Below you find a short summary for the purpose of each package. 
-
-`newsanchor` enables us to download necessary meta data. Unfortuentaly, the free newsapi account only allows to query data within the last 3 months. For the purpose of this tutorial we use an internal data set. The data set is also available using the `newsanchor::sample_response`. You find detailed information about the sample response object using `?newsanchor::sample_response`.   
-
-`robotstxt` provides functionalities that automatically read the `robots.txt` file of a website. The `robots.txt` file allows website administrators to define which scrappers and robots are allowed to visit certain folders within the webiste. While the usage is mainly based on trust you should definitly always check the file.
-
-`httr` is a wrapper for the curl package and provides functions to query modern web APIs. It allows to easily download websites and access useful information about the connection.
-
-`rvest` ships with functions that allow to easily parse HTML to characters. We can search for certain items on the downloaded website and easily access their text and attributes.
-
-`dplyr` is a package that provides us with neat functions to manipulate data frames. It will be essential in our last task: the sentiment calculation. Furthermore, it autmatically loads `magrittr` package with it's beautiful pipe operators. 
-
-`stringr` is a wrapper for string manipulation functions. It provides a consistent grammer. Hence, we prefer it over `stringi` and the `grep` family.
-
-`tidytext` is a tool that provides text manipulation along with the tidy data principles. It works well along with `dplyr` and is used to apply the sentiment calculations.
-`
-
-```{r load packages}
+  ---
+  
+  
+  This introduction shows how you could gether meta data, such as title and URL, from the newsapi and use this information to download the complete article and calculate the sentiment for text body. First, we will download the meta data using the `newsanchor` package. Secondly, we will write a function that allows us to automatically scrape the text of any New York Times (NYT) article from their website. We will apply this function on the URLs fetched in the first section. Thirdly, we will calculate the sentiment for each article using the **AFINN** dictionary. While a dictionary approach is probably not ideal to analyze political newspaper articles this introduction provides an insight how the newsanchor package could be used for more detailed analysis.  
+  
+  ## Dependencies
+  
+  Before we start downloading the actual content we have to load the required packages. Below you find a short summary for the purpose of each package. 
+  
+  `newsanchor` enables us to download necessary meta data. Unfortuentaly, the free newsapi account only allows to query data within the last 3 months. For the purpose of this tutorial we use an internal data set. The data set is also available using the `newsanchor::sample_response`. You find detailed information about the sample response object using `?newsanchor::sample_response`.   
+  
+  `robotstxt` provides functionalities that automatically read the `robots.txt` file of a website. The `robots.txt` file allows website administrators to define which scrappers and robots are allowed to visit certain folders within the webiste. While the usage is mainly based on trust you should definitly always check the file.
+  
+  `httr` is a wrapper for the curl package and provides functions to query modern web APIs. It allows to easily download websites and access useful information about the connection.
+  
+  `rvest` ships with functions that allow to easily parse HTML to characters. We can search for certain items on the downloaded website and easily access their text and attributes.
+  
+  `dplyr` is a package that provides us with neat functions to manipulate data frames. It will be essential in our last task: the sentiment calculation. Furthermore, it autmatically loads `magrittr` package with it's beautiful pipe operators. 
+  
+  `stringr` is a wrapper for string manipulation functions. It provides a consistent grammer. Hence, we prefer it over `stringi` and the `grep` family.
+  
+  `tidytext` is a tool that provides text manipulation along with the tidy data principles. It works well along with `dplyr` and is used to apply the sentiment calculations.
+  `
+  
+  ```{r load packages}
 # load all required packages
 library(newsanchor) # download newspaper articles
 library(robotstxt)  # get robots.txt
@@ -48,10 +48,10 @@ Firstly, we have to download the meta data using the `get_everything` function. 
 
 ```{r get meta data, eval=FALSE}
 # get heaadlines published by spiegel online
-response <- get_everything(query   = "Trump",
-                           sources = "the-new-york-times",
-                           from    = "2018-12-03",
-                           to      = "2018-12-09") 
+response <- get_everything_all(query   = "Trump",
+                               sources = "the-new-york-times",
+                               from    = "2018-12-03",
+                               to      = "2018-12-09") 
 
 # extract response data frame
 articles <- response$results_df
@@ -113,7 +113,7 @@ get_article_body <- function (url) {
 
 ## Apply the new function
 
-Why do not use an apply function ?
+After we defined a function that is able to scrape NYT articles, we want to *apply* the function to our list of URLs. We append a empty new column to the data set. AFterwards, we initialize a progress bar which will show us the progress within the loop. Within each loop we apply the function to the i-th URL and save the result to the newly created body column. Addtionally, we pause the program for 1 second. You may ask now, why we talk about *apply* all the time but we do not use the apply family? The answer is multifaceted. First, we want to execute the function wihthin a loop because we want to keep track of the progress. Secondly, we can easily debug our function if we know which URL may breaks the function. However, if you write a more advanced function you could easily replace the loop with an *apply* function, such as `sapply()`.    
 
 ```{r apply function to urls, cache=T}
 # create new text column
@@ -140,36 +140,34 @@ for (i in 1:nrow(articles)) {
 
 ## Calculate sentiment
 
+After, we finally downloaded all articles we can calculate the sentiment for each article. We use a simple dictonary approach. A dictionary approach assigns a positive or negative score or label to each word. We use the **AFINN** dictionary that assigns numerical scores between `-5` and `5` to english words. As stated in the introduction, dictionary approaches, especially with non-domain specific dictionaries, might be not the best choice to determine the sentiment of newspaper articles. However, due to the simplicity of this tutorial we stick with the dictionary approach. In the end, we group the scores by the date there were published and calculate the mean score for each respective day.   
+
 ```{r calculate sentiment, cache=T}
-articles_sentiment <- articles %>%
+sentiment_by_day <- articles %>%
   select(url, body) %>%                                     # extract required columns 
-  unnest_tokens(word, body) %>%                             # split each article into single word
+  unnest_tokens(word, body) %>%                             # split each article into single words
   anti_join(get_stopwords(), by = "word") %>%               # remove stopwords
   inner_join(get_sentiments("afinn"), by = "word") %>%      # join sentiment scores
   group_by(url) %>%                                         # group text again by their url
   summarise(sentiment = sum(score)) %>%                     # sum up sentiment scores
   left_join(articles, by = "url") %>%                       # add sentiment column to articles
   select(published_at, sentiment) %>%                       # extract required columns 
-  group_by(date = as.Date(published_at, "%Y-%m-%d")) %>%  # group by date
-  summarise(sentiment = sum(sentiment))
+  group_by(date = as.Date(published_at, "%Y-%m-%d")) %>%    # group by date
+  summarise(sentiment = mean(sentiment))
 ```
 
+Below you can find the plot that results from our analysis. 
 
 ```{r plot results}
-plot(sentiment ~ date,
-     data = articles_sentiment)
+barplot(height    = sentiment_by_day$sentiment,
+        names.arg = format(sentiment_by_day$date, "%a"),
+        ylab      = "Sentiment Score",
+        ylim      = c(-5, 20),
+        las       = 2)
 ```
-
-
-
 
 ## What else could be done?
 
-- more defined split in headings in paragrahs 
-- check if article has multiple pages
-- fetch comments
-- download all images
+As we stated mutliple times, we could have made some further improvements to the above code. While the `get_article_body()` function provides the article text it does not differniate between the actual paragraphs and the headings. We could ammend the function so it provides a vector where each item represents either the heading or a paragraph. Due to the simplicity of our anaylsis we did not need such details. Furthermore, we probably could have checked whether the article consists of multiple pages. Currently, our function only returns the main page of the article. However, if the article consists of multiple pages we miss those pages. Addtionally, we could write functions that enable to extract the comments and also the images of each article. This could be a useful for further analysis.
 
-
-
-
+The given suggestions could be implemented in future versions of this package to provide easy functions for automated web scraping of online newspaper articles. 
