@@ -4,15 +4,15 @@ author: "Jan Dix <jan.dix@uni-konstanz.de>"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-%\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  ---
+---
   
+
+This introduction shows how you could gether meta data, such as title and URL, from the newsapi and use this information to download the complete article and calculate the sentiment for text body. First, we will download the meta data using the `newsanchor` package. Secondly, we will write a function that allows us to automatically scrape the text of any New York Times (NYT) article from their website. We will apply this function on the URLs fetched in the first section. Thirdly, we will calculate the sentiment for each article using the **AFINN** dictionary. While a dictionary approach is probably not ideal to analyze political newspaper articles this introduction provides an insight how the newsanchor package could be used for more detailed analysis.  
   
-  This introduction shows how you could gether meta data, such as title and URL, from the newsapi and use this information to download the complete article and calculate the sentiment for text body. First, we will download the meta data using the `newsanchor` package. Secondly, we will write a function that allows us to automatically scrape the text of any New York Times (NYT) article from their website. We will apply this function on the URLs fetched in the first section. Thirdly, we will calculate the sentiment for each article using the **AFINN** dictionary. While a dictionary approach is probably not ideal to analyze political newspaper articles this introduction provides an insight how the newsanchor package could be used for more detailed analysis.  
-  
-  ## Dependencies
+## Dependencies
   
   Before we start downloading the actual content we have to load the required packages. Below you find a short summary for the purpose of each package. 
   
@@ -31,7 +31,7 @@ vignette: >
   `tidytext` is a tool that provides text manipulation along with the tidy data principles. It works well along with `dplyr` and is used to apply the sentiment calculations.
   `
   
-  ```{r load packages}
+```{r load packages, warning=FALSE, message=FALSE}
 # load all required packages
 library(newsanchor) # download newspaper articles
 library(robotstxt)  # get robots.txt
@@ -115,7 +115,7 @@ get_article_body <- function (url) {
 
 After we defined a function that is able to scrape NYT articles, we want to *apply* the function to our list of URLs. We append a empty new column to the data set. AFterwards, we initialize a progress bar which will show us the progress within the loop. Within each loop we apply the function to the i-th URL and save the result to the newly created body column. Addtionally, we pause the program for 1 second. You may ask now, why we talk about *apply* all the time but we do not use the apply family? The answer is multifaceted. First, we want to execute the function wihthin a loop because we want to keep track of the progress. Secondly, we can easily debug our function if we know which URL may breaks the function. However, if you write a more advanced function you could easily replace the loop with an *apply* function, such as `sapply()`.    
 
-```{r apply function to urls, cache=T}
+```{r apply function to urls, cache=T, message=FALSE, results='hide'}
 # create new text column
 articles$body <- NA
 
@@ -144,25 +144,42 @@ After, we finally downloaded all articles we can calculate the sentiment for eac
 
 ```{r calculate sentiment, cache=T}
 sentiment_by_day <- articles %>%
-  select(url, body) %>%                                     # extract required columns 
-  unnest_tokens(word, body) %>%                             # split each article into single words
-  anti_join(get_stopwords(), by = "word") %>%               # remove stopwords
-  inner_join(get_sentiments("afinn"), by = "word") %>%      # join sentiment scores
-  group_by(url) %>%                                         # group text again by their url
-  summarise(sentiment = sum(score)) %>%                     # sum up sentiment scores
-  left_join(articles, by = "url") %>%                       # add sentiment column to articles
-  select(published_at, sentiment) %>%                       # extract required columns 
-  group_by(date = as.Date(published_at, "%Y-%m-%d")) %>%    # group by date
-  summarise(sentiment = mean(sentiment))
+  select(url, body) %>%                                  # extract required columns 
+  unnest_tokens(word, body) %>%                          # split each article into single words
+  anti_join(get_stopwords(), by = "word") %>%            # remove stopwords
+  inner_join(get_sentiments("afinn"), by = "word") %>%   # join sentiment scores
+  group_by(url) %>%                                      # group text again by their url
+  summarise(sentiment = sum(score)) %>%                  # sum up sentiment scores
+  left_join(articles, by = "url") %>%                    # add sentiment column to articles
+  select(published_at, sentiment) %>%                    # extract required columns 
+  group_by(date = as.Date(published_at, "%Y-%m-%d")) %>% # group by date
+  summarise(sentiment = mean(sentiment), n = n())        # calculate summaries
 ```
 
-Below you can find the plot that results from our analysis. 
+## Results
 
-```{r plot results}
+Below you can find the plot that results from our analysis. We can see that most of the articles were published Tuesday and Friday. The least number of articles can be found Saturday and Sunday. Probably, during the weekend there is less staff available or Donald Trump is busy playing golf in Mar-a-Lago. Hence, less news worthy events take place. 
+
+Monday, Tuesday and Friday have negative sentiment scores. Digging into the Tuesday's headings we can see that news do not have a common theme. Friday's results look similar. However, we can find various articles about the Mueller investigations. Saturday's score is outstanding positive. Hence, one would expect articles about a certain news worthy positive event. Unfortuentaly, the result shows us that we cannot find a common theme again. 
+
+The analysis above shows that one have to be very careful with sentiment analysis. It seems that the dictonary approach did not capture the overall atmosphere of the respective day since the articles seem to be very different. One could probably review whether we find anomalies along the authors, the length of the articles or other attributes to explain the strongly varying scores.
+
+```{r plot results, dev='svg', fig.align='center', fig.width=7.3, fig.height=4.3}
+# enable two plots in one figure
+old_par <- par(mfrow=c(1, 2))
+
+# plot number of articles vs time 
+barplot(height    = sentiment_by_day$n,
+        names.arg = format(sentiment_by_day$date, "%a"),
+        ylab      = "# of articles",
+        ylim      = c(-10, 35),
+        las       = 2)
+
+# plot sentiment score vs time
 barplot(height    = sentiment_by_day$sentiment,
         names.arg = format(sentiment_by_day$date, "%a"),
         ylab      = "Sentiment Score",
-        ylim      = c(-5, 20),
+        ylim      = c(-10, 35),
         las       = 2)
 ```
 
