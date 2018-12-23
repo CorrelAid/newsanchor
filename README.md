@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-newsanchor
-==========
+newsanchor <img src="newsanchor.png" width="160px" align="right" />
+===================================================================
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) [![Build Status](https://travis-ci.org/correlaid/newsanchor.svg?branch=master)](https://travis-ci.org/correlaid/newsanchor) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/newsanchor)](https://cran.r-project.org/package=newsanchor) [![CRAN\_Download\_Badge](https://cranlogs.r-pkg.org/badges/newsanchor)](https://cran.r-project.org/package=newsanchor)
 
@@ -26,7 +26,7 @@ The package is under continuous development and will be extended with additional
 Installation
 ------------
 
-### Stable Version
+### Stable Version (coming soon)
 
 ``` r
 # install package from CRAN
