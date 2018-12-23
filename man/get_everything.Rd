@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_everything.R
 \name{get_everything}
 \alias{get_everything}
-\title{Get all resources of newsapi.org}
+\title{Get resources of newsapi.org}
 \usage{
 get_everything(query, sources = NULL, domains = NULL,
   exclude_domains = NULL, from = NULL, to = NULL, language = NULL,
@@ -11,7 +11,8 @@ get_everything(query, sources = NULL, domains = NULL,
 }
 \arguments{
 \item{query}{Character string that contains the searchterm for the API's 
-data base. API supports advanced search parameters, see 'details'.}
+data base. API supports advanced search parameters, see 'details'.
+Passing a searchterm is compulsory.}
 
 \item{sources}{Character string with IDs (comma separated) of the news outlets 
 you want to focus on (e.g., "usa-today, spiegel-online").}
@@ -32,8 +33,8 @@ Default is the latest article available.}
 
 \item{language}{Specifies the language of the articles of your search. Must 
 be in ISO shortcut format (e.g., "de", "en"). See list of all 
-languages on https://newsapi.org/docs/endpoints/everything. 
-Default is all languages.}
+languages using \code{newsanchor::terms_language}. Default 
+is all languages.}
 
 \item{sort_by}{Character string that specifies the sorting of your article 
 results. Accepts three options: "publishedAt", "relevancy", 
@@ -48,7 +49,7 @@ Maximum is 100 (also default).}
 
 \item{api_key}{Character string with the API key you get from newsapi.org. 
 Passing it is compulsory. Alternatively, function can be 
-provided from the global environment (see \code{set_api_key}).}
+provided from the global environment (see \code{set_api_key()}).}
 }
 \value{
 List with two dataframes:\cr
@@ -56,15 +57,15 @@ List with two dataframes:\cr
         2) Data frame with \code{meta_data}
 }
 \description{
-\code{get_everything} searches through articles from large and small news 
-sources and blogs. This includes breaking news as well as other regular articles.
-You  can search for multiple \code{sources}, different \code{language}, 
+\code{get_everything} returns articles from large and small news 
+sources and blogs. This includes news as well as other regular articles.
+You can search for multiple \code{sources}, different \code{language}, 
 or use your own keywords. Articles can be sorted by the earliest date 
 \code{publishedAt}, \code{relevancy}, or \code{popularity}. To automatically 
-download all results, use \code{get_everything_all()}\cr\cr
+download all results, use \code{get_everything_all()}.\cr\cr
 Please check that the \code{api_key} is available. You can provide an explicit
-definition of the api_key or use \code{set_api_key()}. \cr\cr
-Valid languages for \code{language} are provided in the dataset \cr\cr
+definition of the key or use \code{set_api_key()}. \cr\cr
+Valid languages for \code{language} are provided in the dataset 
 \code{terms_language}.
 }
 \details{

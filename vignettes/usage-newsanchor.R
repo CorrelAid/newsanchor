@@ -5,7 +5,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval = FALSE, fig.align="cen
 #  library(newsanchor)
 
 ## ----set_api_key---------------------------------------------------------
-#  # save the api key in the .Renviron file
+#  # save the api_key in the .Renviron file
 #  set_api_key(api_key = "YOUR API KEY",
 #              path = "~/.Renviron")
 
@@ -36,7 +36,9 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval = FALSE, fig.align="cen
 #  # get everything published about Trump
 #  results <- get_everything(query = "Trump")
 #  # get everything published with the phrase "Trump says"
-#  results <- get_everything(query = "Trump says")
+#  results <- get_everything(query = "Trump says +migrants")
+#  # get everything published with the phrase "Trump" and "migrants" but without "Mexico"
+#  results <- get_everything(query = "Trump +migrants -Mexico")
 
 ## ----everything: examples------------------------------------------------
 #  # get everything published about Trump

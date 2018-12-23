@@ -9,13 +9,13 @@ get_headlines(query = NULL, category = NULL, country = NULL,
   api_key = Sys.getenv("NEWS_API_KEY"))
 }
 \arguments{
-\item{query}{Character string that contains the searchterm}
+\item{query}{Character string that contains the searchterm.}
 
-\item{category}{Character string with the category you want headlines from}
+\item{category}{Character string with the category you want headlines from.}
 
-\item{country}{Character string with the country you want headlines from}
+\item{country}{Character string with the country you want headlines from.}
 
-\item{sources}{Character string with IDs (comma separated) of the news outlets 
+\item{sources}{Character string with IDs (comma separated) of the news outlets. 
 you want to focus on (e.g., "usa-today, spiegel-online").}
 
 \item{page}{Specifies the page number of your results that is returned. Must 
@@ -26,7 +26,7 @@ at once, use \code{get_headlines_all} from 'newsanchor'.}
 Maximum is 100 (also default).}
 
 \item{api_key}{Character string with the API key you get from newsapi.org. 
-Passing it is compulsory. Alternatively, function can be 
+Passing it is compulsory. Alternatively, a function can be 
 provided from the global environment (see \code{set_api_key}).}
 }
 \value{
@@ -39,11 +39,11 @@ List with two dataframes:\cr
 specific category in a country, single source, or multiple sources. You can 
 also search with keywords. Articles are sorted by the earliest date 
 published first. To automatically download all results, use 
-\code{get_headlines_all}.\cr\cr
-Please check that the api_key is available. You can provide an explicit
-definition of the api_key or use \code{set_api_key} \cr\cr
-Valid searchterms are provided in \code{terms_category}, 
-\code{terms_country} or \code{terms_sources}
+\code{get_headlines_all()}.\cr\cr
+Please check that the \code{api_key} is available. You can provide an explicit
+definition of the key or use \code{set_api_key()}. \cr\cr
+Valid searchterms are provided in the data sets \code{terms_category}, 
+\code{terms_country} or \code{terms_sources}.
 }
 \examples{
 \dontrun{
