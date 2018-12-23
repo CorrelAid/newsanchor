@@ -6,3 +6,4 @@
 ^README\.md$
 ^README\.Rmd$
 ^README-.*\.png$
+^\.png$
