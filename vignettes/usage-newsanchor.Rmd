@@ -129,7 +129,7 @@ results <- get_everything(query = "Trump", from = "2018-09-08")
 - Some limitations are restricted to the free plan of www.newsapi.org. For example, you cannot access articles that have been published more than a month ago. This can only be accomplished using the paid plan. 
 
 **Additional settings**<br>
-The default of https://newsapi.org only allows to get a maximum of 1,000 results per search/day. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page_size** (per default: page_size = 100).
+The default of https://newsapi.org only allows to get a maximum of 100 results per search. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page_size** (per default: page_size = 100).
 
 ```{r everything: page, page_size}
 results <- get_everything(query = "Trump", page = 2)

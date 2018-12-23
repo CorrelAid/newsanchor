@@ -153,7 +153,7 @@ results <- get_everything(query = "Trump", from = "2018-09-08")
 
 **Additional settings:**
 
-The default of <https://newsapi.org> only allows to get a maximum of 1,000 results per search. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page\_size** (per default: page\_size = 100).
+The default of <https://newsapi.org> only allows to get a maximum of 100 results per search. Since some search terms might yield much more results, you can use the option **page** to browse throught your results (per default: page = 1). You can change the number of results returned per request using **page\_size** (per default: page\_size = 100).
 
 ``` r
 results <- get_everything(query = "Trump", page = 2)
@@ -171,7 +171,7 @@ results <- get_everything(query = "Trump", sort_by = "popularity")
 results <- get_everything(query = "Trump", sort_by = "publishedAt")
 ```
 
-**get\_everything\_all:** To automatically download all results, use **get\_everything\_all**. This function is build around `get_everything` and provides the same options (except for *page* and *page\_size*).
+**get\_everything\_all:** To automatically download all results, use **get\_everything\_all**. This function is build around `get_everything` and provides the same options (except for *page* and *page\_size*). Be aware that here, the limit of 1,000 articles kicks in if you do not have a paid plan. The function will then provide you with a dataset of these 1,000 results and stop there.
 
 ``` r
 results <- get_everything_all(query = "Trump")
