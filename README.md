@@ -30,10 +30,10 @@ Installation
 
 ``` r
 # install package from CRAN
-install.packages("rzeit2")
+install.packages("newsanchor")
 
 # load package
-library(rzeit2)
+library(newsanchor)
 ```
 
 ### Current Development Version
@@ -48,7 +48,7 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 devtools::install_github("correlaid/newsanchor")
 
 # load package
-library(rzeit2)
+library(newsanchro)
 ```
 
 Introduction
