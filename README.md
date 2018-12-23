@@ -48,7 +48,7 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 devtools::install_github("correlaid/newsanchor")
 
 # load package
-library(newsanchro)
+library(newsanchor)
 ```
 
 Introduction
