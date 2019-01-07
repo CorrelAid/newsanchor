@@ -4,7 +4,7 @@ author: "Jan Dix <jan.dix@uni-konstanz.de>"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Scrape New York Times Online Articles}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -163,7 +163,7 @@ Monday, Tuesday and Friday have negative sentiment scores. Digging into the Tues
 
 The analysis above shows that one needs to be very careful with sentiment analysis. It seems that the dictionary approach did not capture the overall atmosphere of the respective day since the articles seem to be very different. One could probably review whether we find anomalies along the authors, the length of the articles or other attributes to explain the strongly varying scores.
 
-```{r plot results, dev='svg', fig.align='center', fig.width=7.3, fig.height=4.3}
+```{r plot-results, dev='svg', fig.align='center', fig.width=7.3, fig.height=4.3}
 # enable two plots in one figure
 old_par <- par(mfrow=c(1, 2))
 

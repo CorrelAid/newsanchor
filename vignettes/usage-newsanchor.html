@@ -12,14 +12,14 @@
 
 <meta name="author" content="Lars Schulze lars.schulze@hotmail.com" />
 
-<meta name="date" content="2018-12-23" />
+<meta name="date" content="2019-01-07" />
 
 <title>Usage of newsanchor</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -55,7 +55,29 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -70,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Usage of newsanchor</h1>
 <h4 class="author"><em>Lars Schulze <a href="mailto:lars.schulze@hotmail.com">lars.schulze@hotmail.com</a></em></h4>
-<h4 class="date"><em>2018-12-23</em></h4>
+<h4 class="date"><em>2019-01-07</em></h4>
 
 
 
@@ -153,7 +175,7 @@ results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<sp
 <li>The <code>language</code> needs to be a two digits ISO 639-1 code. You can only use one language for a search, default is all. See <code>newsanchor::terms_language</code> for all possible languages.</li>
 <li>Some limitations are restricted to the free plan of www.newsapi.org. For example, you cannot access articles that have been published more than a month ago. This can only be accomplished using the paid plan.</li>
 </ul>
-<p><strong>Additional settings</strong><br> The default of <a href="https://newsapi.org" class="uri">https://newsapi.org</a> only allows to get a maximum of 1,000 results per search/day. Since some search terms might yield much more results, you can use the option <strong>page</strong> to browse throught your results (per default: page = 1). You can change the number of results returned per request using <strong>page_size</strong> (per default: page_size = 100).</p>
+<p><strong>Additional settings</strong><br> The default of <a href="https://newsapi.org" class="uri">https://newsapi.org</a> only allows to get a maximum of 100 results per search. Since some search terms might yield much more results, you can use the option <strong>page</strong> to browse throught your results (per default: page = 1). You can change the number of results returned per request using <strong>page_size</strong> (per default: page_size = 100).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">page =</span> <span class="dv">2</span>)
 results &lt;-<span class="st"> </span><span class="kw">get_everything</span>(<span class="dt">query =</span> <span class="st">&quot;Trump&quot;</span>, <span class="dt">page =</span> <span class="dv">3</span>, <span class="dt">page_size =</span> <span class="dv">20</span>)</code></pre></div>
 <p>In addition, you can sort (<strong>sort_by</strong>) the order of the articles. Possible options are <code>relevancy</code> (articles more closely related to the query come first), <code>popularity</code> (articles from popular sources and publishers come first) and <code>publishedAt</code> (newest articles come first). Per default articles are sorted by <code>publishedAt</code>.</p>

@@ -6,4 +6,6 @@
 ^README\.md$
 ^README\.Rmd$
 ^README-.*\.png$
-^\.png$
+^cran-comments\.md$
+^newsanchor\.png$
+^vignettes\/scrape-nyt_cache\/*$
