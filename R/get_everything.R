@@ -79,15 +79,9 @@ get_everything <- function(query,
   
   # Errors and warnings -----------------------------------------------------
   
-  # Make sure an API key is provided
-  if(nchar(api_key) == 0)
-    stop(paste0("You did not correctly specify your API key as global variable.", 
-                " See documentation for further info."))
-  
   # Make sure that some search term is passed
   if(missing(query) == TRUE)
     stop("You need to specify at least some content that you search for.")
-  
   # Bind together various search parameters as comma-separated strings as required by API
   
   # Parameter: sources (plus limit to maximum of 20 sources)
@@ -134,6 +128,11 @@ get_everything <- function(query,
   if(!sort_by %in% c("publishedAt", "relevancy", "popularity")){
     stop("Sortings can be only by 'publishedAt', 'relevancy', or 'popularity'.")
   }
+  
+  # Make sure an API key is provided
+  if(nchar(api_key) == 0)
+    stop(paste0("You did not correctly specify your API key as global variable.", 
+                " See documentation for further info."))
   
   # Accessing the API  -----------------------------------------------------
   

@@ -32,13 +32,6 @@ get_sources <- function(category = NULL,
   
   # errors and warnings -----------------------------------------------------
   
-  # is an api-key available?
-  if (nchar(api_key) == 0){
-    stop(paste0("You did not correctly specify your API key neither as global",
-                " variable nor with the function call. See documentation for",
-                " further info."))
-  }
-  
   # are the arguments for 'category' valid?
   if(!is.null(category)){
     if (!category %in% newsanchor::terms_category$category) {
@@ -60,6 +53,13 @@ get_sources <- function(category = NULL,
       stop(paste0("Please provide valid searchterm for country",
                   "see terms_country"))
     } }
+  
+  # is an api-key available?
+  if (nchar(api_key) == 0){
+    stop(paste0("You did not correctly specify your API key neither as global",
+                " variable nor with the function call. See documentation for",
+                " further info."))
+  }
   
   # access newsapi.org ------------------------------------------------------
   

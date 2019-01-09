@@ -52,13 +52,6 @@ get_headlines <- function(query     = NULL,
   
   # errors and warnings -----------------------------------------------------
 
-  # is an api-key available?
-  if (nchar(api_key) == 0){
-    stop(paste0("You did not correctly specify your API key neither as global",
-                " variable nor with the function call. See documentation for",
-                " further info."))
-  }
-
   # are any searchterms provided?
   if (all(sapply(list(sources, country, category, query), is.null))) {
     stop(paste0("Please provide at least one searchterm"))
@@ -115,6 +108,13 @@ get_headlines <- function(query     = NULL,
   # Error for non-numeric page parameter
   if(!is.numeric(page)) {
     stop("Page should be a number.")
+  }
+  
+  # is an api-key available?
+  if (nchar(api_key) == 0){
+    stop(paste0("You did not correctly specify your API key neither as global",
+                " variable nor with the function call. See documentation for",
+                " further info."))
   }
   
   # access newsapi.org ------------------------------------------------------

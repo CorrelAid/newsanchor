@@ -13,8 +13,7 @@ testthat::test_that("that that function returns error if no argument provided", 
 })
 
 testthat::test_that("that that function returns error if no argument provided", {
-  testthat::expect_error(newsanchor::get_headlines(api_key = Sys.getenv("NEWS_API_TEST_KEY"), 
-                                                   ))
+  testthat::expect_error(newsanchor::get_headlines(api_key = Sys.getenv("NEWS_API_TEST_KEY")))
 })
 
 testthat::test_that("that that function returns error if invalid country is provided.", {
@@ -24,9 +23,9 @@ testthat::test_that("that that function returns error if invalid country is prov
 })
 
 testthat::test_that("that that function returns error if more than one country is provided.", {
-  testthat::expect_error(newsanchor::get_headlines(api_key = Sys.getenv("NEWS_API_TEST_KEY"),
+  testthat::expect_warning(newsanchor::get_headlines(api_key = Sys.getenv("NEWS_API_TEST_KEY"),
                                                    query = c("sports"),
-                                                   country = c("DE", "FR")))
+                                                   country = c("de", "fr")))
 })
 
 testthat::test_that("that that function raises warning vector is provided to query.", {
