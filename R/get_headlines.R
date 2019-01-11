@@ -83,18 +83,14 @@ get_headlines <- function(query     = NULL,
   
   # is the combination of search terms allowed?
   if (!is.null(sources) & (!is.null(country) | !is.null(category))){
-    warning(paste0("'sources' must not be used as a search category with ",
-                   "'country' and/or 'category'. Only 'sources' was used.",
-                   " Further arguments were ignored."))
-    country <- NULL; category <- NULL
+    stop(paste0("'sources' cannot be used together with ",
+                   "'country' and/or 'category'."))
   }
 
   # more than one searchterm for 'country', 'category', or 'query'?
   if (length(country) > 1 | length(category) > 1 | length(query) > 1){
-   warning(paste0("Only one searchterm can be used for 'category' or",
-                  "'country', or 'query'. Thus, only the first element was",
-                  " used. Further elements were ignored."))
-   category = category[1]; country = country[1]; query = query[1]
+   stop(paste0("Only one search term can be used for 'category' or",
+                  "'country', or 'query'."))
   }
 
   # check that page_size is numeric and <= 100

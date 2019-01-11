@@ -1,10 +1,30 @@
 context("Get sources")
 
-testthat::test_that("that that function returns error if no argument provided", {
-  testthat::expect_error(newsanchor::get_sources(api_key = ""))
+# INVALID INPUTS
+testthat::test_that("that that function returns error if non-existing category is specified.", {
+  testthat::expect_error(newsanchor::get_sources(api_key = "thisisnotanapikey", 
+                                                 category = "DOESNOTEXIST"))
 })
 
+testthat::test_that("that that function returns error if non-existing language is specified.", {
+  testthat::expect_error(newsanchor::get_sources(api_key = "thisisnotanapikey",
+                                                 language = "DOESNOTEXIST"))
+})
+
+testthat::test_that("that that function returns error if non-existing country is specified.", {
+  testthat::expect_error(newsanchor::get_sources(api_key = "thisisnotanapikey",
+                                                 country = "DOESNOTEXIST"))
+})
+
+# INVALID API KEY
+testthat::test_that("that that function returns error if non-existing country is specified.", {
+  testthat::expect_warning(newsanchor::get_sources(api_key = "thisisnotanapikey", ))
+})
+
+# FORMAT OF RETURNED DATA FRAME
 testthat::test_that("test that the function returns a data frame", {
+  testthat::skip_if(Sys.getenv("NEWS_API_TEST_KEY") == "", 
+                    message = "NEWS_API_TEST_KEY not available in environment. Skipping test.")
   res <- newsanchor::get_sources(api_key = Sys.getenv("NEWS_API_TEST_KEY"), 
                                  category = "general",
                                  language = "de")
@@ -13,6 +33,8 @@ testthat::test_that("test that the function returns a data frame", {
 })
 
 testthat::test_that("test that all columns are atomic vectors", {
+  testthat::skip_if(Sys.getenv("NEWS_API_TEST_KEY") == "", 
+                    message = "NEWS_API_TEST_KEY not available in environment. Skipping test.")
   res <- newsanchor::get_sources(api_key = Sys.getenv("NEWS_API_TEST_KEY"), 
                                  category = "general",
                                  language = "de")
@@ -21,6 +43,8 @@ testthat::test_that("test that all columns are atomic vectors", {
 })
 
 testthat::test_that("test that the number of rows is greater than zero", {
+  testthat::skip_if(Sys.getenv("NEWS_API_TEST_KEY") == "", 
+                    message = "NEWS_API_TEST_KEY not available in environment. Skipping test.")
   res <- newsanchor::get_sources(api_key = Sys.getenv("NEWS_API_TEST_KEY"), 
                                     category = "general",
                                     language = "de")
