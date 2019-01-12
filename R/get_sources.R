@@ -4,10 +4,10 @@
 #' The sources can be filtered using category, language or country. If the arguments are empty
 #' the query return all available sources.
 #'
-#' @param category any category you might want to explore. Must be character or string
-#' @param language the language of the newsoutlet (e.g. "de" or "en").
-#' @param country the newsoutlet's country (e.g. "us").
-#' @param api_key Character string with the API key you get from newsapi.org. 
+#' @param category Category you want to get sources for as a string. Default: NULL.
+#' @param language The langauge you want to get sources for as a string. Default: NULL.
+#' @param country The country you want to get sources for as a string (e.g. "us"). Default: NULL.
+#' @param api_key  String with the API key you get from newsapi.org. 
 #'                Passing it is compulsory. Alternatively, function can be 
 #'                provided from the global environment (see \code{set_api_key}).
 #' 
@@ -34,25 +34,27 @@ get_sources <- function(category = NULL,
   
   # are the arguments for 'category' valid?
   if(!is.null(category)){
-    if (!category %in% newsanchor::terms_category$category) {
-      stop(paste0("Please provide a valid searchterm for category,", 
-                  "see terms_category"))
+    if(length(category) > 1){
+      stop("You cannot specify more than one category.")
     }
+    stop_if_invalid_category(category)
   }
   
   # check for a valid language:
   if(!is.null(language)){
-    if (!language %in% newsanchor::terms_language$language) {
-      stop(paste0("Please provide valid searchterm for language,",
-                  "see terms_language"))
-    } }
+    if(length(language) > 1){
+      stop("You cannot specify more than one language.")
+    }
+    stop_if_invalid_language(language)
+  } 
   
   # check for a valid country:
   if(!is.null(country)){
-    if (!country %in%  newsanchor::terms_country$country) {
-      stop(paste0("Please provide valid searchterm for country",
-                  "see terms_country"))
-    } }
+    if(length(country) > 1){
+      stop("You cannot specify more than one country.")
+    }
+    stop_if_invalid_country(country)
+  }
   
   # is an api-key available?
   if (nchar(api_key) == 0){
@@ -62,23 +64,15 @@ get_sources <- function(category = NULL,
   }
   
   # access newsapi.org ------------------------------------------------------
-  
-  # define url for query
-  url <- httr::parse_url("https://newsapi.org/v2/sources")
-  url$scheme <- "https"
-  url$query <- list(category = category,
-                    language = language,
-                    country  = country)
-  # build url for query
-  url <- httr::build_url(url)
-  # get results from query to newsapi
-  results <- httr::GET(url, httr::add_headers("X-Api-Key" = api_key))
+  query_params <- list(category = category,
+                       language = language,
+                       country  = country)
+  url <- build_newsanchor_url("https://newsapi.org/v2/sources", query_params)
+
+  response <- make_newsanchor_get_request(url, api_key)
   
   # build df from results ---------------------------------------------------
-  # extract content
-  content_text   <- httr::content(results, "text")
-  content_parsed <- jsonlite::fromJSON(content_text)
-  
+  content_parsed <- parse_newsanchor_content(response)
   # check whether content_parsed is NULL 
   if(length(content_parsed$sources) < 1){
     content_parsed$totalResults <- 0
@@ -86,55 +80,8 @@ get_sources <- function(category = NULL,
     content_parsed$totalResults <- nrow(content_parsed$sources)
   }
   
-  #--- Check if http status code equals 200 (and construct results accordingly)
-  if (results$status_code == 200 & content_parsed$totalResults != 0 ) {
-    
-    # create results data frame
-    results_df        <- content_parsed$sources
-    
-    # extract meta-data
-    metadata <- data.frame(total_results = nrow(results_df), 
-                           status_code   = results$status_code,
-                           request_date  = results$date,
-                           request_url   = results$url,
-                           code          = results$status_code,
-                           message       = content_parsed$status,
-                           stringsAsFactors = FALSE)
-  }
-  
-  #--- if the http code displays an error, throw a warning and build the results 
-  #    accordingly
-  if (results$status_code != 200 | content_parsed$totalResults == 0) {
-    
-    # provide warning for error message
-    if (results$status_code != 200){
-      warning(paste0("The search resulted in the following error message: ",
-                     content_parsed$message))
-    }
-    
-    # provide warning that zero results (but only if status_code == 200)
-    if (results$status_code == 200){
-      if (content_parsed$totalResults == 0){
-        warning(paste0("The search was not successful. There were no results",
-                       " for your specifications."))
-      }
-    }
-    
-    # empty results dataframe
-    results_df = data.frame()
-    # extract meta-data
-    metadata <- data.frame(total_results = 0, 
-                           status_code   = results$status_code,
-                           request_date  = results$date,
-                           request_url   = results$url,
-                           code          = ifelse(results$status_code != 200, 
-                                                  content_parsed$code, 
-                                                  results$status_code),
-                           message       = ifelse(results$status_code != 200,
-                                                  content_parsed$message, 
-                                                  content_parsed$status),
-                           stringsAsFactors = FALSE)
-  }
+  metadata <- extract_newsanchor_metadata(response, content_parsed)
+  results_df <- extract_newsanchor_sources(metadata, content_parsed)
   
   # return results ----------------------------------------------------------
   return(list(metadata = metadata, results_df = results_df))
