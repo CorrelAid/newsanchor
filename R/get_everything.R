@@ -99,7 +99,9 @@ get_everything <- function(query,
   
   # Error if language indicated does not match the ones provided by the API
   if(!is.null(language)){
-    stop_if_more_than_one_specified(language)
+    if(length(language) > 1){
+      stop("You cannot specify more than one language.")
+    }
     stop_if_invalid_language(language)
   }
   

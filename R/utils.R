@@ -92,7 +92,7 @@ extract_newsanchor_metadata <- function(response, content_parsed, total_results,
 #' @return data frame containing sources.
 extract_newsanchor_sources <- function(metadata, content_parsed){
   empty_df <- data.frame()
-  if (results$status_code == 200) {
+  if (response$status_code == 200) {
     if(metadata$total_results > 0){
       return(content_parsed$sources)
     } else {
