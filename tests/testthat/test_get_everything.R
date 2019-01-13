@@ -10,13 +10,15 @@ PAGE_SIZE_LIMIT <- 100
 
 # INVALID INPUTS
 testthat::test_that("test that function returns error if no argument provided", {
-  testthat::expect_error(newsanchor::get_everything())
+  testthat::expect_error(newsanchor::get_everything(),
+                         regexp = "You need to specify at least some content that you search for.")
 })
 
 testthat::test_that("test that function returns error if source limit is exceeded.", {
   testthat::expect_error(newsanchor::get_everything(api_key = "thisisnotanapikey",
                                                     query = "sports",
-                                                    sources = rep("testsource", LIMIT_SOURCES + 1)))
+                                                    sources = rep("testsource", LIMIT_SOURCES + 1)),
+                         regexp = "You cannot specify more than 20 sources.")
 })
 
 testthat::test_that("test that function returns error if page size limit is exceeded.", {
@@ -24,14 +26,15 @@ testthat::test_that("test that function returns error if page size limit is exce
                                                     query = "sports", 
                                                     sources = "testsource",
                                                     page_size = 101
-                                                    ))
+                                                    ),
+                         regexp = "Page size cannot not exceed 100 articles per page.")
 })
 
 testthat::test_that("test that function returns error if page size is not numeric.", {
   testthat::expect_error(newsanchor::get_everything(query = "sports", 
                                                     sources = "testsource",
-                                                    page_size = "101"
-  ))
+                                                    page_size = "101"),
+                          regexp = "You need to insert numeric values for the number of texts per page.")
 })
 
 testthat::test_that("test that function returns error if page is not numeric.", {
@@ -39,8 +42,8 @@ testthat::test_that("test that function returns error if page is not numeric.", 
                                                     query = "sports", 
                                                     sources = "testsource",
                                                     page_size = 10,
-                                                    page = "9"
-  ))
+                                                    page = "9"),
+                         regexp = "Page should be a number.")
 })
 
 testthat::test_that("test that function returns error if non-existing language is specified.", {
@@ -49,8 +52,8 @@ testthat::test_that("test that function returns error if non-existing language i
                                                     sources = "testsource",
                                                     page_size = 10,
                                                     page = 9,
-                                                    language = "DOESNOTEXIST"
-  ))
+                                                    language = "DOESNOTEXIST"),
+                         regexp = "not a valid language")
 })
 
 testthat::test_that("test that function returns error if attempting to sort by a non-existing sort key.", {
@@ -60,14 +63,15 @@ testthat::test_that("test that function returns error if attempting to sort by a
                                                     page_size = 10,
                                                     page = 9,
                                                     language = "de",
-                                                    sort_by = "DOESNOTEXIST"
-  ))
+                                                    sort_by = "DOESNOTEXIST"),
+                         regexp = "Sortings can be only by 'publishedAt', 'relevancy', or 'popularity'.")
 })
 
 # INVALID API KEY
 testthat::test_that("test that function raises warning if API key invalid.", {
   testthat::expect_warning(newsanchor::get_everything(api_key = "thisisnotanapikey",
-                                                     query = "sports"))
+                                                     query = "sports"),
+                           regexp = "The search resulted in the following error message:")
 })
 
 # FORMAT OF RESULT DATA FRAME
