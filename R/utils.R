@@ -63,14 +63,11 @@ parse_newsanchor_content <- function(response){
 #' @param page_size The number of articles per page that were returned. Defaults to NULL.
 #' 
 #' @return data frame containing meta data related to the query.
-extract_newsanchor_metadata <- function(response, content_parsed, total_results, page = NULL, page_size = NULL){
-  
+extract_newsanchor_metadata <- function(response, content_parsed, page = NULL, page_size = NULL){
   metadata <- data.frame(total_results = content_parsed$totalResults, 
                          status_code   = response$status_code,
                          request_date  = response$date,
                          request_url   = response$url,
-                         page_size     = page_size,
-                         page          = page,
                          code          = ifelse(response$status_code !=200, 
                                                 content_parsed$code, 
                                                 ""),
@@ -78,6 +75,13 @@ extract_newsanchor_metadata <- function(response, content_parsed, total_results,
                                                 content_parsed$message, 
                                                 ""),
                          stringsAsFactors = FALSE)
+  
+  if(!is.null(page)){
+    metadata$page <- page
+  }
+  if(!is.null(page_size)){
+    metadata$page_size <- page_size
+  }
   return(metadata)
 }
 
@@ -92,7 +96,7 @@ extract_newsanchor_metadata <- function(response, content_parsed, total_results,
 #' @return data frame containing sources.
 extract_newsanchor_sources <- function(metadata, content_parsed){
   empty_df <- data.frame()
-  if (response$status_code == 200) {
+  if (metadata$status_code == 200) {
     if(metadata$total_results > 0){
       return(content_parsed$sources)
     } else {
@@ -137,6 +141,7 @@ extract_newsanchor_articles <- function(metadata, content_parsed){
                                               tz = "UTC",
                                               format("%Y-%m-%dT%H:%M:%OSZ"))
       }
+      return(results_df)
     } else {
       warning(paste0("The search was not successful. There were no results",
                      " for your specifications."))

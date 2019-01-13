@@ -158,8 +158,7 @@ get_everything <- function(query,
   }
   
   metadata <- extract_newsanchor_metadata(response, content_parsed, page, page_size)
-  results_df = extract_newsanchor_articles(metadata = metadata, content_parsed = content_parsed)
-
+  results_df <- extract_newsanchor_articles(metadata = metadata, content_parsed = content_parsed)
   # return results ----------------------------------------------------------
   return(list(metadata    = metadata, 
               results_df  = results_df))

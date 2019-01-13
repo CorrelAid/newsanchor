@@ -70,11 +70,11 @@ get_sources <- function(category = NULL,
   url <- build_newsanchor_url("https://newsapi.org/v2/sources", query_params)
 
   response <- make_newsanchor_get_request(url, api_key)
-  
+
   # build df from results ---------------------------------------------------
   content_parsed <- parse_newsanchor_content(response)
   # check whether content_parsed is NULL 
-  if(length(content_parsed$sources) < 1){
+  if(is.null(content_parsed$sources)){
     content_parsed$totalResults <- 0
   } else {
     content_parsed$totalResults <- nrow(content_parsed$sources)
