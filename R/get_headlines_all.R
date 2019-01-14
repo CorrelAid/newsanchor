@@ -73,6 +73,6 @@ get_headlines_all <- function(query     = NULL,
     }
   }
 
-  # return results ----------------------------------------------------------
+  # return results -----------------------------------------------------------
   return(results)
 }
