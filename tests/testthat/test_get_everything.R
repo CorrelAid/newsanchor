@@ -1,14 +1,12 @@
 context("Get everything")
 
-testthat::setup({
-  EXPECTED_METADATA_COLUMNS <- c("total_results", "status_code", "request_date", "request_url", 
-                                 "page_size", "page", "code", "message")
-  date_raw <- Sys.Date()
-  DATE_BEGIN <- as.character(date_raw - as.difftime(2, unit= "days"))
-  DATE_END <- as.character(date_raw)
-  LIMIT_SOURCES <- 20
-  PAGE_SIZE_LIMIT <- 100
-})
+EXPECTED_METADATA_COLUMNS <- c("total_results", "status_code", "request_date", "request_url", 
+                               "page_size", "page", "code", "message")
+date_raw <- Sys.Date()
+DATE_BEGIN <- as.character(date_raw - as.difftime(2, unit= "days"))
+DATE_END <- as.character(date_raw)
+LIMIT_SOURCES <- 20
+PAGE_SIZE_LIMIT <- 100
 
 # INVALID INPUTS
 testthat::test_that("test that function returns error if no argument provided", {

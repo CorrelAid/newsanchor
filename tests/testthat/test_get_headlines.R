@@ -1,8 +1,6 @@
 context("Get headlines")
-testthat::setup({
-  EXPECTED_METADATA_COLUMNS <- c("total_results", "status_code", "request_date", "request_url", 
-                                 "page_size", "page", "code", "message")
-})
+EXPECTED_METADATA_COLUMNS <- c("total_results", "status_code", "request_date", "request_url", 
+                               "page_size", "page", "code", "message")
 
 # TEST INVALID INPUTS
 testthat::test_that("test that function returns error if no argument provided", {
