@@ -3,22 +3,26 @@ context("Get sources")
 # INVALID INPUTS
 testthat::test_that("that that function returns error if non-existing category is specified.", {
   testthat::expect_error(newsanchor::get_sources(api_key = "thisisnotanapikey", 
-                                                 category = "DOESNOTEXIST"))
+                                                 category = "DOESNOTEXIST"),
+                         regexp = "not a valid category")
 })
 
 testthat::test_that("that that function returns error if non-existing language is specified.", {
   testthat::expect_error(newsanchor::get_sources(api_key = "thisisnotanapikey",
-                                                 language = "DOESNOTEXIST"))
+                                                 language = "DOESNOTEXIST"),
+                         regexp = "not a valid language")
 })
 
 testthat::test_that("that that function returns error if non-existing country is specified.", {
   testthat::expect_error(newsanchor::get_sources(api_key = "thisisnotanapikey",
-                                                 country = "DOESNOTEXIST"))
+                                                 country = "DOESNOTEXIST"),
+                         regexp = "not a valid country")
 })
 
 # INVALID API KEY
-testthat::test_that("that that function returns error if non-existing country is specified.", {
-  testthat::expect_warning(newsanchor::get_sources(api_key = "thisisnotanapikey", ))
+testthat::test_that("that that function raises warning if invalid API key is specified.", {
+  testthat::expect_warning(newsanchor::get_sources(api_key = "thisisnotanapikey"),
+                           regexp = "The search resulted in the following error message:")
 })
 
 # FORMAT OF RETURNED DATA FRAME
