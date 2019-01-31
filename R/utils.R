@@ -206,7 +206,7 @@ stop_if_invalid_country <- function(country){
 #'
 stop_if_invalid_source <- function(source){
   if (!source %in% newsanchor::terms_sources$sources) { 
-    stop(paste0(source, "is not a valid source name. ",
+    stop(paste0(source, " is not a valid source name. ",
                 "See terms_sources for a list of valid sources."))
   }
 }
