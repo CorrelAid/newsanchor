@@ -14,19 +14,20 @@ get_everything(query, sources = NULL, domains = NULL,
 data base. API supports advanced search parameters, see 'details'.
 Passing a searchterm is compulsory.}
 
-\item{sources}{Character string with IDs (comma separated) of the news outlets 
-you want to focus on (e.g., "usa-today, spiegel-online").}
+\item{sources}{Character vector with with IDs of the news outlets 
+you want to focus on (e.g., c("usa-today", "spiegel-online")).}
 
-\item{domains}{Character string (comma separated) with domains that you want 
-to restrict your search to (e.g., "bbc.com, nytimes.com").}
+\item{domains}{Character vector with domains that you want 
+to restrict your search to (e.g. c("bbc.com", "nytimes.com")).}
 
 \item{exclude_domains}{Similar usage as with 'domains'. Will exclude these 
 domains from your search.}
 
 \item{from}{Marks the start date of your search. Must be in ISO 8601 format 
-(e.g., "2018-09-08" or "2018-09-08T12:51:42"). Default is the 
-oldest available date (depends on your paid/unpaid plan from 
-newsapi.org).}
+(e.g., "2018-09-08" or "2018-09-08T12:51:42"). Package also 
+accepts: "YYYY/MM/DD", "YYYY.MM.DD", "YYYY,MM,DD" and "YYYY MM DD". 
+Default is the oldest available date (depends on your 
+paid/unpaid plan from newsapi.org).}
 
 \item{to}{Marks the end date of your search. Works similarly to 'from'. 
 Default is the latest article available.}

@@ -21,9 +21,10 @@
 #' @param exclude_domains Similar usage as with 'domains'. Will exclude these 
 #'                        domains from your search.
 #' @param from Marks the start date of your search. Must be in ISO 8601 format 
-#'             (e.g., "2018-09-08" or "2018-09-08T12:51:42"). Default is the 
-#'             oldest available date (depends on your paid/unpaid plan from 
-#'             newsapi.org).
+#'             (e.g., "2018-09-08" or "2018-09-08T12:51:42"). Package also 
+#'             accepts: "YYYY/MM/DD", "YYYY.MM.DD", "YYYY,MM,DD" and "YYYY MM DD",
+#'             including precise time (via %H:%M:%S). Default is the oldest 
+#'             available date (depends on your paid/unpaid plan from newsapi.org).
 #' @param to Marks the end date of your search. Works similarly to 'from'. 
 #'           Default is the latest article available.
 #' @param language Specifies the language of the articles of your search. Must 
@@ -135,9 +136,49 @@ get_everything <- function(query,
     stop(paste0("You did not specify your API key as an argument or as a global variable.", 
                 " See documentation for further info."))
   
+  
+  # Test if date format is in correct format
+  
+  
+  valid_dates <- c("%Y-%m-%d", 
+                   "%Y/%m/%d",
+                   "%Y.%m.%d",
+                   "%Y %m %d",
+                   "%Y,%m,%d",
+                   "%Y-%m-%d", 
+                   "%Y/%m/%d %H:%M:%S",
+                   "%Y.%m.%d %H:%M:%S",
+                   "%Y %m %d %H:%M:%S",
+                   "%Y,%m,%d %H:%M:%S")
+  
+  if(!is.null(from)) {
+    
+    tryCatch({
+      from <- as.Date(from, tryFormats = valid_dates)},
+      error = function(e){
+        print(paste0("Your date format needs to be in one of these formats:", 
+              " YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD, YYYY,MM,DD, YYYY MM DD.",
+              " For further information, check the package documentation.",
+              " Default time range (all available) applies for results."))
+         })
+  }
+  
+  if(!is.null(to)) {
+    
+    tryCatch({
+      to <- as.Date(to, tryFormats = valid_dates)},
+      error = function(e){
+        print(paste0("Your date format needs to be in one of these formats:", 
+              " YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD, YYYY,MM,DD YYYY MM DD.",
+              " For further information, check the package documentation.",
+              " Default time range (all available) applies for results."))
+        })
+  }
+  
+  
   # Accessing the API  -----------------------------------------------------
   # Build URL
-  query_params <- list(q               = query,
+  query_params <- list(q              = query,
                       language        = language,
                       sources         = sources,
                       domains         = domains,

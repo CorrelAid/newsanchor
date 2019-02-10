@@ -15,8 +15,8 @@ get_headlines(query = NULL, category = NULL, country = NULL,
 
 \item{country}{Character string with the country you want headlines from.}
 
-\item{sources}{Character string with IDs (comma separated) of the news outlets. 
-you want to focus on (e.g., "usa-today, spiegel-online").}
+\item{sources}{Character vector with with IDs of the news outlets 
+you want to focus on (e.g., c("usa-today", "spiegel-online")).}
 
 \item{page}{Specifies the page number of your results that is returned. Must 
 be numeric. Default is first page. If you want to get all results 
