@@ -161,8 +161,10 @@ extract_newsanchor_articles <- function(metadata, content_parsed){
 #' 
 #' @param v character vector.
 #' @examples 
+#'\dontrun{
 #' collapse_to_comma_separated("foo") # "foo"
 #' collapse_to_comma_separated(c("foo", "bar")) # "foo, bar"
+#' }
 #' @return string with elements of v separated by comma.
 #' 
 collapse_to_comma_separated <- function(v){
