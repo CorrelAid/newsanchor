@@ -9,7 +9,7 @@ build_newsanchor_url(url, query_args)
 \arguments{
 \item{url}{NEWS API endpoint.}
 
-\item{query_params}{named list of parameters that are needed to query the endpoint. 
+\item{query_args}{named list of parameters that are needed to query the endpoint. 
 Check the News API documentation to see which endpoint requires which parameters.}
 }
 \value{

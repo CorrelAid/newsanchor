@@ -25,9 +25,9 @@ domains from your search.}
 
 \item{from}{Marks the start date of your search. Must be in ISO 8601 format 
 (e.g., "2018-09-08" or "2018-09-08T12:51:42"). Package also 
-accepts: "YYYY/MM/DD", "YYYY.MM.DD", "YYYY,MM,DD" and "YYYY MM DD". 
-Default is the oldest available date (depends on your 
-paid/unpaid plan from newsapi.org).}
+accepts: "YYYY/MM/DD", "YYYY.MM.DD", "YYYY,MM,DD" and "YYYY MM DD",
+including precise time (via %H:%M:%S). Default is the oldest 
+available date (depends on your paid/unpaid plan from newsapi.org).}
 
 \item{to}{Marks the end date of your search. Works similarly to 'from'. 
 Default is the latest article available.}

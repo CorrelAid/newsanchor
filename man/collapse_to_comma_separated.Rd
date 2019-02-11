@@ -16,7 +16,3 @@ string with elements of v separated by comma.
 \code{collapse_to_comma_separated} is a helper function that concatenates a character vector 
 to a comma-separated string. If the input vector has only one element, the element will be returned unchanged.
 }
-\examples{
-collapse_to_comma_separated("foo") # "foo"
-collapse_to_comma_separated(c("foo", "bar")) # "foo, bar"
-}
