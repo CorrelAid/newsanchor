@@ -160,7 +160,6 @@ extract_newsanchor_articles <- function(metadata, content_parsed){
 #' to a comma-separated string. If the input vector has only one element, the element will be returned unchanged.
 #' 
 #' @param v character vector.
-#' @examples 
 #' @return string with elements of v separated by comma.
 #' 
 collapse_to_comma_separated <- function(v){
