@@ -4,7 +4,7 @@
 #' News API endpoint.
 #' 
 #' @param url NEWS API endpoint.
-#' @param query_params named list of parameters that are needed to query the endpoint. 
+#' @param query_args named list of parameters that are needed to query the endpoint. 
 #' Check the News API documentation to see which endpoint requires which parameters.
 #'
 #' @importFrom httr parse_url 
