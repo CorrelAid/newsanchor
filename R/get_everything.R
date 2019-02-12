@@ -20,11 +20,11 @@
 #'                to restrict your search to (e.g. c("bbc.com", "nytimes.com")).
 #' @param exclude_domains Similar usage as with 'domains'. Will exclude these 
 #'                        domains from your search.
-#' @param from Marks the start date of your search. Must be in ISO 8601 format 
-#'             (e.g., "2018-09-08" or "2018-09-08T12:51:42"). Package also 
-#'             accepts: "YYYY/MM/DD", "YYYY.MM.DD", "YYYY,MM,DD" and "YYYY MM DD",
-#'             including precise time (via %H:%M:%S). Default is the oldest 
-#'             available date (depends on your paid/unpaid plan from newsapi.org).
+#' @param from Marks the start date of your search. Package accepts the following
+#'              date formats: \code{"YYYY/MM/DD"}, \code{"YYYY.MM.DD"}, \code{"YYYY-MM-DD"},
+#'              \code{"YYYY,MM,DD"} and \code{"YYYY MM DD"}, including precise time 
+#'              (e.g., \code{"YYYY/MM/DD HH:MM:SS). Default is the oldest 
+#'              available date (depends on your paid/unpaid plan from newsapi.org).
 #' @param to Marks the end date of your search. Works similarly to 'from'. 
 #'           Default is the latest article available.
 #' @param language Specifies the language of the articles of your search. Must 
@@ -60,21 +60,11 @@
 #'         1) Data frame with \code{results_df}\cr
 #'         2) Data frame with \code{meta_data}
 #' @export
-<<<<<<< Updated upstream
+
 
 get_everything <- function(query,
                            sources         = NULL,
                            domains         = NULL,
-=======
-#' 
-
-
-get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
-                           query,
-                           page_size = 100, 
-                           sources = NULL,
-                           domains = NULL,
->>>>>>> Stashed changes
                            exclude_domains = NULL,
                            from            = NULL, 
                            to              = NULL,
@@ -157,6 +147,7 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
                    "%Y %m %d",
                    "%Y,%m,%d",
                    "%Y-%m-%d", 
+                   "%Y-%m-%d %H:%M:%S",
                    "%Y/%m/%d %H:%M:%S",
                    "%Y.%m.%d %H:%M:%S",
                    "%Y %m %d %H:%M:%S",
@@ -167,10 +158,9 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
     tryCatch({
       from <- as.Date(from, tryFormats = valid_dates)},
       error = function(e){
-        print(paste0("Your date format needs to be in one of these formats:", 
+        stop(paste0("Your date format needs to be in one of these formats:", 
               " YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD, YYYY,MM,DD, YYYY MM DD.",
-              " For further information, check the package documentation.",
-              " Default time range (all available) applies for results."))
+              " For further information, check the package documentation."))
          })
   }
   
@@ -179,10 +169,9 @@ get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
     tryCatch({
       to <- as.Date(to, tryFormats = valid_dates)},
       error = function(e){
-        print(paste0("Your date format needs to be in one of these formats:", 
+        stop(paste0("Your date format needs to be in one of these formats:", 
               " YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD, YYYY,MM,DD YYYY MM DD.",
-              " For further information, check the package documentation.",
-              " Default time range (all available) applies for results."))
+              " For further information, check the package documentation."))
         })
   }
   
