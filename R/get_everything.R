@@ -60,10 +60,21 @@
 #'         1) Data frame with \code{results_df}\cr
 #'         2) Data frame with \code{meta_data}
 #' @export
+<<<<<<< Updated upstream
 
 get_everything <- function(query,
                            sources         = NULL,
                            domains         = NULL,
+=======
+#' 
+
+
+get_everything <- function(api_key = Sys.getenv("NEWS_API_KEY"),
+                           query,
+                           page_size = 100, 
+                           sources = NULL,
+                           domains = NULL,
+>>>>>>> Stashed changes
                            exclude_domains = NULL,
                            from            = NULL, 
                            to              = NULL,
