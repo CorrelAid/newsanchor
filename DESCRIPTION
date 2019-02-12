@@ -17,7 +17,6 @@ Imports:
     devtools,
     httr,
     jsonlite,
-<<<<<<< Updated upstream
     tidyr,
     xml2
 Suggests: 
@@ -32,10 +31,3 @@ Suggests:
     tidytext
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
-=======
-    rvest,
-    tidyr,
-    xml2
-Suggests: testthat
-RoxygenNote: 6.0.1
->>>>>>> Stashed changes

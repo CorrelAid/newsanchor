@@ -20,11 +20,10 @@
 #'                to restrict your search to (e.g. c("bbc.com", "nytimes.com")).
 #' @param exclude_domains Similar usage as with 'domains'. Will exclude these 
 #'                        domains from your search.
-#' @param from Marks the start date of your search. Package accepts the following
-#'              date formats: \code{"YYYY/MM/DD"}, \code{"YYYY.MM.DD"}, \code{"YYYY-MM-DD"},
-#'              \code{"YYYY,MM,DD"} and \code{"YYYY MM DD"}, including precise time 
-#'              (e.g., \code{"YYYY/MM/DD HH:MM:SS). Default is the oldest 
-#'              available date (depends on your paid/unpaid plan from newsapi.org).
+#' @param from Character string with start date of your search. Usual format: 
+#'                 \code{"YYYY-MM-DD"} (or \code{"YYYY-MM-DD HH:MM:SS"}). Default 
+#'                 is the oldest available date (depends on your paid/unpaid plan 
+#'                 from newsapi.org). For further information, see \code{details}.
 #' @param to Marks the end date of your search. Works similarly to 'from'. 
 #'           Default is the latest article available.
 #' @param language Specifies the language of the articles of your search. Must 
@@ -48,11 +47,18 @@
 #'          appear with "+" symbol (e.g., +bitcoin). Prepend words that must not 
 #'          appear with "-" symbol (e.g., -bitcoin). You can also use AND, OR, 
 #'          NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND 
-#'          (ethereum OR litecoin) NOT bitcoin)').
-#' @examples
+#'          (ethereum OR litecoin) NOT bitcoin)'). \cr
+#'          \cr
+#'          Other date formats for the \code{from} and \code{to} parameters are: 
+#'          \cr \code{"YYYY/MM/DD"}, 
+#'          \cr \code{"YYYY.MM.DD"}, 
+#'          \cr \code{"YYYY,MM,DD"} and 
+#'          \cr \code{"YYYY MM DD"}, 
+#'          \cr including precise time (e.g., \code{"YYYY/MM/DD HH:MM:SS"}).
+#' @examples         
 #' \dontrun{
 #' df <- get_everything(query = "stuttgart", language = "de")
-#' df <- get_everything(query = "mannheim", from = "2019-01-02T12:00:00")
+#' df <- get_everything(query = "mannheim", from = "2019-01-02 12:00:00")
 #' }
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @importFrom jsonlite fromJSON
@@ -138,15 +144,13 @@ get_everything <- function(query,
                 " See documentation for further info."))
   
   
-  # Test if date format is in correct format
-  
+  # Test if date formats are in correct format and stop otherwise
   
   valid_dates <- c("%Y-%m-%d", 
                    "%Y/%m/%d",
                    "%Y.%m.%d",
                    "%Y %m %d",
                    "%Y,%m,%d",
-                   "%Y-%m-%d", 
                    "%Y-%m-%d %H:%M:%S",
                    "%Y/%m/%d %H:%M:%S",
                    "%Y.%m.%d %H:%M:%S",
@@ -160,6 +164,7 @@ get_everything <- function(query,
       error = function(e){
         stop(paste0("Your date format needs to be in one of these formats:", 
               " YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD, YYYY,MM,DD, YYYY MM DD.",
+              " If you include a specific time, use, e.g., 'YYYY.MM.DD HH:MM:SS'.",
               " For further information, check the package documentation."))
          })
   }
@@ -170,7 +175,8 @@ get_everything <- function(query,
       to <- as.Date(to, tryFormats = valid_dates)},
       error = function(e){
         stop(paste0("Your date format needs to be in one of these formats:", 
-              " YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD, YYYY,MM,DD YYYY MM DD.",
+              " YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD, YYYY,MM,DD, YYYY MM DD.",
+              " If you include a specific time, use, e.g., 'YYYY.MM.DD HH:MM:SS'.",
               " For further information, check the package documentation."))
         })
   }

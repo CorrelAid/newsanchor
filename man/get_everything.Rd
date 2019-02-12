@@ -23,11 +23,10 @@ to restrict your search to (e.g. c("bbc.com", "nytimes.com")).}
 \item{exclude_domains}{Similar usage as with 'domains'. Will exclude these 
 domains from your search.}
 
-\item{from}{Marks the start date of your search. Must be in ISO 8601 format 
-(e.g., "2018-09-08" or "2018-09-08T12:51:42"). Package also 
-accepts: "YYYY/MM/DD", "YYYY.MM.DD", "YYYY,MM,DD" and "YYYY MM DD",
-including precise time (via %H:%M:%S). Default is the oldest 
-available date (depends on your paid/unpaid plan from newsapi.org).}
+\item{from}{Character string with start date of your search. Usual format: 
+\code{"YYYY-MM-DD"} (or \code{"YYYY-MM-DD HH:MM:SS"}). Default 
+is the oldest available date (depends on your paid/unpaid plan 
+from newsapi.org). For further information, see \code{details}.}
 
 \item{to}{Marks the end date of your search. Works similarly to 'from'. 
 Default is the latest article available.}
@@ -75,11 +74,19 @@ Advanced search (see also www.newsapi.org): Surround entire phrases
          appear with "+" symbol (e.g., +bitcoin). Prepend words that must not 
          appear with "-" symbol (e.g., -bitcoin). You can also use AND, OR, 
          NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND 
-         (ethereum OR litecoin) NOT bitcoin)').
+         (ethereum OR litecoin) NOT bitcoin)'). \cr
+         \cr
+         Other date formats for the \code{from} and \code{to} parameters are: 
+         \cr \code{"YYYY/MM/DD"}, 
+         \cr \code{"YYYY.MM.DD"}, 
+         \cr \code{"YYYY,MM,DD"} and 
+         \cr \code{"YYYY MM DD"}, 
+         \cr including precise time (e.g., \code{"YYYY/MM/DD HH:MM:SS"}).
 }
 \examples{
+        
 \dontrun{
 df <- get_everything(query = "stuttgart", language = "de")
-df <- get_everything(query = "mannheim", from = "2019-01-02T12:00:00")
+df <- get_everything(query = "mannheim", from = "2019-01-02 12:00:00")
 }
 }

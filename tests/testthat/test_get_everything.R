@@ -19,13 +19,16 @@ testthat::test_that("test that function returns error if source limit is exceede
                                                     query = "sports",
                                                     sources = rep("testsource", LIMIT_SOURCES + 1)),
                          regexp = "You cannot specify more than 20 sources.")
-})
+  
+  })
+  
+
 
 testthat::test_that("test that function returns error if page size limit is exceeded.", {
   testthat::expect_error(newsanchor::get_everything(api_key = "thisisnotanapikey",
                                                     query = "sports", 
                                                     sources = "testsource",
-                                                    page_size = 101
+                                                    page_size = 101 
                                                     ),
                          regexp = "Page size cannot not exceed 100 articles per page.")
 })
@@ -65,6 +68,21 @@ testthat::test_that("test that function returns error if attempting to sort by a
                                                     language = "de",
                                                     sort_by = "DOESNOTEXIST"),
                          regexp = "Sortings can be only by 'publishedAt', 'relevancy', or 'popularity'.")
+})
+
+testthat::test_that("Test that function stops when invalid date format is provided", {
+  testthat::expect_error(newsanchor::get_everything(api_key = "thisisnotanapikey",
+                                                    query = "sports",
+                                                    from = "2019;02;10"),
+                         regexp = "date format")
+  
+})
+
+testthat::test_that("Test that function stops when invalid date format is provided", {
+  testthat::expect_error(newsanchor::get_everything(api_key = "thisisnotanapikey",
+                                                    query = "sports",
+                                                    to = "2019_02_10"),
+                         regexp = "date format")
 })
 
 # INVALID API KEY
