@@ -8,7 +8,7 @@ DATE_END <- as.character(date_raw)
 LIMIT_SOURCES <- 20
 PAGE_SIZE_LIMIT <- 100
 
-# INVALID INPUTS
+# INVALID INPUTS --------------------------------------------------------------------
 testthat::test_that("test that function returns error if no argument provided", {
   testthat::expect_error(newsanchor::get_everything(),
                          regexp = "You need to specify at least some content that you search for.")
@@ -21,8 +21,6 @@ testthat::test_that("test that function returns error if source limit is exceede
                          regexp = "You cannot specify more than 20 sources.")
   
   })
-  
-
 
 testthat::test_that("test that function returns error if page size limit is exceeded.", {
   testthat::expect_error(newsanchor::get_everything(api_key = "thisisnotanapikey",
@@ -74,7 +72,7 @@ testthat::test_that("Test that function stops when invalid date format is provid
   testthat::expect_error(newsanchor::get_everything(api_key = "thisisnotanapikey",
                                                     query = "sports",
                                                     from = "2019;02;10"),
-                         regexp = "date format")
+                         regexp = "%Y-%m-%d format")
   
 })
 
@@ -82,17 +80,17 @@ testthat::test_that("Test that function stops when invalid date format is provid
   testthat::expect_error(newsanchor::get_everything(api_key = "thisisnotanapikey",
                                                     query = "sports",
                                                     to = "2019_02_10"),
-                         regexp = "date format")
+                         regexp = "%Y-%m-%d format")
 })
 
-# INVALID API KEY
+# INVALID API KEY --------------------------------------------------------------------
 testthat::test_that("test that function raises warning if API key invalid.", {
   testthat::expect_warning(newsanchor::get_everything(api_key = "thisisnotanapikey",
-                                                     query = "sports"),
+                                                      query = "sports"),
                            regexp = "The search resulted in the following error message:")
 })
 
-# FORMAT OF RESULT DATA FRAME
+# FORMAT OF RESULT DATA FRAME --------------------------------------------------------
 testthat::test_that("test that a data frame is returned in the result list.", {
   testthat::skip_if(Sys.getenv("NEWS_API_TEST_KEY") == "", 
                     message = "NEWS_API_TEST_KEY not available in environment. Skipping test.")

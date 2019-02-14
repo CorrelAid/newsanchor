@@ -10,45 +10,46 @@ get_everything(query, sources = NULL, domains = NULL,
   api_key = Sys.getenv("NEWS_API_KEY"))
 }
 \arguments{
-\item{query}{Character string that contains the searchterm for the API's 
+\item{query}{Character string that contains the searchterm for the API's
 data base. API supports advanced search parameters, see 'details'.
 Passing a searchterm is compulsory.}
 
-\item{sources}{Character vector with with IDs of the news outlets 
+\item{sources}{Character vector with with IDs of the news outlets
 you want to focus on (e.g., c("usa-today", "spiegel-online")).}
 
-\item{domains}{Character vector with domains that you want 
+\item{domains}{Character vector with domains that you want
 to restrict your search to (e.g. c("bbc.com", "nytimes.com")).}
 
-\item{exclude_domains}{Similar usage as with 'domains'. Will exclude these 
+\item{exclude_domains}{Similar usage as with 'domains'. Will exclude these
 domains from your search.}
 
-\item{from}{Character string with start date of your search. Usual format: 
-\code{"YYYY-MM-DD"} (or \code{"YYYY-MM-DD HH:MM:SS"}). Default 
-is the oldest available date (depends on your paid/unpaid plan 
-from newsapi.org). For further information, see \code{details}.}
+\item{from}{Character string with start date of your search. Needs to be in 
+\code{"YYYY-mm-dd"} format. If left unspecified, defaults to
+the oldest available date (depends on your paid/unpaid plan
+from newsapi.org).}
 
-\item{to}{Marks the end date of your search. Works similarly to 'from'. 
-Default is the latest article available.}
+\item{to}{Character string that marks the end date of your search. Needs to be in 
+\code{"YYYY-mm-dd"} format. If left unspecified, defaults to
+the most recent article available.}
 
-\item{language}{Specifies the language of the articles of your search. Must 
-be in ISO shortcut format (e.g., "de", "en"). See list of all 
-languages using \code{newsanchor::terms_language}. Default 
+\item{language}{Specifies the language of the articles of your search. Must
+be in ISO shortcut format (e.g., "de", "en"). See list of all
+languages using \code{newsanchor::terms_language}. Default
 is all languages.}
 
-\item{sort_by}{Character string that specifies the sorting of your article 
-results. Accepts three options: "publishedAt", "relevancy", 
+\item{sort_by}{Character string that specifies the sorting variable of your article
+results. Accepts three options: "publishedAt", "relevancy",
 "popularity". Default is "publishedAt".}
 
-\item{page}{Specifies the page number of your results that is returned. Must 
-be numeric. Default is first page. If you want to get all results 
+\item{page}{Specifies the page number of your results that is returned. Must
+be numeric. Default is first page. If you want to get all results
 at once, use \code{get_everything_all} from 'newsanchor'.}
 
-\item{page_size}{The number of articles per page that are returned. 
+\item{page_size}{The number of articles per page that are returned.
 Maximum is 100 (also default).}
 
-\item{api_key}{Character string with the API key you get from newsapi.org. 
-Passing it is compulsory. Alternatively, function can be 
+\item{api_key}{Character string with the API key you get from newsapi.org.
+Passing it is compulsory. Alternatively, function can be
 provided from the global environment (see \code{set_api_key()}).}
 }
 \value{
@@ -57,34 +58,26 @@ List with two dataframes:\cr
         2) Data frame with \code{meta_data}
 }
 \description{
-\code{get_everything} returns articles from large and small news 
+\code{get_everything} returns articles from large and small news
 sources and blogs. This includes news as well as other regular articles.
-You can search for multiple \code{sources}, different \code{language}, 
-or use your own keywords. Articles can be sorted by the earliest date 
-\code{publishedAt}, \code{relevancy}, or \code{popularity}. To automatically 
+You can search for multiple \code{sources}, different \code{language},
+or use your own keywords. Articles can be sorted by the earliest date
+\code{publishedAt}, \code{relevancy}, or \code{popularity}. To automatically
 download all results, use \code{get_everything_all()}.\cr\cr
 Please check that the \code{api_key} is available. You can provide an explicit
 definition of the key or use \code{set_api_key()}. \cr\cr
-Valid languages for \code{language} are provided in the dataset 
+Valid languages for \code{language} are provided in the dataset
 \code{terms_language}.
 }
 \details{
-Advanced search (see also www.newsapi.org): Surround entire phrases 
-         with quotes (") for exact matches. Prepend words/phrases that must 
-         appear with "+" symbol (e.g., +bitcoin). Prepend words that must not 
-         appear with "-" symbol (e.g., -bitcoin). You can also use AND, OR, 
-         NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND 
+Advanced search (see also www.newsapi.org): Surround entire phrases
+         with quotes (") for exact matches. Prepend words/phrases that must
+         appear with "+" symbol (e.g., +bitcoin). Prepend words that must not
+         appear with "-" symbol (e.g., -bitcoin). You can also use AND, OR,
+         NOT keywords (optionally grouped with parenthesis, e.g., 'crypto AND
          (ethereum OR litecoin) NOT bitcoin)'). \cr
-         \cr
-         Other date formats for the \code{from} and \code{to} parameters are: 
-         \cr \code{"YYYY/MM/DD"}, 
-         \cr \code{"YYYY.MM.DD"}, 
-         \cr \code{"YYYY,MM,DD"} and 
-         \cr \code{"YYYY MM DD"}, 
-         \cr including precise time (e.g., \code{"YYYY/MM/DD HH:MM:SS"}).
 }
 \examples{
-        
 \dontrun{
 df <- get_everything(query = "stuttgart", language = "de")
 df <- get_everything(query = "mannheim", from = "2019-01-02 12:00:00")

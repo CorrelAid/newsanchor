@@ -1,6 +1,6 @@
 context("Get sources")
 
-# INVALID INPUTS
+# INVALID INPUTS ----------------------------------------------------------------------------
 testthat::test_that("that that function returns error if non-existing category is specified.", {
   testthat::expect_error(newsanchor::get_sources(api_key = "thisisnotanapikey", 
                                                  category = "DOESNOTEXIST"),
@@ -19,13 +19,13 @@ testthat::test_that("that that function returns error if non-existing country is
                          regexp = "not a valid country")
 })
 
-# INVALID API KEY
+# INVALID API KEY ----------------------------------------------------------------------------
 testthat::test_that("that that function raises warning if invalid API key is specified.", {
   testthat::expect_warning(newsanchor::get_sources(api_key = "thisisnotanapikey"),
                            regexp = "The search resulted in the following error message:")
 })
 
-# FORMAT OF RETURNED DATA FRAME
+# FORMAT OF RETURNED DATA FRAME --------------------------------------------------------------
 testthat::test_that("test that the function returns a data frame", {
   testthat::skip_if(Sys.getenv("NEWS_API_TEST_KEY") == "", 
                     message = "NEWS_API_TEST_KEY not available in environment. Skipping test.")
