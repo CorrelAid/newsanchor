@@ -59,7 +59,6 @@
 #' }
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @importFrom jsonlite fromJSON
-#' @importFrom lubridate parse_date_time
 #' @return List with two dataframes:\cr
 #'         1) Data frame with \code{results_df}\cr
 #'         2) Data frame with \code{meta_data}
