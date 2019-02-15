@@ -20,13 +20,16 @@
 #'                to restrict your search to (e.g. c("bbc.com", "nytimes.com")).
 #' @param exclude_domains Similar usage as with 'domains'. Will exclude these
 #'                        domains from your search.
-#' @param from Character string with start date of your search. Needs to be in 
-#'                 \code{"YYYY-mm-dd"} format. If left unspecified, defaults to
-#'                 the oldest available date (depends on your paid/unpaid plan
-#'                 from newsapi.org).
-#' @param to Character string that marks the end date of your search. Needs to be in 
-#'                 \code{"YYYY-mm-dd"} format. If left unspecified, defaults to
-#'                 the most recent article available. 
+#' @param from Character string with start date of your search. Needs to conform
+#'                 to one of the following lubridate order strings: 
+#'                 \code{"ymdHMs, ymdHMsz, ymd"}. See help for lubridate::parse_date_time. 
+#'                 If from is not specified, NewsAPI defaults to the oldest available date 
+#'                 (depends on your paid/unpaid plan from newsapi.org).
+#' @param to Character string that marks the end date of your search. Needs to conform
+#'                 to one of the following lubridate order strings: 
+#'                 \code{"ymdHMs, ymdHMsz, ymd"}. See help for lubridate::parse_date_time. 
+#'                 If \code{to} is not specified, 
+#'                 NewsAPI defaults to the most recent article available. 
 #' @param language Specifies the language of the articles of your search. Must
 #'                 be in ISO shortcut format (e.g., "de", "en"). See list of all
 #'                 languages using \code{newsanchor::terms_language}. Default
@@ -56,6 +59,7 @@
 #' }
 #' @importFrom httr content GET build_url parse_url add_headers
 #' @importFrom jsonlite fromJSON
+#' @importFrom lubridate parse_date_time
 #' @return List with two dataframes:\cr
 #'         1) Data frame with \code{results_df}\cr
 #'         2) Data frame with \code{meta_data}
@@ -141,20 +145,28 @@ get_everything <- function(query,
     )
   
   # Parse date
+  lubridate_orders <- c("ymdHMs","ymdHMsz", "ymd")
+  lubridate_orders_string <- paste(lubridate_orders, collapse = ", ")
+  
   if (!is.null(from)) {
-    from <- as.Date(from, format = "%Y-%m-%d")
-    if (is.na(from)) {
-      stop(paste0("From argument needs to be in %Y-%m-%d format."))
+    from_parsed <- lubridate::parse_date_time(from, lubridate_orders)
+    if (is.na(from_parsed)) {
+      stop(paste0("From argument needs conform to one of the following lubridate orders: ", 
+                  lubridate_orders_string, ". See help for lubridate::parse_date_time. ", 
+                  "If in doubt, use %Y-%m-%d for a date or %Y-%m-%d %H:%M:%S for datetime."))
     }
+    from <- format(from_parsed, "%Y-%m-%dT%H:%M:%S")
   }
   
   if (!is.null(to)) {
-    to <- as.Date(to, format = "%Y-%m-%d")
-    if (is.na(to)) {
-      stop(paste0("To argument needs to be  in %Y-%m-%d format."))
+    to_parsed <- lubridate::parse_date_time(to, lubridate_orders)
+    if (is.na(to_parsed)) {
+      stop(paste0("To argument needs conform to one of the following lubridate orders: ", 
+                  lubridate_orders_string, ". See help for lubridate::parse_date_time. ", 
+                  "If in doubt, use %Y-%m-%d for a date or %Y-%m-%d %H:%M:%S for datetime."))
     }
+    to <- format(to_parsed, "%Y-%m-%dT%H:%M:%S")
   }
-  
   
   # Accessing the API  -----------------------------------------------------
   # Build URL
@@ -182,10 +194,9 @@ get_everything <- function(query,
     content_parsed$totalResults <- 0
   }
   
-  metadata <-
-    extract_newsanchor_metadata(response, content_parsed, page, page_size)
-  results_df <-
-    extract_newsanchor_articles(metadata = metadata, content_parsed = content_parsed)
+  metadata <- extract_newsanchor_metadata(response, content_parsed, page, page_size)
+  results_df <- extract_newsanchor_articles(metadata = metadata, 
+                                            content_parsed = content_parsed)
   # return results ----------------------------------------------------------
   return(list(metadata    = metadata,
               results_df  = results_df))

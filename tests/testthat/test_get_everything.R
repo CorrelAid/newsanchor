@@ -68,19 +68,19 @@ testthat::test_that("test that function returns error if attempting to sort by a
                          regexp = "Sortings can be only by 'publishedAt', 'relevancy', or 'popularity'.")
 })
 
-testthat::test_that("Test that function stops when invalid date format is provided", {
+testthat::test_that("Test that function stops when invalid date format is provided to from argument.", {
   testthat::expect_error(newsanchor::get_everything(api_key = "thisisnotanapikey",
                                                     query = "sports",
-                                                    from = "2019;02;10"),
-                         regexp = "%Y-%m-%d format")
+                                                    from = "2019;13;10"),
+                         regexp = "From argument")
   
 })
 
-testthat::test_that("Test that function stops when invalid date format is provided", {
+testthat::test_that("Test that function stops when invalid date format is provided to to argument.", {
   testthat::expect_error(newsanchor::get_everything(api_key = "thisisnotanapikey",
                                                     query = "sports",
-                                                    to = "2019_02_10"),
-                         regexp = "%Y-%m-%d format")
+                                                    to = "2019/31/02"),
+                         regexp = "To argument")
 })
 
 # INVALID API KEY --------------------------------------------------------------------
