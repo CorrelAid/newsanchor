@@ -8,13 +8,13 @@ get_sources(category = NULL, language = NULL, country = NULL,
   api_key = Sys.getenv("NEWS_API_KEY"))
 }
 \arguments{
-\item{category}{any category you might want to explore. Must be character or string}
+\item{category}{Category you want to get sources for as a string. Default: NULL.}
 
-\item{language}{the language of the newsoutlet (e.g. "de" or "en").}
+\item{language}{The langauge you want to get sources for as a string. Default: NULL.}
 
-\item{country}{the newsoutlet's country (e.g. "us").}
+\item{country}{The country you want to get sources for as a string (e.g. "us"). Default: NULL.}
 
-\item{api_key}{Character string with the API key you get from newsapi.org. 
+\item{api_key}{String with the API key you get from newsapi.org. 
 Passing it is compulsory. Alternatively, function can be 
 provided from the global environment (see \code{set_api_key}).}
 }

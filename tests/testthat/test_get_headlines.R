@@ -3,7 +3,7 @@ EXPECTED_METADATA_COLUMNS <- sort(c("total_results", "status_code", "request_dat
                                "page_size", "page", "code", "message"))
 
 
-# TEST INVALID INPUTS
+# TEST INVALID INPUTS -----------------------------------------------------------------------------
 testthat::test_that("test that function returns error if no argument provided", {
   testthat::expect_error(newsanchor::get_headlines(),
                          regexp = "Please provide at least either sources, country, category, or query.")
@@ -42,14 +42,14 @@ testthat::test_that("test that function returns error if list is provided to que
 })
 
 
-# INVALID API KEY
+# INVALID API KEY  ------------------------------------------------------------------
 testthat::test_that("test that function raises warning if API key invalid.", {
   testthat::expect_warning(newsanchor::get_headlines(api_key = "thisisnotanapikey",
                                                    query = "sports"),
                            regexp = "The search resulted in the following error message:")
 })
 
-# FORMAT OF RESULT DATAFRAME
+# FORMAT OF RESULT DATAFRAME ------------------------------------------------------------------
 testthat::test_that("test that the query returns results at all.", {
   testthat::skip_if(Sys.getenv("NEWS_API_TEST_KEY") == "", 
                     message = "NEWS_API_TEST_KEY not available in environment. Skipping test.")

@@ -4,7 +4,7 @@
 #' News API endpoint.
 #' 
 #' @param url NEWS API endpoint.
-#' @param query_params named list of parameters that are needed to query the endpoint. 
+#' @param query_args named list of parameters that are needed to query the endpoint. 
 #' Check the News API documentation to see which endpoint requires which parameters.
 #'
 #' @importFrom httr parse_url 
@@ -160,9 +160,6 @@ extract_newsanchor_articles <- function(metadata, content_parsed){
 #' to a comma-separated string. If the input vector has only one element, the element will be returned unchanged.
 #' 
 #' @param v character vector.
-#' @examples 
-#' collapse_to_comma_separated("foo") # "foo"
-#' collapse_to_comma_separated(c("foo", "bar")) # "foo, bar"
 #' @return string with elements of v separated by comma.
 #' 
 collapse_to_comma_separated <- function(v){
