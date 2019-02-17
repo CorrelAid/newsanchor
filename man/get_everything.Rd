@@ -23,14 +23,17 @@ to restrict your search to (e.g. c("bbc.com", "nytimes.com")).}
 \item{exclude_domains}{Similar usage as with 'domains'. Will exclude these
 domains from your search.}
 
-\item{from}{Character string with start date of your search. Needs to be in 
-\code{"YYYY-mm-dd"} format. If left unspecified, defaults to
-the oldest available date (depends on your paid/unpaid plan
-from newsapi.org).}
+\item{from}{Character string with start date of your search. Needs to conform
+to one of the following lubridate order strings: 
+\code{"ymdHMs, ymdHMsz, ymd"}. See help for lubridate::parse_date_time. 
+If from is not specified, NewsAPI defaults to the oldest available date 
+(depends on your paid/unpaid plan from newsapi.org).}
 
-\item{to}{Character string that marks the end date of your search. Needs to be in 
-\code{"YYYY-mm-dd"} format. If left unspecified, defaults to
-the most recent article available.}
+\item{to}{Character string that marks the end date of your search. Needs to conform
+to one of the following lubridate order strings: 
+\code{"ymdHMs, ymdHMsz, ymd"}. See help for lubridate::parse_date_time. 
+If \code{to} is not specified, 
+NewsAPI defaults to the most recent article available.}
 
 \item{language}{Specifies the language of the articles of your search. Must
 be in ISO shortcut format (e.g., "de", "en"). See list of all

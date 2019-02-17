@@ -7,7 +7,7 @@ Authors@R: c(person("Preu", "Frie", email = "fr1e@pm.me", role = c("aut", "pro")
   person("Schulze", "Lars", email = "lars.schulze@hotmail.com", role = c("aut")),
   person("Dix", "Jan", email = "jan.dix@uni-konstanz.de", role = c("aut", "pro")))
 Maintainer: Frie Preu <fr1e@pm.me>
-Description: Interface to gather news from the 'NEWS API', based on a multilevel query <https://newsapi.org/>. A personal API key is required. 
+Description: Interface to gather news from the 'News API', based on a multilevel query <https://newsapi.org/>. A personal API key is required. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.2.0)
@@ -18,7 +18,8 @@ Imports:
     httr,
     jsonlite,
     tidyr,
-    xml2
+    xml2,
+    lubridate
 Suggests: 
     dplyr,
     knitr,
