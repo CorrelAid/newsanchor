@@ -18,7 +18,6 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval = FALSE, fig.align="cen
 #  results <- get_headlines(country = "de")
 #  # get headlines published about Trump
 #  results <- get_headlines(query = "Trump")
-#  
 
 ## ----headlines: page, page_size------------------------------------------
 #  results <- get_headlines(category = "sports", page = 2)
@@ -65,7 +64,6 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval = FALSE, fig.align="cen
 #  results <- get_everything(query = "Trump", sort_by = "popularity")
 #  # sort results by date
 #  results <- get_everything(query = "Trump", sort_by = "publishedAt")
-#  
 
 ## ----everything: get_all-------------------------------------------------
 #  results <- get_everything_all(query = "Trump")
@@ -78,4 +76,10 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval = FALSE, fig.align="cen
 
 ## ----sources-------------------------------------------------------------
 #  publisher <- get_sources()
+
+## ----searchterms: dataframes---------------------------------------------
+#  terms_category
+#  terms_country
+#  terms_language
+#  terms_sources
 
