@@ -148,7 +148,7 @@ get_everything <- function(query,
   lubridate_orders_string <- paste(lubridate_orders, collapse = ", ")
   
   if (!is.null(from)) {
-    from_parsed <- lubridate::parse_date_time(from, lubridate_orders)
+    from_parsed <- lubridate::parse_date_time(from, lubridate_orders, quiet = TRUE)
     if (is.na(from_parsed)) {
       stop(paste0("From argument needs conform to one of the following lubridate orders: ", 
                   lubridate_orders_string, ". See help for lubridate::parse_date_time. ", 
@@ -158,7 +158,7 @@ get_everything <- function(query,
   }
   
   if (!is.null(to)) {
-    to_parsed <- lubridate::parse_date_time(to, lubridate_orders)
+    to_parsed <- lubridate::parse_date_time(to, lubridate_orders, quiet = TRUE)
     if (is.na(to_parsed)) {
       stop(paste0("To argument needs conform to one of the following lubridate orders: ", 
                   lubridate_orders_string, ". See help for lubridate::parse_date_time. ", 
