@@ -2,16 +2,13 @@
 #'
 #'@description Function to set you API Key to the R environment when starting using \code{newsanchor} package. Attention: You should only execute this functions once.
 #'
-#'@param api_key character. The personal API key To request an API key see: \url{https://newsapi.org/register}
 #'@param path character. Path where the environment is stored. Default is the normalized path.
 #'
 #'@return None.
 #'
 #'@examples
 #'\dontrun{
-#'# this is not an actual API key
-#'api_key <- "5t5yno5qqkufxis5q2vzx26vxq2hqej9"
-#'set_api_key(api_key, tempdir())
+#'set_api_key(tempdir()) # you will be prompted to enter your API key.
 #'}
 #'@author Jan Dix <\email{jan.d@@correlaid.org}>
 #'
