@@ -26,7 +26,7 @@ set_api_key <- function(path = stop("Please specify a path.")) {
   env_file <- readLines(path, encoding = "UTF-8")
   
   # setup key variable
-  key <- paste0("NEWS_API_KEY=", askpass::askpass("Please enter api key"))
+  key <- paste0("NEWS_API_KEY=", askpass::askpass("Please enter your api key"))
   
   # add api key
   env_file <- c(env_file, key)
