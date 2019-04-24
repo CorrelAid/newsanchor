@@ -17,8 +17,7 @@
 #'
 #'@export
 
-set_api_key <- function(api_key,
-                        path = stop("Please specify a path.")) {
+set_api_key <- function(path = stop("Please specify a path.")) {
   
   # check if an environment file exists
   if (!file.exists(path)) file.create(path)
@@ -27,7 +26,7 @@ set_api_key <- function(api_key,
   env_file <- readLines(path, encoding = "UTF-8")
   
   # setup key variable
-  key <- paste0("NEWS_API_KEY=", api_key)
+  key <- paste0("NEWS_API_KEY=", askpass::askpass("Please enter api key"))
   
   # add api key
   env_file <- c(env_file, key)
