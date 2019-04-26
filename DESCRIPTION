@@ -28,6 +28,7 @@ Suggests:
     rvest,
     stringr,
     testthat,
+    mockery,
     tidytext
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
