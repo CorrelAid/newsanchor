@@ -19,7 +19,8 @@ Imports:
     tidyr,
     xml2,
     lubridate
-    askpass
+Remotes: 
+    jeroen/askpass
 Suggests: 
     dplyr,
     knitr,
