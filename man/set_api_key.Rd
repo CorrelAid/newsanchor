@@ -4,11 +4,9 @@
 \alias{set_api_key}
 \title{Add API key to the .Renviron}
 \usage{
-set_api_key(api_key, path = stop("Please specify a path."))
+set_api_key(path = stop("Please specify a path."))
 }
 \arguments{
-\item{api_key}{character. The personal API key To request an API key see: \url{https://newsapi.org/register}}
-
 \item{path}{character. Path where the environment is stored. Default is the normalized path.}
 }
 \value{
@@ -19,9 +17,7 @@ Function to set you API Key to the R environment when starting using \code{newsa
 }
 \examples{
 \dontrun{
-# this is not an actual API key
-api_key <- "5t5yno5qqkufxis5q2vzx26vxq2hqej9"
-set_api_key(api_key, tempdir())
+set_api_key(tempdir()) # you will be prompted to enter your API key.
 }
 }
 \author{
