@@ -26,7 +26,7 @@ The package is under continuous development and will be extended with additional
 Installation
 ------------
 
-### Stable Version (coming soon)
+### Stable Version
 
 ``` r
 # install package from CRAN

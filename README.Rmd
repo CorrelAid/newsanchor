@@ -39,7 +39,7 @@ The package is under continuous development and will be extended with additional
 
 ## Installation
 
-### Stable Version (coming soon)
+### Stable Version
 
 ```{r, eval=FALSE}
 # install package from CRAN
