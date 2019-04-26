@@ -19,6 +19,7 @@ Imports:
     tidyr,
     xml2,
     lubridate
+    askpass
 Suggests: 
     dplyr,
     knitr,
