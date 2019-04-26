@@ -18,7 +18,8 @@ Imports:
     jsonlite,
     tidyr,
     xml2,
-    lubridate
+    lubridate,
+    askpass
 Remotes: 
     jeroen/askpass
 Suggests: 
