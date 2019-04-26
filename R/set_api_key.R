@@ -11,7 +11,7 @@
 #'set_api_key(tempdir()) # you will be prompted to enter your API key.
 #'}
 #'@author Jan Dix <\email{jan.d@@correlaid.org}>
-#'
+#'@importFrom askpass askpass
 #'@export
 
 set_api_key <- function(path = stop("Please specify a path.")) {
