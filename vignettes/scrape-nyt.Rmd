@@ -29,6 +29,8 @@ This introduction shows how you could gather meta data (such as title and URL) f
   
   `tidytext` is a tool that provides text manipulation along with the tidy data principles. It works well along with `dplyr` and is used to apply the sentiment calculations.
   
+  `textdata` is used to get the sentiment analyses done, accessing a certain lexicon (AFINN). Users must agree to understand the library’s license/terms of use before the dataset is downloaded. 
+  
 ```{r load packages, warning=FALSE, message=FALSE}
 # load all required packages
 library(newsanchor) # download newspaper articles
@@ -38,6 +40,7 @@ library(rvest)      # web scraping tools
 library(dplyr)      # easy data frame manipulation
 library(stringr)    # string/character manipulation 
 library(tidytext)   # tidy text analysis
+library(textdata)   # contains the AFINN lexicon 
 ```
 
 ## Download NYT articles and their corresponding URLs
@@ -141,17 +144,18 @@ for (i in 1:nrow(articles)) {
 
 After we finally downloaded all articles, we can calculate the sentiment for each article. We use a simple dictionary approach. A dictionary approach assigns a positive or negative score or label to each word. We use the **AFINN** dictionary that assigns numerical scores between `-5` and `5` to English words. As stated in the introduction, dictionary approaches, especially with non-domain specific dictionaries, might not be the best choice to determine the sentiment of newspaper articles. However, due to the simplicity of this tutorial, we stick to the dictionary approach. In the end, we group the scores by the date they were published and calculate the mean score for each respective day.   
 
+
 ```{r calculate sentiment, cache=T}
 sentiment_by_day <- articles %>%
   select(url, body) %>%                                  # extract required columns 
   unnest_tokens(word, body) %>%                          # split each article into single words
   anti_join(get_stopwords(), by = "word") %>%            # remove stopwords
-  inner_join(get_sentiments("afinn"), by = "word") %>%   # join sentiment scores
+  inner_join(get_sentiments("afinn"), by = "word") %>%    # join sentiment scores
   group_by(url) %>%                                      # group text again by their URL
-  summarise(sentiment = sum(score)) %>%                  # sum up sentiment scores
+  summarise(sentiment = sum(value)) %>%                  # sum up sentiment scores
   left_join(articles, by = "url") %>%                    # add sentiment column to articles
   select(published_at, sentiment) %>%                    # extract required columns 
-  group_by(date = as.Date(published_at, "%Y-%m-%d")) %>% # group by date
+  group_by(date = as.Date(published_at)) %>%            # group by date
   summarise(sentiment = mean(sentiment), n = n())        # calculate summaries
 ```
 
