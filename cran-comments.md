@@ -8,3 +8,7 @@ There were no ERRORs, WARNINGs or NOTEs
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package. 
+
+## Fixed: Version  0.1.1
+Version 0.1.1 contains a fix for one of the vignettes which had seen a change
+in package dependencies. DESCRIPTION now suggests to load textdata as well.

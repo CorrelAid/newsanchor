@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jan Dix jan.dix@uni-konstanz.de" />
 
-<meta name="date" content="2019-06-20" />
+<meta name="date" content="2019-06-26" />
 
 <title>Scrape New York Times Online Articles</title>
 
@@ -303,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Scrape New York Times Online Articles</h1>
 <h4 class="author">Jan Dix <a href="mailto:jan.dix@uni-konstanz.de" class="email">jan.dix@uni-konstanz.de</a></h4>
-<h4 class="date">2019-06-20</h4>
+<h4 class="date">2019-06-26</h4>
 
 
 
@@ -422,7 +422,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<p>Below you find the plot that results from our analysis. We can see that most of the articles were published Tuesday and Friday. The least number of articles can be found Saturday and Sunday. Probably there is less staff available during the weekend or Donald Trump is busy playing golf in Mar-a-Lago. Hence, less newsworthy events take place.</p>
+<p>Below, you find the plot that results from our analysis. We can see that most of the articles were published Tuesday and Friday. The least number of articles can be found Saturday and Sunday. Probably there is less staff available during the weekend or Donald Trump is busy playing golf in Mar-a-Lago. Hence, less newsworthy events take place.</p>
 <p>Monday, Tuesday and Friday have negative sentiment scores. Digging into the Tuesday’s headings, we can see that news do not have a common theme. Friday’s results look similar. However, we can find various articles about the Mueller investigation. Saturday’s score is outstandingly positive. Hence, one would expect articles about a certain newsworthy positive event. Unfortunately, the result shows us that we cannot find a common theme again.</p>
 <p>The analysis above shows that one needs to be very careful with sentiment analysis. It seems that the dictionary approach did not capture the overall atmosphere of the respective day since the articles seem to be very different. One could probably review whether we find anomalies along the authors, the length of the articles or other attributes to explain the strongly varying scores.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co"># enable two plots in one figure</span></a>
