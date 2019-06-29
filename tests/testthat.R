@@ -1,5 +1,4 @@
 library(testthat)
 library(newsanchor)
 library(askpass)
-library(mockery)
 test_check("newsanchor")

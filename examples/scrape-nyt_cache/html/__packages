@@ -1,0 +1,10 @@
+base
+newsanchor
+robotstxt
+httr
+xml2
+rvest
+dplyr
+stringr
+tidytext
+textdata

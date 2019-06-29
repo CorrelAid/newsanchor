@@ -9,4 +9,4 @@
 ^README-.*\.png$
 ^cran-comments\.md$
 ^newsanchor\.png$
-^vignettes\/scrape-nyt_cache\/*$
+^examples$

@@ -86,7 +86,7 @@ testthat::test_that("Test that function stops when invalid date format is provid
 # INVALID API KEY --------------------------------------------------------------------
 testthat::test_that("test that function raises warning if API key invalid.", {
   testthat::expect_warning(newsanchor::get_everything(api_key = "thisisnotanapikey",
-                                                      query = "sports"),
+                                                     query = "sports"),
                            regexp = "The search resulted in the following error message:")
 })
 
