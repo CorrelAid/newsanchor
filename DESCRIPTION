@@ -1,7 +1,7 @@
 Package: newsanchor
 Type: Package
 Title: Client for the News API
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(person("Preu", "Frie", email = "fr1e@pm.me", role = c("aut", "pro")),
   person("Buhl", "Yannik", email = "ybuhl@posteo.de", role = c("aut", "cre")),
   person("Schulze", "Lars", email = "lars.schulze@hotmail.com", role = c("aut")),
@@ -20,8 +20,6 @@ Imports:
     xml2,
     lubridate,
     askpass
-Remotes: 
-    jeroen/askpass
 Suggests: 
     dplyr,
     knitr,

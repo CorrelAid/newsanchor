@@ -161,7 +161,7 @@ sentiment_by_day <- articles %>%
 
 ## Results
 
-Below you find the plot that results from our analysis. We can see that most of the articles were published Tuesday and Friday. The least number of articles can be found Saturday and Sunday. Probably there is less staff available during the weekend or Donald Trump is busy playing golf in Mar-a-Lago. Hence, less newsworthy events take place. 
+Below, you find the plot that results from our analysis. We can see that most of the articles were published Tuesday and Friday. The least number of articles can be found Saturday and Sunday. Probably there is less staff available during the weekend or Donald Trump is busy playing golf in Mar-a-Lago. Hence, less newsworthy events take place. 
 
 Monday, Tuesday and Friday have negative sentiment scores. Digging into the Tuesday's headings, we can see that news do not have a common theme. Friday's results look similar. However, we can find various articles about the Mueller investigation. Saturday's score is outstandingly positive. Hence, one would expect articles about a certain newsworthy positive event. Unfortunately, the result shows us that we cannot find a common theme again. 
 
