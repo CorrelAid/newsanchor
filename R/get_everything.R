@@ -66,6 +66,7 @@
 
 
 get_everything <- function(query,
+                           qInTitle        = NULL,
                            sources         = NULL,
                            domains         = NULL,
                            exclude_domains = NULL,
@@ -171,6 +172,7 @@ get_everything <- function(query,
   # Build URL
   query_params <- list(
     q              = query,
+    qInTitle        = qInTitle,
     language        = language,
     sources         = sources,
     domains         = domains,
