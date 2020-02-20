@@ -14,6 +14,8 @@
 #' @param query Character string that contains the searchterm for the API's
 #'              data base. API supports advanced search parameters, see 'details'.
 #'              Passing a searchterm is compulsory.
+#' @param qInTitle Character string that does the same as above _within the 
+#'            headline only_. API supports advanced search parameters, see 'details'.
 #' @param sources Character vector with with IDs of the news outlets
 #'                you want to focus on (e.g., c("usa-today", "spiegel-online")).
 #' @param domains Character vector with domains that you want
