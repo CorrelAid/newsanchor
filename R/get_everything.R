@@ -67,7 +67,7 @@
 #' @export
 
 
-get_everything <- function(query,
+get_everything <- function(query		   = NULL,
                            qInTitle        = NULL,
                            sources         = NULL,
                            domains         = NULL,
