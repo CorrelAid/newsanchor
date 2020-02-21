@@ -87,7 +87,7 @@ get_everything <- function(query,
   # Errors and warnings -----------------------------------------------------
   
   # Make sure that any search term is passed
-  if (missing(query) == TRUE | missing(qInTitle) == TRUE)
+  if (missing(query) == TRUE & missing(qInTitle) == TRUE)
     stop("You need to specify at least some content that you search for.")
   
   # check that page_size is <= 100
