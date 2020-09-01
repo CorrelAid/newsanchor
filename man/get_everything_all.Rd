@@ -4,13 +4,25 @@
 \alias{get_everything_all}
 \title{Returns all articles from newsapi.org in one data frame}
 \usage{
-get_everything_all(query, sources = NULL, domains = NULL,
-  exclude_domains = NULL, from = NULL, to = NULL, language = NULL,
-  sort_by = "publishedAt", api_key = Sys.getenv("NEWS_API_KEY"))
+get_everything_all(
+  query = NULL,
+  query_in_title = NULL,
+  sources = NULL,
+  domains = NULL,
+  exclude_domains = NULL,
+  from = NULL,
+  to = NULL,
+  language = NULL,
+  sort_by = "publishedAt",
+  api_key = Sys.getenv("NEWS_API_KEY")
+)
 }
 \arguments{
 \item{query}{Character string that contains the searchterm for the API's 
 data base. API supports advanced search parameters, see 'details'.}
+
+\item{query_in_title}{Character string that does the same as above _within the 
+headline only_. API supports advanced search parameters, see 'details'.}
 
 \item{sources}{Character string with IDs (comma separated) of the news outlets 
 you want to focus on (e.g., "usa-today, spiegel-online").}

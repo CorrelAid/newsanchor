@@ -4,8 +4,13 @@
 \alias{get_headlines_all}
 \title{Returns all headlines from newsapi.org}
 \usage{
-get_headlines_all(query = NULL, category = NULL, country = NULL,
-  sources = NULL, api_key = Sys.getenv("NEWS_API_KEY"))
+get_headlines_all(
+  query = NULL,
+  category = NULL,
+  country = NULL,
+  sources = NULL,
+  api_key = Sys.getenv("NEWS_API_KEY")
+)
 }
 \arguments{
 \item{query}{Character string that contains the searchterm}

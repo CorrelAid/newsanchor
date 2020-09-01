@@ -4,7 +4,9 @@
 \name{terms_category}
 \alias{terms_category}
 \title{Terms Category}
-\format{An object of class \code{data.frame} with 7 rows and 1 columns.}
+\format{
+An object of class \code{data.frame} with 7 rows and 1 columns.
+}
 \usage{
 terms_category
 }

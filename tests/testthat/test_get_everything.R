@@ -11,7 +11,12 @@ PAGE_SIZE_LIMIT <- 100
 # INVALID INPUTS --------------------------------------------------------------------
 testthat::test_that("test that function returns error if no argument provided", {
   testthat::expect_error(newsanchor::get_everything(),
-                         regexp = "You need to specify at least some content that you search for.")
+                         regexp = "You need to specify at either query or query_in_title.")
+})
+
+testthat::test_that("test that function returns error if both query and query_in_title are provided", {
+  testthat::expect_error(newsanchor::get_everything(query = "foo", query_in_title = "bar"),
+                         regexp = "You must only specify either query or query_in_title.")
 })
 
 testthat::test_that("test that function returns error if source limit is exceeded.", {
@@ -91,6 +96,15 @@ testthat::test_that("test that function raises warning if API key invalid.", {
 })
 
 # FORMAT OF RESULT DATA FRAME --------------------------------------------------------
+testthat::test_that("test that query_in_title works.", {
+  testthat::skip_if(Sys.getenv("NEWS_API_TEST_KEY") == "", 
+                    message = "NEWS_API_TEST_KEY not available in environment. Skipping test.")
+  res <- newsanchor::get_everything(api_key = Sys.getenv("NEWS_API_TEST_KEY"), 
+                                    from = DATE_BEGIN, to = DATE_END, 
+                                    query_in_title = "Merkel")
+  testthat::expect_true(is.data.frame(res$results_df), info = paste0(str(res)))
+})
+
 testthat::test_that("test that a data frame is returned in the result list.", {
   testthat::skip_if(Sys.getenv("NEWS_API_TEST_KEY") == "", 
                     message = "NEWS_API_TEST_KEY not available in environment. Skipping test.")
