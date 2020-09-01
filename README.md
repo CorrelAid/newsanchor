@@ -3,7 +3,7 @@
 newsanchor <img src="newsanchor.png" width="160px" align="right" />
 ===================================================================
 
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) [![Build Status](https://travis-ci.org/CorrelAid/newsanchor.svg?branch=master)](https://travis-ci.org/CorrelAid/newsanchor) [![codecov](https://codecov.io/gh/CorrelAid/newsanchor/branch/master/graph/badge.svg)](https://codecov.io/gh/CorrelAid/newsanchor) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/newsanchor)](https://cran.r-project.org/package=newsanchor) [![CRAN\_Download\_Badge](https://cranlogs.r-pkg.org/badges/newsanchor)](https://cran.r-project.org/package=newsanchor)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) [![Build Status](https://github.com/CorrelAid/newsanchor/workflows/R-CMD-check/badge.svg)](https://travis-ci.org/CorrelAid/newsanchor) [![codecov](https://codecov.io/gh/CorrelAid/newsanchor/branch/master/graph/badge.svg)](https://codecov.io/gh/CorrelAid/newsanchor) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/newsanchor)](https://cran.r-project.org/package=newsanchor) [![CRAN\_Download\_Badge](https://cranlogs.r-pkg.org/badges/newsanchor)](https://cran.r-project.org/package=newsanchor)
 
 Purpose/Description
 -------------------
