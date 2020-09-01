@@ -4,8 +4,12 @@
 \alias{extract_newsanchor_metadata}
 \title{Extracts metadata.}
 \usage{
-extract_newsanchor_metadata(response, content_parsed, page = NULL,
-  page_size = NULL)
+extract_newsanchor_metadata(
+  response,
+  content_parsed,
+  page = NULL,
+  page_size = NULL
+)
 }
 \arguments{
 \item{response}{httr response object}

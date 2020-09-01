@@ -4,7 +4,9 @@
 \name{sample_response}
 \alias{sample_response}
 \title{Sample Response Object}
-\format{An object of class \code{list} of length 2.}
+\format{
+An object of class \code{list} of length 2.
+}
 \usage{
 sample_response
 }

@@ -4,7 +4,9 @@
 \name{terms_language}
 \alias{terms_language}
 \title{Terms Language}
-\format{An object of class \code{data.frame} with 14 rows and 1 columns.}
+\format{
+An object of class \code{data.frame} with 14 rows and 1 columns.
+}
 \usage{
 terms_language
 }

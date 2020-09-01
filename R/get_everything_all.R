@@ -18,7 +18,7 @@
 #' 
 #' @param query Character string that contains the searchterm for the API's 
 #'              data base. API supports advanced search parameters, see 'details'. 
-#' @param qInTitle Character string that does the same as above _within the 
+#' @param query_in_title Character string that does the same as above _within the 
 #'            headline only_. API supports advanced search parameters, see 'details'.
 #' @param sources Character string with IDs (comma separated) of the news outlets 
 #'                you want to focus on (e.g., "usa-today, spiegel-online").
@@ -55,7 +55,7 @@
 
 
 get_everything_all <- function(query			      = NULL, 
-                              qInTitle          = NULL,
+                              query_in_title    = NULL,
                               sources           = NULL,
                               domains           = NULL, 
                               exclude_domains   = NULL, 
@@ -70,7 +70,7 @@ get_everything_all <- function(query			      = NULL,
   
   # request
   results <- get_everything(query, 
-                            qInTitle,
+                            query_in_title,
                             sources, 
                             domains, 
                             exclude_domains,
@@ -96,7 +96,7 @@ get_everything_all <- function(query			      = NULL,
       
       # temporary results
       results_tmp <-  get_everything(query, 
-                                     qInTitle,
+                                     query_in_title,
                                      sources, 
                                      domains, 
                                      exclude_domains,

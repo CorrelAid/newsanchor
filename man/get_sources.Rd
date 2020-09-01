@@ -4,8 +4,12 @@
 \alias{get_sources}
 \title{Returns selected sources from newsapi.org}
 \usage{
-get_sources(category = NULL, language = NULL, country = NULL,
-  api_key = Sys.getenv("NEWS_API_KEY"))
+get_sources(
+  category = NULL,
+  language = NULL,
+  country = NULL,
+  api_key = Sys.getenv("NEWS_API_KEY")
+)
 }
 \arguments{
 \item{category}{Category you want to get sources for as a string. Default: NULL.}

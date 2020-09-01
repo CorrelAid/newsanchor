@@ -4,7 +4,9 @@
 \name{terms_sources}
 \alias{terms_sources}
 \title{Terms Sources}
-\format{An object of class \code{data.frame} with 138 rows and 1 columns.}
+\format{
+An object of class \code{data.frame} with 138 rows and 1 columns.
+}
 \usage{
 terms_sources
 }

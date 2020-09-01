@@ -4,15 +4,29 @@
 \alias{get_everything}
 \title{Get resources of newsapi.org}
 \usage{
-get_everything(query, sources = NULL, domains = NULL,
-  exclude_domains = NULL, from = NULL, to = NULL, language = NULL,
-  sort_by = "publishedAt", page = 1, page_size = 100,
-  api_key = Sys.getenv("NEWS_API_KEY"))
+get_everything(
+  query = NULL,
+  query_in_title = NULL,
+  sources = NULL,
+  domains = NULL,
+  exclude_domains = NULL,
+  from = NULL,
+  to = NULL,
+  language = NULL,
+  sort_by = "publishedAt",
+  page = 1,
+  page_size = 100,
+  api_key = Sys.getenv("NEWS_API_KEY")
+)
 }
 \arguments{
 \item{query}{Character string that contains the searchterm for the API's
 data base. API supports advanced search parameters, see 'details'.
-Passing a searchterm is compulsory.}
+Either query or query_in_title must be specified.}
+
+\item{query_in_title}{Character string that does the same as above _within the 
+headline only_. API supports advanced search parameters, see 'details'.
+Either query or query_in_title must be specified.}
 
 \item{sources}{Character vector with with IDs of the news outlets
 you want to focus on (e.g., c("usa-today", "spiegel-online")).}

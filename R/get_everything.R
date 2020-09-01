@@ -12,10 +12,11 @@
 #' \code{terms_language}.
 #'
 #' @param query Character string that contains the searchterm for the API's
-#'              data base. API supports advanced search parameters, see 'details'.
-#'              Passing a searchterm is compulsory.
-#' @param qInTitle Character string that does the same as above _within the 
-#'            headline only_. API supports advanced search parameters, see 'details'.
+#'                data base. API supports advanced search parameters, see 'details'.
+#'                Either query or query_in_title must be specified.
+#' @param query_in_title Character string that does the same as above _within the 
+#'                headline only_. API supports advanced search parameters, see 'details'.
+#'                Either query or query_in_title must be specified.
 #' @param sources Character vector with with IDs of the news outlets
 #'                you want to focus on (e.g., c("usa-today", "spiegel-online")).
 #' @param domains Character vector with domains that you want
@@ -67,8 +68,8 @@
 #' @export
 
 
-get_everything <- function(query		   = NULL,
-                           qInTitle        = NULL,
+get_everything <- function(query		       = NULL,
+                           query_in_title  = NULL,
                            sources         = NULL,
                            domains         = NULL,
                            exclude_domains = NULL,
@@ -87,9 +88,13 @@ get_everything <- function(query		   = NULL,
   # Errors and warnings -----------------------------------------------------
   
   # Make sure that any search term is passed
-  if (missing(query) == TRUE & missing(qInTitle) == TRUE)
-    stop("You need to specify at least some content that you search for.")
+  if (missing(query) == TRUE & missing(query_in_title) == TRUE)
+    stop("You need to specify at either query or query_in_title.")
   
+  # but not both query and query_in_title (does not make sense)
+  if (!is.null(query) & !is.null(query_in_title))
+    stop("You must only specify either query or query_in_title.")
+
   # check that page_size is <= 100
   if (!is.numeric(page_size)) {
     stop("You need to insert numeric values for the number of texts per page.")
@@ -173,8 +178,8 @@ get_everything <- function(query		   = NULL,
   # Accessing the API  -----------------------------------------------------
   # Build URL
   query_params <- list(
-    q              = query,
-    qInTitle        = qInTitle,
+    q               = query,
+    qInTitle        = query_in_title,
     language        = language,
     sources         = sources,
     domains         = domains,

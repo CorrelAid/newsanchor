@@ -4,9 +4,15 @@
 \alias{get_headlines}
 \title{Returns selected headlines from newsapi.org}
 \usage{
-get_headlines(query = NULL, category = NULL, country = NULL,
-  sources = NULL, page = 1, page_size = 100,
-  api_key = Sys.getenv("NEWS_API_KEY"))
+get_headlines(
+  query = NULL,
+  category = NULL,
+  country = NULL,
+  sources = NULL,
+  page = 1,
+  page_size = 100,
+  api_key = Sys.getenv("NEWS_API_KEY")
+)
 }
 \arguments{
 \item{query}{Character string that contains the searchterm.}
