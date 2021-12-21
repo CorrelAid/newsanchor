@@ -10,3 +10,6 @@
 ^cran-comments\.md$
 ^newsanchor\.png$
 ^examples$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
